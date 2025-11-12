@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # Main application service
+  web:
+    build: .
+    container_name: rdburman-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - ./public:/app/public:ro
+    networks:
+      - rdburman-network
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.example.description=RD Burman Tribute Backend"
+      - "com.example.version=1.0.0"
+
+  # Redis for caching (optional but recommended)
+  redis:
+    image: redis:7-alpine
+    container_name: rdburman-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - rdburman-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # MongoDB for data persistence (optional)
+  # Uncomment if you want to store user data, favorites, etc.
+  # mongodb:
+  #   image: mongo:6
+  #   container_name: rdburman-mongo
+  #   ports:
+  #     - "27017:27017"
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=admin
+  #     - MONGO_INITDB_ROOT_PASSWORD=changeme123
+  #     - MONGO_INITDB_DATABASE=rdburman
+  #   volumes:
+  #     - mongo-data:/data/db
+  #     - mongo-config:/data/configdb
+  #   networks:
+  #     - rdburman-network
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+
+networks:
+  rdburman-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  # mongo-data:
+  # mongo-config:
