@@ -1,0 +1,46 @@
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+GOOGLE_API_KEY=${GOOGLE_DRIVE_API_KEY}
+GOOGLE_DRIVE_ROOT_KEY=${GOOGLE_DRIVE_API_KEY}
+
+# YouTube Data API v3
+YOUTUBE_API_KEY=AIzaSyCl1TQl5Uy0ZlLt8IITQQmfo-9YuUMLAsU
+YOUTUBE_API_URL=https://www.googleapis.com/youtube/v3/search
+
+# Google Drive API
+GOOGLE_DRIVE_API_KEY=AIzaSyBF4CXEvJQHM6OlOcRYugN5OaU3GiVE75k
+GOOGLE_DRIVE_API_URL=https://www.googleapis.com/drive/v3/files
+	GOOGLE_DRIVE_CLIENT_ID=468756812580-u77fn2j4i6t077665jv7e1o4jse3ipf6.apps.googleusercontent.com
+	GOOGLE_DRIVE_CLIENT_SECRET=13WPCb0yhLnDu_V_oxtSxVj3YoCX_n25B
+	GOOGLE_DRIVE_REDIRECT_URI=http://localhost:3000/api/drive/callback
+
+# Google Drive folders (these are the IDs you gave — okay to keep)
+GDRIVE_FOLDER_1=1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1
+GDRIVE_FOLDER_2=16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3
+GDRIVE_FOLDER_3=15W7_4PUUYRSxntCn7EUg95wETL0Alzsa
+GDRIVE_FOLDER_4=1vbTX12RNbNJSHNXenJ-es805NslwEClv
+GDRIVE_FOLDER_5=1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy
+GDRIVE_FOLDER_6=1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g
+
+# Optional top-level folder (if your app expects it)
+GDRIVE_ROOT_FOLDER=1FQNqgfrnppArFoYqkL7eL67-r1GS_ar6
+
+
+# Spotify API
+SPOTIFY_CLIENT_ID=86c03a3e35bd487685011aa38ec23171
+SPOTIFY_CLIENT_SECRET=ada028ca60eb4f4f9a38147dce45f2cc
+SPOTIFY_TOKEN_URL=https://accounts.spotify.com/api/token
+
+# Session Secret (for secure sessions)
+SESSION_SECRET=replace_with_random_session_secret
+
+# Production Settings (uncomment when deploying)
+# NODE_ENV=production
+# PORT=8080
+# GOOGLE_DRIVE_REDIRECT_URI=https://yourdomain.com/api/drive/callback
+
+
+
+===========================================================================================================

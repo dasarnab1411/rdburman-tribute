@@ -1,0 +1,285 @@
+// API Testing Script for RD Burman Tribute Website
+// Run this to verify your API keys are working
+
+//require('dotenv').config();
+const axios = require('axios');
+
+require("dotenv").config();
+
+// Normalize env names
+process.env.YT_API_URL = process.env.YT_API_URL || process.env.YOUTUBE_API_URL;
+process.env.GDRIVE_API_URL = process.env.GDRIVE_API_URL || process.env.GOOGLE_DRIVE_API_URL;
+process.env.SPOTIFY_TOKEN = process.env.SPOTIFY_TOKEN || process.env.SPOTIFY_TOKEN_URL;
+process.env.GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || process.env.GOOGLE_DRIVE_API_KEY;
+
+console.log('🎵 RD Burman Tribute - API Testing Script\n');
+console.log('═══════════════════════════════════════════\n');
+
+// Colors for terminal output
+const green = '\x1b[32m';
+const red = '\x1b[31m';
+const yellow = '\x1b[33m';
+const blue = '\x1b[36m';
+const reset = '\x1b[0m';
+
+// API Keys from .env
+const config = {
+    youtube: process.env.YOUTUBE_API_KEY,
+    driveApiKey: process.env.GOOGLE_DRIVE_API_KEY,
+    driveClientId: process.env.GOOGLE_DRIVE_CLIENT_ID,
+    driveClientSecret: process.env.GOOGLE_DRIVE_CLIENT_SECRET,
+    spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
+    spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET
+};
+
+// Test results
+let results = {
+    passed: 0,
+    failed: 0,
+    warnings: 0
+};
+
+// Helper function to display results
+function displayResult(testName, success, message = '') {
+    if (success) {
+        console.log(`${green}✅ PASS${reset} - ${testName}`);
+        if (message) console.log(`   ${blue}${message}${reset}`);
+        results.passed++;
+    } else {
+        console.log(`${red}❌ FAIL${reset} - ${testName}`);
+        if (message) console.log(`   ${red}${message}${reset}`);
+        results.failed++;
+    }
+    console.log();
+}
+
+function displayWarning(testName, message) {
+    console.log(`${yellow}⚠️  WARN${reset} - ${testName}`);
+    if (message) console.log(`   ${yellow}${message}${reset}`);
+    results.warnings++;
+    console.log();
+}
+
+// Test 1: Check .env file exists
+async function test1_CheckEnvFile() {
+    console.log('Test 1: Checking .env file...');
+    const hasYoutube = !!config.youtube;
+    const hasDrive = !!config.driveApiKey;
+    
+    if (hasYoutube && hasDrive) {
+        displayResult('Environment Configuration', true, 'All API keys found in .env file');
+    } else if (hasYoutube && !hasDrive) {
+        displayWarning('Environment Configuration', 'Google Drive API key missing. Will use YouTube key as fallback.');
+    } else {
+        displayResult('Environment Configuration', false, 'YouTube API key is missing! Please add to .env file');
+    }
+}
+
+// Test 2: YouTube API
+async function test2_YouTubeAPI() {
+    console.log('Test 2: Testing YouTube Data API v3...');
+    
+    if (!config.youtube) {
+        displayResult('YouTube API', false, 'API key not configured');
+        return;
+    }
+    
+    try {
+        const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+            params: {
+                part: 'snippet',
+                q: 'RD Burman',
+                type: 'video',
+                maxResults: 1,
+                key: config.youtube
+            }
+        });
+        
+        if (response.data.items && response.data.items.length > 0) {
+            displayResult('YouTube API', true, `Successfully fetched videos. Quota used: 100 units`);
+        } else {
+            displayResult('YouTube API', false, 'No results returned');
+        }
+    } catch (error) {
+        if (error.response?.status === 403) {
+            displayResult('YouTube API', false, 'API key is invalid or quota exceeded');
+        } else if (error.response?.status === 400) {
+            displayResult('YouTube API', false, 'Bad request - check API key format');
+        } else {
+            displayResult('YouTube API', false, error.message);
+        }
+    }
+}
+
+// Test 3: Google Drive API
+async function test3_GoogleDriveAPI() {
+    console.log('Test 3: Testing Google Drive API...');
+    
+    const apiKey = config.driveApiKey || config.youtube;
+    
+    if (!apiKey) {
+        displayResult('Google Drive API', false, 'No API key available');
+        return;
+    }
+    
+    // Test with one of the configured folders
+    const testFolderId = '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1'; // "2 Songs on Same Tune"
+    
+    try {
+        const response = await axios.get('https://www.googleapis.com/drive/v3/files', {
+            params: {
+                q: `'${testFolderId}' in parents and trashed=false`,
+                fields: 'files(id, name, mimeType)',
+                key: apiKey
+            }
+        });
+        
+        if (response.data.files) {
+            const folderCount = response.data.files.filter(f => f.mimeType === 'application/vnd.google-apps.folder').length;
+            const audioCount = response.data.files.filter(f => f.mimeType.includes('audio')).length;
+            
+            displayResult('Google Drive API', true, 
+                `Found ${response.data.files.length} items (${folderCount} folders, ${audioCount} audio files)`);
+        } else {
+            displayWarning('Google Drive API', 'Folder is empty or not accessible');
+        }
+    } catch (error) {
+        if (error.response?.status === 403) {
+            displayResult('Google Drive API', false, 
+                'Access denied. Folder may not be shared publicly. Share with "Anyone with the link"');
+        } else if (error.response?.status === 404) {
+            displayResult('Google Drive API', false, 'Folder not found - check folder ID');
+        } else {
+            displayResult('Google Drive API', false, error.message);
+        }
+    }
+}
+
+// Test 4: Spotify API
+async function test4_SpotifyAPI() {
+    console.log('Test 4: Testing Spotify API (Optional)...');
+    
+    if (!config.spotifyClientId || !config.spotifyClientSecret) {
+        displayWarning('Spotify API', 'Not configured - this is optional');
+        return;
+    }
+    
+    try {
+        const auth = Buffer.from(`${config.spotifyClientId}:${config.spotifyClientSecret}`).toString('base64');
+        
+        const tokenResponse = await axios.post(
+            'https://accounts.spotify.com/api/token',
+            'grant_type=client_credentials',
+            {
+                headers: {
+                    'Authorization': `Basic ${auth}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
+        );
+        
+        const token = tokenResponse.data.access_token;
+        
+        const searchResponse = await axios.get('https://api.spotify.com/v1/search', {
+            params: {
+                q: 'R.D. Burman',
+                type: 'artist',
+                limit: 1
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (searchResponse.data.artists.items.length > 0) {
+            const artist = searchResponse.data.artists.items[0];
+            displayResult('Spotify API', true, `Found artist: ${artist.name}`);
+        } else {
+            displayWarning('Spotify API', 'No artist found');
+        }
+    } catch (error) {
+        displayResult('Spotify API', false, error.message);
+    }
+}
+
+// Test 5: Test all 6 Google Drive folders
+async function test5_AllDriveFolders() {
+    console.log('Test 5: Testing all 6 configured Google Drive folders...\n');
+    
+    const folders = [
+        { name: '2 Songs on Same Tune', id: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1' },
+        { name: 'A to M', id: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3' },
+        { name: 'Asha && R.D_Bangla', id: '15W7_4PUUYRSxntCn7EUg95wETL0Alzsa' },
+        { name: 'Gulzar_Asha_RD', id: '1vbTX12RNbNJSHNXenJ-es805NslwEClv' },
+        { name: 'N to Z', id: '1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy' },
+        { name: 'Pancham - Gulzar Remembers', id: '1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g' }
+    ];
+    
+    const apiKey = config.driveApiKey || config.youtube;
+    
+    if (!apiKey) {
+        displayResult('All Drive Folders', false, 'No API key available');
+        return;
+    }
+    
+    for (const folder of folders) {
+        try {
+            const response = await axios.get('https://www.googleapis.com/drive/v3/files', {
+                params: {
+                    q: `'${folder.id}' in parents and trashed=false`,
+                    fields: 'files(id, name, mimeType)',
+                    key: apiKey
+                }
+            });
+            
+            const totalFiles = response.data.files?.length || 0;
+            console.log(`   ${green}✅${reset} ${folder.name}: ${totalFiles} items`);
+            results.passed++;
+            
+        } catch (error) {
+            console.log(`   ${red}❌${reset} ${folder.name}: ${error.response?.status === 403 ? 'Not shared publicly' : 'Error'}`);
+            results.failed++;
+        }
+    }
+    console.log();
+}
+
+// Run all tests
+async function runAllTests() {
+    console.log('Starting API tests...\n');
+    console.log('═══════════════════════════════════════════\n');
+    
+    await test1_CheckEnvFile();
+    await test2_YouTubeAPI();
+    await test3_GoogleDriveAPI();
+    await test4_SpotifyAPI();
+    await test5_AllDriveFolders();
+    
+    // Summary
+    console.log('═══════════════════════════════════════════');
+    console.log('\n📊 TEST SUMMARY:\n');
+    console.log(`   ${green}Passed:${reset}   ${results.passed}`);
+    console.log(`   ${red}Failed:${reset}   ${results.failed}`);
+    console.log(`   ${yellow}Warnings:${reset} ${results.warnings}`);
+    console.log();
+    
+    if (results.failed === 0) {
+        console.log(`${green}🎉 All critical tests passed! Your website should work correctly.${reset}\n`);
+    } else if (results.failed < 3) {
+        console.log(`${yellow}⚠️  Some tests failed. Check the errors above and fix them.${reset}\n`);
+    } else {
+        console.log(`${red}❌ Multiple tests failed. Please review your API configuration.${reset}\n`);
+    }
+    
+    console.log('Next steps:');
+    console.log('1. Fix any failed tests above');
+    console.log('2. Run: npm start');
+    console.log('3. Open: http://localhost:3000');
+    console.log('4. Test the Audio Collection tab\n');
+}
+
+// Run the tests
+runAllTests().catch(error => {
+    console.error(`${red}Fatal error:${reset}`, error.message);
+    process.exit(1);
+});							

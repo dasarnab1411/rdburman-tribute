@@ -3,14 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A vibrant tribute to R.D. Burman (Pancham Da), the legendary Bollywood music composer. Explore his videos, audio, biography, and complete song collection.">
-    <meta name="keywords" content="RD Burman, Pancham Da, Bollywood Music, Indian Music, Music Composer">
+    <meta name="description" content="A vibrant tribute to R.D. Burman (Pancham Da), the legendary Bollywood music composer.">
     <title>R.D. Burman - Pancham Da Tribute | The Musical Genius</title>
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="R.D. Burman - Pancham Da Tribute">
-    <meta property="og:description" content="A vibrant tribute to the legendary music composer who revolutionized Bollywood music">
-    <meta property="og:type" content="website">
     
     <style>
         * {
@@ -55,6 +49,46 @@
             100% { transform: translateY(-100vh) rotate(360deg); }
         }
 
+        .scrolling-header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 0;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .scrolling-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            width: fit-content;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .scrolling-header:hover .scrolling-track {
+            animation-play-state: paused;
+        }
+
+        .scrolling-image {
+            height: 80px;
+            width: auto;
+            margin: 0 15px;
+            border-radius: 10px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            object-fit: cover;
+        }
+
+        .scrolling-image:hover {
+            transform: scale(1.2);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.5);
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -78,16 +112,22 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        .main-portrait {
-            width: 250px;
-            height: 250px;
+        .main-video-container {
+            width: 300px;
+            height: 300px;
             border-radius: 50%;
             border: 8px solid #ff6b6b;
             margin: 20px auto;
-            object-fit: cover;
+            overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             animation: pulse 3s ease-in-out infinite;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        .main-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         @keyframes pulse {
@@ -178,6 +218,140 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Folder Navigation Styles */
+        .folder-tree {
+            margin: 20px 0;
+        }
+
+        .folder-level {
+            margin-left: 30px;
+            border-left: 3px solid #e74c3c;
+            padding-left: 20px;
+        }
+
+        .folder-item {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .folder-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        .folder-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .folder-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .folder-icon {
+            font-size: 1.5rem;
+        }
+
+        .folder-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .folder-item.expanded .folder-arrow {
+            transform: rotate(90deg);
+        }
+
+        .subfolder-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .subfolder-content.show {
+            display: block;
+        }
+
+        /* Audio Player Styles */
+        .song-item {
+            background: white;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .song-item:hover {
+            background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .song-item.playing {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .play-icon {
+            font-size: 1.3rem;
+        }
+
+        .song-name {
+            flex: 1;
+            font-size: 1.05rem;
+        }
+
+        .audio-player-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+        }
+
+        .audio-player-container.active {
+            display: block;
+        }
+
+        .audio-controls {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .now-playing {
+            flex: 1;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .audio-player {
+            flex: 2;
+            max-width: 600px;
+        }
+
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -203,12 +377,6 @@
             color: #e74c3c;
             margin-bottom: 15px;
             font-size: 1.4rem;
-        }
-
-        .content-card p {
-            color: #555;
-            line-height: 1.8;
-            font-size: 1.1rem;
         }
 
         .video-embed {
@@ -240,15 +408,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        .error-message {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
         .biography-section {
             line-height: 2;
             font-size: 1.2rem;
@@ -272,20 +431,20 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        footer p {
-            font-size: 1.2rem;
-            color: #34495e;
-            font-style: italic;
-        }
-
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             .tab-btn { padding: 12px 25px; font-size: 1rem; }
             .content-grid { grid-template-columns: 1fr; }
+            .main-video-container { width: 200px; height: 200px; }
+            .folder-level { margin-left: 15px; padding-left: 10px; }
         }
     </style>
 </head>
 <body>
+    <div class="scrolling-header">
+        <div class="scrolling-track" id="scrollingTrack"></div>
+    </div>
+
     <div class="floating-notes">
         <div class="note" style="left: 10%; animation-delay: 0s;">🎵</div>
         <div class="note" style="left: 30%; animation-delay: 3s;">🎶</div>
@@ -296,7 +455,13 @@
 
     <div class="container">
         <header>
-            <div class="main-portrait"></div>
+            <div class="main-video-container">
+                <video class="main-video" autoplay loop muted playsinline>
+                    <source src="images/RD.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            
             <h1>R.D. BURMAN</h1>
             <div class="subtitle">🎵 Pancham Da - The Musical Genius 🎶</div>
             <div class="dates">27 June 1939 - 4 January 1994</div>
@@ -306,14 +471,14 @@
         </header>
 
         <nav>
-            <button class="tab-btn active" onclick="showTab('video')">📹 Video</button>
-            <button class="tab-btn" onclick="showTab('audio')">🎧 Audio</button>
+            <button class="tab-btn" onclick="showTab('video')">📹 Video</button>
+            <button class="tab-btn active" onclick="showTab('audio')">🎧 Audio Collection</button>
             <button class="tab-btn" onclick="showTab('about')">📖 About Pancham</button>
-            <button class="tab-btn" onclick="showTab('songs')">🎵 Songs Collection</button>
+            <button class="tab-btn" onclick="showTab('songs')">🎵 Drive Access</button>
         </nav>
 
         <!-- VIDEO TAB -->
-        <div id="video" class="tab-content active">
+        <div id="video" class="tab-content">
             <h2 style="color: #e74c3c; font-size: 2.5rem; margin-bottom: 30px;">📹 Video Collection</h2>
             <div id="videoContent" class="content-grid">
                 <div class="loading">
@@ -323,11 +488,15 @@
             </div>
         </div>
 
-        <!-- AUDIO TAB -->
-        <div id="audio" class="tab-content">
-            <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 30px;">🎧 Audio Collection</h2>
-            <div id="audioContent" class="content-grid">
-                <!-- Audio content will be populated here -->
+        <!-- AUDIO TAB with Google Drive Integration -->
+        <div id="audio" class="tab-content active">
+            <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 30px;">🎧 Complete Audio Collection</h2>
+            
+            <div id="audioTreeContent">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading audio collection from Google Drive...</p>
+                </div>
             </div>
         </div>
 
@@ -336,57 +505,16 @@
             <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 30px;">📖 About Pancham Da</h2>
             <div class="biography-section">
                 <h2>🎼 The Musical Prodigy</h2>
-                <p>
-                    Rahul Dev Burman, affectionately known as Pancham Da, was born on 27th June 1939 in the vibrant city of Calcutta. 
-                    From the very first cry, destiny whispered that this child would change the landscape of Indian music forever. 
-                    His nickname "Pancham" originated from a delightful legend - whenever baby Rahul cried, it resonated with the fifth note 
-                    (Pa) of the Indian musical scale, as if even his tears were composed in perfect harmony!
-                </p>
+                <p>Rahul Dev Burman, affectionately known as Pancham Da, was born on 27th June 1939 in the vibrant city of Calcutta. From the very first cry, destiny whispered that this child would change the landscape of Indian music forever. His nickname "Pancham" originated from a delightful legend - whenever baby Rahul cried, it resonated with the fifth note (Pa) of the Indian musical scale, as if even his tears were composed in perfect harmony!</p>
 
                 <h2>🎹 The Genesis of Genius</h2>
-                <p>
-                    Born into a royal lineage of music - the son of legendary composer Sachin Dev Burman and lyricist Meera Dev Burman - 
-                    young Pancham was destined for greatness. At the tender age of nine, he composed his first song, "Aye Meri Topi Palat Ke Aa," 
-                    which his father lovingly incorporated into the film Funtoosh (1956). This was merely the overture to a symphony that would 
-                    span over three glorious decades!
-                </p>
+                <p>Born into a royal lineage of music - the son of legendary composer Sachin Dev Burman and lyricist Meera Dev Burman - young Pancham was destined for greatness. At the tender age of nine, he composed his first song, "Aye Meri Topi Palat Ke Aa," which his father lovingly incorporated into the film Funtoosh (1956).</p>
 
                 <h2>🎺 The Revolutionary Era</h2>
-                <p>
-                    Pancham Da didn't just compose music; he orchestrated a revolution! He brought rock 'n' roll, jazz, Western classical, 
-                    and electronic sounds into the heart of Bollywood, creating a fusion that was unprecedented and utterly mesmerizing. 
-                    His collaboration with legendary singers Asha Bhosle (whom he married in 1980), Kishore Kumar, and Lata Mangeshkar 
-                    produced immortal melodies that continue to echo through generations.
-                </p>
+                <p>Pancham Da didn't just compose music; he orchestrated a revolution! He brought rock 'n' roll, jazz, Western classical, and electronic sounds into the heart of Bollywood, creating a fusion that was unprecedented and utterly mesmerizing.</p>
 
                 <h2>🎪 The Master Craftsman</h2>
-                <p>
-                    Over his illustrious career, this musical wizard composed scores for an astounding 331 films - 292 in Hindi, 31 in Bengali, 
-                    and several in other languages. From the foot-tapping "Mehbooba Mehbooba" (which he sang himself!) to the soul-stirring 
-                    "Tere Bina Zindagi Se" and the groovy "Dum Maro Dum," each composition bore the unmistakable stamp of Pancham's genius.
-                </p>
-
-                <h2>🎭 The Human Behind the Legend</h2>
-                <p>
-                    Beyond the studio lights and recording rooms, Pancham Da was a man of simple pleasures - he loved cooking, watching sports, 
-                    and spending time with close friends like Rajesh Khanna and Kishore Kumar. His spontaneity, warmth, and ability to find 
-                    music in everyday sounds made him not just a great composer, but a beloved personality.
-                </p>
-
-                <h2>💔 The Final Note</h2>
-                <p>
-                    On 4th January 1994, the maestro left for his heavenly abode following a heart attack, leaving behind a legacy that 
-                    would never fade. His last masterpiece, "1942: A Love Story," was released after his passing and earned him a posthumous 
-                    Filmfare Award - a bittersweet recognition of his eternal brilliance.
-                </p>
-
-                <h2>🌟 The Eternal Legacy</h2>
-                <p>
-                    Even today, decades after his departure, Pancham Da's music continues to inspire, comfort, and energize millions. 
-                    His innovative spirit lives on in every remix, every tribute, every new generation of music lovers who discover his 
-                    timeless creations. The Filmfare RD Burman Award for New Music Talent, established in 1995, ensures that his name 
-                    continues to encourage fresh talent in the industry he revolutionized.
-                </p>
+                <p>Over his illustrious career, this musical wizard composed scores for an astounding 331 films - 292 in Hindi, 31 in Bengali, and several in other languages. From the foot-tapping "Mehbooba Mehbooba" to the soul-stirring "Tere Bina Zindagi Se" and the groovy "Dum Maro Dum," each composition bore the unmistakable stamp of Pancham's genius.</p>
 
                 <p style="text-align: center; font-size: 1.5rem; color: #e74c3c; margin-top: 40px; font-weight: bold;">
                     🎵 "Pancham Da didn't just compose music - he composed emotions, memories, and magic!" 🎶
@@ -396,59 +524,222 @@
 
         <!-- SONGS TAB -->
         <div id="songs" class="tab-content">
-            <h2 style="color: #43e97b; font-size: 2.5rem; margin-bottom: 30px;">🎵 Songs Collection from Google Drive</h2>
+            <h2 style="color: #43e97b; font-size: 2.5rem; margin-bottom: 30px;">🎵 Direct Google Drive Access</h2>
             
             <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 30px; border-radius: 15px; margin-bottom: 30px;">
                 <h3 style="color: #2c3e50; margin-bottom: 15px;">📁 Access the Complete Collection</h3>
                 <p style="color: #555; font-size: 1.1rem; line-height: 1.8;">
-                    Access the complete curated collection of R.D. Burman songs organized by films, decades, and genres.
+                    For full browsing and download capabilities, access the complete collection directly on Google Drive.
                 </p>
                 <a href="https://drive.google.com/drive/folders/1FQNqgfrnppArFoYqkL7eL67-r1GS_ar6" 
                    target="_blank" 
                    style="display: inline-block; margin-top: 20px; padding: 15px 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                           color: white; text-decoration: none; border-radius: 50px; font-size: 1.2rem; font-weight: bold; 
                           box-shadow: 0 8px 20px rgba(0,0,0,0.3); transition: all 0.3s ease;">
-                    🎵 Open Song Collection in Google Drive
+                    🎵 Open in Google Drive
                 </a>
-            </div>
-
-            <div style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); padding: 25px; border-radius: 15px; margin-top: 30px;">
-                <h4 style="color: #2c3e50; margin-bottom: 15px;">⚠️ Important Note</h4>
-                <p style="color: #555; font-size: 1.05rem; line-height: 1.6;">
-                    The songs in this collection are for streaming and personal listening only. Please respect copyright laws 
-                    and enjoy the music responsibly. All content belongs to their respective copyright holders.
-                </p>
             </div>
         </div>
 
         <footer>
-            <p>
-                "Pancham Da's music transcends time, touching hearts across generations. His melodies are not just songs - 
-                they are emotions, memories, and the very soundtrack of our lives."
-            </p>
-            <p style="margin-top: 20px; font-weight: bold; color: #e74c3c;">
-                🎵 Forever in our hearts - R.D. Burman (1939-1994) 🎶
-            </p>
+            <p>"Pancham Da's music transcends time, touching hearts across generations. His melodies are not just songs - they are emotions, memories, and the very soundtrack of our lives."</p>
+            <p style="margin-top: 20px; font-weight: bold; color: #e74c3c;">🎵 Forever in our hearts - R.D. Burman (1939-1994) 🎶</p>
         </footer>
     </div>
 
-    <script>
-        // Configuration
-        const API_BASE_URL = window.location.origin + '/api';
+    <!-- Fixed Audio Player -->
+    <div class="audio-player-container" id="audioPlayerContainer">
+        <div class="audio-controls">
+            <div class="now-playing" id="nowPlaying">🎵 No song playing</div>
+            <audio class="audio-player" id="audioPlayer" controls></audio>
+        </div>
+    </div>
 
-        // Tab switching function
+    <script>
+        const API_BASE_URL = window.location.origin + '/api';
+        
+        // Google Drive folder structure
+        const driveFolders = [
+            {
+                id: '1',
+                name: '2 Songs on Same Tune',
+                folderId: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1',
+                link: 'https://drive.google.com/drive/folders/1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1'
+            },
+            {
+                id: '2',
+                name: 'A to M',
+                folderId: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3',
+                link: 'https://drive.google.com/drive/folders/16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3'
+            },
+            {
+                id: '3',
+                name: 'Asha && R.D_Bangla',
+                folderId: '15W7_4PUUYRSxntCn7EUg95wETL0Alzsa',
+                link: 'https://drive.google.com/drive/folders/15W7_4PUUYRSxntCn7EUg95wETL0Alzsa'
+            },
+            {
+                id: '4',
+                name: 'Gulzar_Asha_RD',
+                folderId: '1vbTX12RNbNJSHNXenJ-es805NslwEClv',
+                link: 'https://drive.google.com/drive/folders/1vbTX12RNbNJSHNXenJ-es805NslwEClv'
+            },
+            {
+                id: '5',
+                name: 'N to Z',
+                folderId: '1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy',
+                link: 'https://drive.google.com/drive/folders/1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy'
+            },
+            {
+                id: '6',
+                name: 'Pancham - Gulzar Remembers R D Burman',
+                folderId: '1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g',
+                link: 'https://drive.google.com/drive/folders/1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g'
+            }
+        ];
+
+        let currentAudio = null;
+
+        // Load scrolling images
+        function loadScrollingImages() {
+            const scrollingTrack = document.getElementById('scrollingTrack');
+            fetch('/api/images/list')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.images.length > 0) {
+                        const allImages = [...data.images, ...data.images];
+                        allImages.forEach(imageName => {
+                            const img = document.createElement('img');
+                            img.src = `images/${imageName}`;
+                            img.alt = 'R.D. Burman';
+                            img.className = 'scrolling-image';
+                            img.onerror = function() { this.style.display = 'none'; };
+                            scrollingTrack.appendChild(img);
+                        });
+                    }
+                })
+                .catch(error => console.log('Error loading images:', error));
+        }
+
+        // Tab switching
         function showTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
 
-        // Load video content from backend API
+        // Load audio collection
+        async function loadAudioCollection() {
+            const container = document.getElementById('audioTreeContent');
+            container.innerHTML = '<div class="folder-tree"></div>';
+            const treeContainer = container.querySelector('.folder-tree');
+
+            for (const folder of driveFolders) {
+                const folderDiv = document.createElement('div');
+                folderDiv.className = 'folder-item';
+                folderDiv.innerHTML = `
+                    <div class="folder-name">
+                        <span class="folder-arrow">▶</span>
+                    `;
+                    
+                    const subContentDiv = document.createElement('div');
+                    subContentDiv.className = 'subfolder-content folder-level';
+                    
+                    subfolderDiv.onclick = async () => {
+                        subfolderDiv.classList.toggle('expanded');
+                        if (subContentDiv.classList.contains('show')) {
+                            subContentDiv.classList.remove('show');
+                        } else {
+                            subContentDiv.classList.add('show');
+                            if (!subContentDiv.dataset.loaded) {
+                                subContentDiv.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+                                await loadSubfolderContents(subfolder.id, subContentDiv, subfolder.name);
+                                subContentDiv.dataset.loaded = 'true';
+                            }
+                        }
+                    };
+                    
+                    container.appendChild(subfolderDiv);
+                    container.appendChild(subContentDiv);
+                });
+            }
+            
+            // Render audio files
+            if (data.audioFiles && data.audioFiles.length > 0) {
+                data.audioFiles.forEach(file => {
+                    const songDiv = document.createElement('div');
+                    songDiv.className = 'song-item';
+                    songDiv.innerHTML = `
+                        <span class="play-icon">▶️</span>
+                        <span class="song-name">${file.name}</span>
+                    `;
+                    songDiv.onclick = () => playAudio(file, songDiv, parentName);
+                    container.appendChild(songDiv);
+                });
+            }
+            
+            if ((!data.folders || data.folders.length === 0) && (!data.audioFiles || data.audioFiles.length === 0)) {
+                container.innerHTML = '<p style="padding: 15px; color: #666;">No content found in this folder</p>';
+            }
+        }
+
+        // Load subfolder contents
+        async function loadSubfolderContents(folderId, container, folderName) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderFolderContents(data, container, folderName);
+                } else {
+                    container.innerHTML = '<p style="color: #c62828; padding: 15px;">Failed to load contents</p>';
+                }
+            } catch (error) {
+                console.error('Error loading subfolder:', error);
+                container.innerHTML = '<p style="color: #c62828; padding: 15px;">Error loading subfolder</p>';
+            }
+        }
+
+        // Play audio file
+        function playAudio(file, songElement, folderName) {
+            const player = document.getElementById('audioPlayer');
+            const playerContainer = document.getElementById('audioPlayerContainer');
+            const nowPlaying = document.getElementById('nowPlaying');
+            
+            // Remove playing class from all songs
+            document.querySelectorAll('.song-item').forEach(item => {
+                item.classList.remove('playing');
+                item.querySelector('.play-icon').textContent = '▶️';
+            });
+            
+            // Set new song as playing
+            songElement.classList.add('playing');
+            songElement.querySelector('.play-icon').textContent = '⏸️';
+            
+            // Update player
+            const streamUrl = `https://drive.google.com/uc?export=download&id=${file.id}`;
+            player.src = streamUrl;
+            player.play();
+            
+            nowPlaying.textContent = `🎵 Now Playing: ${file.name} (${folderName})`;
+            playerContainer.classList.add('active');
+            
+            currentAudio = file;
+            
+            // Handle play/pause on click
+            songElement.onclick = () => {
+                if (player.paused) {
+                    player.play();
+                    songElement.querySelector('.play-icon').textContent = '⏸️';
+                } else {
+                    player.pause();
+                    songElement.querySelector('.play-icon').textContent = '▶️';
+                }
+            };
+        }
+
+        // Load videos
         async function loadVideoContent() {
             const videoContent = document.getElementById('videoContent');
             
@@ -456,17 +747,8 @@
                 const response = await fetch(`${API_BASE_URL}/youtube/search`);
                 const data = await response.json();
                 
-                if (!data.success) {
-                    throw new Error(data.error || 'Failed to load videos');
-                }
-                
-                if (!data.videos || data.videos.length === 0) {
-                    videoContent.innerHTML = `
-                        <div class="error-message">
-                            <h3>📹 No videos found</h3>
-                            <p>Please check your YouTube API configuration in the server</p>
-                        </div>
-                    `;
+                if (!data.success || !data.videos || data.videos.length === 0) {
+                    videoContent.innerHTML = '<div style="text-align: center; padding: 40px;"><h3 style="color: #e74c3c;">No videos found</h3><p>Please check YouTube API configuration</p></div>';
                     return;
                 }
                 
@@ -492,58 +774,100 @@
                 
             } catch (error) {
                 console.error('Error loading videos:', error);
-                videoContent.innerHTML = `
-                    <div class="error-message">
-                        <h3>⚠️ Error Loading Videos</h3>
-                        <p>${escapeHtml(error.message)}</p>
-                        <p style="margin-top: 15px; font-size: 0.95rem;">
-                            Please ensure the backend server is running and YouTube API is configured.
-                        </p>
-                    </div>
-                `;
+                videoContent.innerHTML = '<div style="text-align: center; padding: 40px;"><h3 style="color: #e74c3c;">Error loading videos</h3></div>';
             }
         }
 
-        // Load audio content
-        function loadAudioContent() {
-            const audioContent = document.getElementById('audioContent');
-            
-            const famousSongs = [
-                { title: 'Mehbooba Mehbooba', film: 'Sholay (1975)', description: 'The iconic song sung by R.D. Burman himself, which became one of the most memorable tracks in Indian cinema.' },
-                { title: 'Dum Maro Dum', film: 'Hare Rama Hare Krishna (1971)', description: 'A revolutionary composition that brought Western influences to Bollywood music.' },
-                { title: 'Chura Liya Hai Tumne', film: 'Yaadon Ki Baaraat (1973)', description: 'A timeless romantic melody that continues to enchant audiences.' },
-                { title: 'Tum Aa Gaye Ho', film: 'Aandhi (1975)', description: 'Beautiful collaboration with Gulzar, showcasing mastery in creating soulful melodies.' },
-                { title: 'Tere Bina Zindagi Se', film: 'Aandhi (1975)', description: 'One of the most romantic duets in Hindi cinema history.' },
-                { title: 'Piya Tu Ab To Aaja', film: 'Caravan (1971)', description: 'A mesmerizing song with Helen\'s iconic dance performance.' },
-                { title: 'Kya Hua Tera Wada', film: 'Hum Kisise Kum Naheen (1977)', description: 'A soulful melody that has touched millions of hearts.' },
-                { title: 'Duniya Mein Logon Ko', film: 'Apna Desh (1972)', description: 'A philosophical song with deep lyrics by Anand Bakshi.' }
-            ];
-            
-            audioContent.innerHTML = famousSongs.map(song => `
-                <div class="content-card">
-                    <h3>🎵 ${song.title}</h3>
-                    <p style="color: #8e44ad; font-weight: bold; margin-bottom: 10px;">${song.film}</p>
-                    <p>${song.description}</p>
-                    <p style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.95rem; color: #666;">
-                        <strong>💡 Note:</strong> To add streaming audio, integrate with services like Spotify, SoundCloud, or JioSaavn API.
-                        Check your Google Drive collection for offline listening.
-                    </p>
-                </div>
-            `).join('');
-        }
-
-        // Utility function to escape HTML
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
-        // Initialize on page load
+        // Initialize
         window.addEventListener('DOMContentLoaded', () => {
+            loadScrollingImages();
+            loadAudioCollection();
             loadVideoContent();
-            loadAudioContent();
         });
     </script>
 </body>
-</html>
+</html>="folder-icon">📁</span>
+                        <span>${folder.name}</span>
+                    </div>
+                    <span class="folder-arrow">▶</span>
+                `;
+                
+                const subfolderDiv = document.createElement('div');
+                subfolderDiv.className = 'subfolder-content folder-level';
+                subfolderDiv.id = `subfolder-${folder.id}`;
+
+                folderDiv.onclick = () => toggleFolder(folder, folderDiv, subfolderDiv);
+                
+                treeContainer.appendChild(folderDiv);
+                treeContainer.appendChild(subfolderDiv);
+            }
+        }
+
+        // Toggle folder expansion
+        async function toggleFolder(folder, folderElement, contentElement) {
+            folderElement.classList.toggle('expanded');
+            
+            if (contentElement.classList.contains('show')) {
+                contentElement.classList.remove('show');
+            } else {
+                contentElement.classList.add('show');
+                if (!contentElement.dataset.loaded) {
+                    contentElement.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading folder contents...</p></div>';
+                    await loadFolderContents(folder, contentElement);
+                    contentElement.dataset.loaded = 'true';
+                }
+            }
+        }
+
+        // Load folder contents from Google Drive
+        async function loadFolderContents(folder, container) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/drive/folder-contents/${folder.folderId}`);
+                const data = await response.json();
+                
+                if (!data.success) {
+                    container.innerHTML = `
+                        <div style="padding: 20px; background: #ffebee; border-radius: 10px; margin: 10px 0;">
+                            <p style="color: #c62828;">⚠️ ${data.error || 'Could not load folder contents'}</p>
+                            <p style="color: #666; margin-top: 10px; font-size: 0.95rem;">
+                                <a href="${folder.link}" target="_blank" style="color: #1976d2;">Open in Google Drive</a>
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                renderFolderContents(data, container, folder.name);
+                
+            } catch (error) {
+                console.error('Error loading folder:', error);
+                container.innerHTML = `
+                    <div style="padding: 20px; background: #ffebee; border-radius: 10px;">
+                        <p style="color: #c62828;">Error loading folder. Please try accessing directly:</p>
+                        <a href="${folder.link}" target="_blank" style="color: #1976d2;">Open in Google Drive</a>
+                    </div>
+                `;
+            }
+        }
+
+        // Render folder contents
+        function renderFolderContents(data, container, parentName) {
+            container.innerHTML = '';
+            
+            // Render subfolders
+            if (data.folders && data.folders.length > 0) {
+                data.folders.forEach(subfolder => {
+                    const subfolderDiv = document.createElement('div');
+                    subfolderDiv.className = 'folder-item';
+                    subfolderDiv.innerHTML = `
+                        <div class="folder-name">
+                            <span class="folder-icon">📂</span>
+                            <span>${subfolder.name}</span>
+                        </div>
+                        <span class

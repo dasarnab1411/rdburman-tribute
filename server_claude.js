@@ -65,7 +65,6 @@ app.get('/api/health', (req, res) => {
         environment: process.env.NODE_ENV || 'development',
         apis: {
             youtube: !!CONFIG.YOUTUBE_API_KEY,
-            driveApiKey: !!CONFIG.GOOGLE_DRIVE_API_KEY,
             drive: !!CONFIG.GOOGLE_DRIVE_CLIENT_ID,
             spotify: !!CONFIG.SPOTIFY_CLIENT_ID
         }
@@ -454,10 +453,10 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
     try {
         const { folderId } = req.params;
         
-        // Use Google Drive API key for public access (no OAuth needed)
+        // Use API key for public access (no OAuth needed)
         const drive = google.drive({ 
             version: 'v3', 
-            auth: CONFIG.GOOGLE_DRIVE_API_KEY || CONFIG.YOUTUBE_API_KEY // Fallback to YouTube key
+            auth: CONFIG.YOUTUBE_API_KEY // Using YouTube API key as they share Google Cloud project
         });
         
         // List all files in the folder
@@ -505,11 +504,9 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
         // More detailed error message
         let errorMessage = 'Failed to access folder';
         if (error.message.includes('403')) {
-            errorMessage = 'Access denied. Please ensure the folder is shared publicly (Anyone with the link can view).';
+            errorMessage = 'Access denied. Please ensure the folder is shared publicly or API has correct permissions.';
         } else if (error.message.includes('404')) {
             errorMessage = 'Folder not found. Please check the folder ID.';
-        } else if (error.message.includes('401')) {
-            errorMessage = 'API key is invalid or expired. Please check your Google Drive API key.';
         }
         
         res.status(500).json({
@@ -692,12 +689,10 @@ General:
 
 ⚙️  API Status:
   YouTube: ${CONFIG.YOUTUBE_API_KEY ? '✅ Configured' : '❌ Not configured'}
-  Drive API Key: ${CONFIG.GOOGLE_DRIVE_API_KEY ? '✅ Configured' : '❌ Not configured'}
-  Drive OAuth: ${CONFIG.GOOGLE_DRIVE_CLIENT_ID ? '✅ Configured' : '❌ Not configured'}
+  Drive:   ${CONFIG.GOOGLE_DRIVE_CLIENT_ID ? '✅ Configured' : '❌ Not configured'}
   Spotify: ${CONFIG.SPOTIFY_CLIENT_ID ? '✅ Configured' : '❌ Not configured'}
 
-${!CONFIG.YOUTUBE_API_KEY ? '⚠️  WARNING: YouTube API key not found. Please configure in .env file\n' : ''}
-${!CONFIG.GOOGLE_DRIVE_API_KEY ? '⚠️  WARNING: Google Drive API key not found. Audio streaming may not work.\n' : ''}
+${!CONFIG.YOUTUBE_API_KEY ? '\n⚠️  WARNING: YouTube API key not found. Please configure in .env file\n' : ''}
 Ready to serve requests! 🎶
     `);
 });
