@@ -9,8 +9,9 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
+process.env.DEBUG = 'googleapis:*';
 // ============================================
 // MIDDLEWARE CONFIGURATION
 // ============================================
@@ -19,7 +20,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
         ? ['https://yourdomain.com'] 
-        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+        : ['http://localhost:3001', 'http://127.0.0.1:3001'],
     credentials: true
 }));
 
@@ -47,7 +48,7 @@ const CONFIG = {
     GOOGLE_DRIVE_API_KEY: process.env.GOOGLE_DRIVE_API_KEY,
     GOOGLE_DRIVE_CLIENT_ID: process.env.GOOGLE_DRIVE_CLIENT_ID,
     GOOGLE_DRIVE_CLIENT_SECRET: process.env.GOOGLE_DRIVE_CLIENT_SECRET,
-    GOOGLE_DRIVE_REDIRECT_URI: process.env.GOOGLE_DRIVE_REDIRECT_URI || 'http://localhost:3000/api/drive/callback',
+    GOOGLE_DRIVE_REDIRECT_URI: process.env.GOOGLE_DRIVE_REDIRECT_URI || 'http://localhost:3001/api/drive/callback',
     DRIVE_FOLDER_ID: process.env.DRIVE_FOLDER_ID || '1FQNqgfrnppArFoYqkL7eL67-r1GS_ar6',
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
@@ -111,6 +112,89 @@ app.get('/api/images/list', (req, res) => {
         res.status(500).json({
             success: false,
             error: 'Failed to list images',
+            details: error.message
+        });
+    }
+});
+
+// ============================================
+// GOOGLE DRIVE AUDIO STREAMING PROXY
+// ============================================
+
+app.get('/api/drive/stream/:fileId', async (req, res) => {
+    try {
+        const { fileId } = req.params;
+        
+        console.log(`Streaming request for file: ${fileId}`);
+        
+        // Use API key since folders are publicly shared
+        const drive = google.drive({ 
+            version: 'v3', 
+            auth: CONFIG.GOOGLE_DRIVE_API_KEY || CONFIG.YOUTUBE_API_KEY 
+        });
+        
+        // Get file metadata to check size and type
+        const metadata = await drive.files.get({
+            fileId: fileId,
+            fields: 'name,mimeType,size',
+            supportsAllDrives: true
+        });
+        
+        console.log(`File metadata:`, metadata.data);
+        
+        // Get the file content as a stream
+        const fileStream = await drive.files.get({
+            fileId: fileId,
+            alt: 'media',
+            supportsAllDrives: true
+        }, {
+            responseType: 'stream'
+        });
+        
+        // Set appropriate headers for audio streaming
+        res.setHeader('Content-Type', metadata.data.mimeType || 'audio/mpeg');
+        res.setHeader('Content-Length', metadata.data.size);
+        res.setHeader('Accept-Ranges', 'bytes');
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+        
+        // Handle range requests for seeking
+        if (req.headers.range) {
+            res.status(206); // Partial Content
+        }
+        
+        // Pipe the stream to the response
+        fileStream.data.pipe(res);
+        
+        fileStream.data.on('error', (error) => {
+            console.error('Stream error:', error);
+            if (!res.headersSent) {
+                res.status(500).json({ error: 'Streaming failed' });
+            }
+        });
+        
+    } catch (error) {
+        console.error('Drive Stream Error:', error.message);
+        console.error('Full error:', error);
+        
+        if (error.response?.status === 403 || error.code === 403) {
+            return res.status(403).json({
+                success: false,
+                error: 'Access denied. Please ensure the folder is shared publicly.',
+                details: error.message
+            });
+        }
+        
+        if (error.response?.status === 404 || error.code === 404) {
+            return res.status(404).json({
+                success: false,
+                error: 'File not found',
+                details: error.message
+            });
+        }
+        
+        res.status(500).json({
+            success: false,
+            error: 'Failed to stream audio',
             details: error.message
         });
     }
@@ -449,16 +533,14 @@ app.post('/api/drive/folder/:folderId', async (req, res) => {
     }
 });
 
-// NEW: Get folder contents with subfolders and audio files (PUBLIC ACCESS)
+// Get folder contents with subfolders and audio files (PUBLIC ACCESS)
 app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
     try {
         const { folderId } = req.params;
         
-        // Use Google Drive API key for public access (no OAuth needed)
-        const drive = google.drive({ 
-            version: 'v3', 
-            auth: CONFIG.GOOGLE_DRIVE_API_KEY || CONFIG.YOUTUBE_API_KEY // Fallback to YouTube key
-        });
+        // Use Service Account or API Key
+        const auth = getDriveAuth();
+        const drive = google.drive({ version: 'v3', auth });
         
         // List all files in the folder
         const response = await drive.files.list({
@@ -501,15 +583,16 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
         
     } catch (error) {
         console.error('Drive Folder Contents Error:', error.message);
+        console.error('Full error:', error);
         
         // More detailed error message
         let errorMessage = 'Failed to access folder';
-        if (error.message.includes('403')) {
-            errorMessage = 'Access denied. Please ensure the folder is shared publicly (Anyone with the link can view).';
-        } else if (error.message.includes('404')) {
+        if (error.message.includes('403') || error.code === 403) {
+            errorMessage = 'Access denied. Please ensure the service account has access to this folder.';
+        } else if (error.message.includes('404') || error.code === 404) {
             errorMessage = 'Folder not found. Please check the folder ID.';
-        } else if (error.message.includes('401')) {
-            errorMessage = 'API key is invalid or expired. Please check your Google Drive API key.';
+        } else if (error.message.includes('401') || error.code === 401) {
+            errorMessage = 'Authentication failed. Please check your service account credentials.';
         }
         
         res.status(500).json({
@@ -672,7 +755,7 @@ app.listen(PORT, () => {
 ╚═══════════════════════════════════════════════════════╝
 
 📋 API Endpoints Available:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+──────────────────────────────────────────────────────
 YouTube API:
   GET  /api/youtube/search           - Search videos
   GET  /api/youtube/video/:id        - Get video details
@@ -681,6 +764,8 @@ Google Drive API:
   GET  /api/drive/auth               - Start OAuth
   POST /api/drive/list               - List folder contents
   POST /api/drive/folder/:id         - Get subfolder files
+  GET  /api/drive/folder-contents/:id - Get folder contents
+  GET  /api/drive/stream/:fileId     - Stream audio file 🎵
 
 Spotify API:
   GET  /api/spotify/artist           - Get artist info
@@ -688,7 +773,7 @@ Spotify API:
 General:
   GET  /api/health                   - Health check
   GET  /api/aggregate/all            - Aggregate all content
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+──────────────────────────────────────────────────────
 
 ⚙️  API Status:
   YouTube: ${CONFIG.YOUTUBE_API_KEY ? '✅ Configured' : '❌ Not configured'}

@@ -551,8 +551,6 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
             auth: CONFIG.GOOGLE_DRIVE_API_KEY || CONFIG.YOUTUBE_API_KEY
         });
         
-        console.log(`Fetching contents for folder: ${folderId}`);
-        
         // List all files in the folder
         const response = await drive.files.list({
             q: `'${folderId}' in parents and trashed=false`,
@@ -565,8 +563,6 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
         
         const files = response.data.files || [];
         
-        console.log(`Found ${files.length} files in folder ${folderId}`);
-        
         // Separate folders and audio files
         const folders = files.filter(f => 
             f.mimeType === 'application/vnd.google-apps.folder'
@@ -576,8 +572,6 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
             f.mimeType.includes('audio') || 
             ['mp3', 'wav', 'flac', 'm4a', 'aac', 'ogg', 'wma'].includes(f.fileExtension?.toLowerCase())
         );
-        
-        console.log(`Folders: ${folders.length}, Audio files: ${audioFiles.length}`);
         
         res.json({
             success: true,
