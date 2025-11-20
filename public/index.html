@@ -898,9 +898,9 @@
 
             // If your server provides an API, it will be used. Otherwise show demo items.
             try {
-                //<!-- const response = await fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`); -->
-				fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`)
-                const data = await response.json();
+				const response = await fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`);
+				const data = await response.json();
+
 				
 				
 
