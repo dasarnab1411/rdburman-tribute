@@ -757,10 +757,10 @@
         /* ============= 
            Data & config (kept original)
            ============= */
-        <!-- const API_BASE_URL  -->= window.location.origin + '/api';
+        // const API_BASE_URL = window.location.origin + '/api';   // old version (kept only as a comment)
 		const API_BASE_URL = window.location.hostname.includes('localhost')
-		  ? 'http://localhost:3001/api'           // when testing locally
-		  : 'https://rdburman-tribute-production.up.railway.app/api';  // Railway backend 
+			? 'http://localhost:3001/api'           // when testing locally
+			: 'https://rdburman-tribute-production.up.railway.app/api';  // Railway backend
         const driveFolders = [
             { id: '1', name: '2 Songs on Same Tune', folderId: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1' },
             { id: '2', name: 'A to M', folderId: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3' },
@@ -898,9 +898,11 @@
 
             // If your server provides an API, it will be used. Otherwise show demo items.
             try {
-                <!-- const response = await fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`); -->
+                //<!-- const response = await fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`); -->
 				fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`)
                 const data = await response.json();
+				
+				
 
                 const loadingDiv = container.querySelector('.loading');
                 if (loadingDiv) loadingDiv.remove();
