@@ -13,12 +13,30 @@ const PORT = process.env.PORT || 3001;
 // ============================================
 // MIDDLEWARE
 // ============================================
-app.use(cors({
+/* app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
         ? ['https://yourdomain.com'] 
         : ['http://localhost:3001', 'http://127.0.0.1:3001','https://rdburman-tribute.vercel.app'],
     credentials: true
-}));
+})); */
+
+const allowedOrigins = [
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
+  'https://rdburman-tribute.vercel.app'  // your Vercel URL
+];
+
+	app.use(cors({
+	  origin: function (origin, callback) {
+		// allow non-browser requests (no origin)
+		if (!origin) return callback(null, true);
+		if (allowedOrigins.indexOf(origin) === -1) {
+		  return callback(new Error('CORS not allowed from this origin'), false);
+		}
+		return callback(null, true);
+	  },
+	  credentials: true
+	}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
