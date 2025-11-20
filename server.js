@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
         ? ['https://yourdomain.com'] 
-        : ['http://localhost:3001', 'http://127.0.0.1:3001'],
+        : ['http://localhost:3001', 'http://127.0.0.1:3001','https://rdburman-tribute.vercel.app'],
     credentials: true
 }));
 
