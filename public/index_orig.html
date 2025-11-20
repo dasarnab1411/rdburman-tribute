@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>R.D. Burman - Pancham Da Tribute</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Georgia, serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 25%, #48dbfb 50%, #ff9ff3 75%, #54a0ff 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .scrolling-header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .scrolling-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            width: fit-content;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .scrolling-image {
+            height: 80px;
+            width: auto;
+            margin: 0 15px;
+            border-radius: 10px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 2; }
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '🎸 🎹 🎺 🥁 🎻 🎷 🪕 🎼 🎵 🎶 ♪ ♫ ♩ ♬ 🎸 🎹 🎺 🥁 🎻 🎷';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            font-size: 4.5rem;
+            opacity: 0.35;
+            color: rgba(255, 215, 0, 0.8);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            padding: 30px;
+            animation: instrumentFloat 20s linear infinite;
+            pointer-events: none;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+        @keyframes instrumentFloat {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-20px); }
+        }
+        header::after {
+            content: '🎤 🪘 🎺 🎸 🎻 🥁 🎹 🎷 🪕 🎼 🎵 🎶 ♪ ♫ 🎤 🪘 🎺 🎸';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 200%;
+            height: 100%;
+            font-size: 4rem;
+            opacity: 0.3;
+            color: rgba(255, 182, 193, 0.8);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 45px;
+            padding: 25px;
+            animation: instrumentFloat 25s linear infinite reverse;
+            pointer-events: none;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+        .main-video-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 8px solid #ff6b6b;
+            margin: 20px auto;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .main-video { width: 100%; height: 100%; object-fit: cover; }
+        h1 {
+            font-size: 3.5rem;
+            color: #ff6b6b;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin: 20px 0;
+            font-weight: bold;
+            position: relative;
+            z-index: 10;
+        }
+        .dates {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            font-weight: bold;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            display: inline-block;
+            border-radius: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+        }
+        .subtitle { 
+            font-size: 1.5rem; 
+            color: #ffeaa7; 
+            font-style: italic; 
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .tab-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .tab-btn:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .tab-btn:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .tab-btn:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .tab-btn:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+        .tab-btn.active { transform: scale(1.1); }
+        .tab-content { 
+            display: none !important;
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 40px; 
+            border-radius: 20px;
+            min-height: 500px;
+            max-height: none;
+            overflow-y: auto;
+        }
+        .tab-content.active { 
+            display: block !important;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #about {
+            height: auto !important;
+            max-height: none !important;
+        }
+        #about > div {
+            display: block !important;
+            visibility: visible !important;
+            height: auto !important;
+        }
+        #about > div > div {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .home-summary { line-height: 1.8; font-size: 1.15rem; }
+        .home-summary h2 { color: #8e44ad; font-size: 2.2rem; margin-bottom: 20px; text-align: center; }
+        .home-summary .highlight { background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 20px; border-radius: 15px; margin: 25px 0; }
+        .biography-content {
+            line-height: 1.8;
+            font-size: 1.05rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: block !important;
+            visibility: visible !important;
+        }
+        .biography-content > div {
+            display: block !important;
+            visibility: visible !important;
+            margin-bottom: 30px;
+        }
+        .folder-item {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .folder-item:hover { transform: translateX(5px); }
+        .song-item {
+            background: white;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .song-item:hover { background: #f8f9fa; }
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .content-card { background: white; padding: 25px; border-radius: 15px; border-left: 5px solid #e74c3c; }
+        .video-embed { width: 100%; aspect-ratio: 16/9; border-radius: 10px; }
+        .loading { text-align: center; padding: 40px; }
+        .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #e74c3c; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .audio-player-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 20px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+        }
+        .video-tab-btn.active { transform: scale(1.1); opacity: 1; }
+        .video-tab-btn { opacity: 0.8; }
+        .life-tab-btn.active { transform: scale(1.05); opacity: 1; }
+        .life-tab-btn { opacity: 0.9; padding: 10px 18px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; transition: transform 0.2s, opacity 0.2s; background: linear-gradient(135deg,#ffd89b 0%, #ff9ff3 100%); }
+        .life-tabs { display:flex; gap:12px; flex-wrap:wrap; margin: 18px 0 30px 0; }
+        .life-sub-content { display: none; }
+        .life-sub-content.active { display: block; }
+        .life-sub-header { font-size: 1.6rem; margin-bottom: 12px; color: #2c3e50; font-weight: bold; }
+        footer { 
+            text-align: center; 
+            padding: 30px; 
+            margin-top: 50px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        footer p {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* small responsive tweaks */
+        @media (max-width: 700px) {
+            .tab-btn { padding: 10px 16px; font-size: 1rem; }
+            .life-tab-btn { padding: 8px 12px; font-size: 0.95rem; }
+            header::before, header::after { display: none; }
+        }
+
+        /* testimonial image style */
+        .testimonial-head-img { width:80px; height:80px; border-radius:50%; object-fit:cover; float:left; margin-right:15px; border:3px solid rgba(255,255,255,0.6); box-shadow:0 6px 18px rgba(0,0,0,0.2); }
+        .testimonial-block { overflow:auto; padding:18px; border-radius:12px; margin-bottom:18px; color:#222; }
+    </style>
+</head>
+<body>
+    <div class="scrolling-header">
+        <div class="scrolling-track" id="scrollingTrack"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="main-video-container">
+                <video class="main-video" autoplay loop muted playsinline>
+                    <source src="images/RD.mp4" type="video/mp4">
+                </video>
+            </div>
+            <h1>R.D. BURMAN</h1>
+            <div class="subtitle">🎵 Pancham Da - The Musical Genius 🎶</div>
+            <div class="dates">27 June 1939 - 4 January 1994</div>
+            <p style="margin-top: 20px; font-size: 1.2rem; color: #ffeaa7; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); position: relative; z-index: 10;">"The Innovator who Revolutionized Bollywood Music"</p>
+        </header>
+
+        <nav>
+            <button class="tab-btn active" onclick="showTab(event, 'home')">🏠 Home</button>
+            <button class="tab-btn" onclick="showTab(event, 'video')">📹 Video</button>
+            <button class="tab-btn" onclick="showTab(event, 'audio')">🎧 Audio</button>
+            <button class="tab-btn" onclick="showTab(event, 'about')">📖 My Life</button>
+        </nav>
+
+        <div id="home" class="tab-content active">
+            <div class="home-summary">
+                <h2>🎼 Welcome to Pancham Da's Musical Legacy</h2>
+                <p>Rahul Dev Burman, known as <strong>Pancham Da</strong>, was born on 27th June 1939 in Calcutta. His nickname came from a legend – his baby cries resonated with the fifth note (Pa) of the Indian musical scale!</p>
+                <div class="highlight">
+                    <strong>Born into Musical Royalty:</strong> Son of Sachin Dev Burman, he composed his first song at age nine for <em>Funtoosh</em> (1956).
+                </div>
+                <p>Pancham Da orchestrated a revolution! He brought rock, jazz, and electronic sounds into Bollywood. His collaboration with Asha Bhosle, Kishore Kumar, and Lata Mangeshkar produced immortal melodies.</p>
+                <div class="highlight">
+                    <strong>The Numbers:</strong> <strong>331 films</strong> - 292 in Hindi, 31 in Bengali. From "Mehbooba Mehbooba" to "Tere Bina Zindagi Se."
+                </div>
+            </div>
+        </div>
+
+        <div id="video" class="tab-content">
+            <h2 style="color: #e74c3c; font-size: 2.5rem; margin-bottom: 30px;">📹 Video Collection</h2>
+            
+            <!-- Video Sub-tabs -->
+            <div style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;">
+                <button class="video-tab-btn active" onclick="showVideoTab(event, 'about-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">About Pancham</button>
+                <button class="video-tab-btn" onclick="showVideoTab(event, 'composing-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">Composing</button>
+                <button class="video-tab-btn" onclick="showVideoTab(event, 'unreleased-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">Unreleased Songs</button>
+            </div>
+
+            <!-- About Pancham Videos -->
+            <div id="about-videos" class="video-sub-content active">
+                <div class="content-grid"></div>
+            </div>
+
+            <!-- Composing Videos -->
+            <div id="composing-videos" class="video-sub-content" style="display: none;">
+                <div class="content-grid"></div>
+            </div>
+
+            <!-- Unreleased Songs Videos -->
+            <div id="unreleased-videos" class="video-sub-content" style="display: none;">
+                <div class="content-grid"></div>
+            </div>
+        </div>
+
+        <div id="audio" class="tab-content">
+            <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 30px;">🎧 Audio Collection</h2>
+            <div id="audioTreeContent">
+                <div class="loading"><div class="spinner"></div><p>Loading audio collection...</p></div>
+            </div>
+        </div>
+
+        <!-- ABOUT / MY LIFE -->
+        <div id="about" class="tab-content">
+            <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 10px;">📖 My Life</h2>
+            <div style="line-height: 2; font-size: 1.2rem; margin-bottom: 8px;">
+                <p>Explore Pancham Da's life through a biographical portrait, testimonials and poems.</p>
+            </div>
+
+            <!-- Life sub-tabs -->
+            <div class="life-tabs" role="tablist" aria-label="My Life Sections">
+                <button class="life-tab-btn active" onclick="showLifeTab(event, 'biography-chapters')">R. D. BURMAN (PANCHAM) — A BIOGRAPHICAL PORTRAIT</button>
+                <button class="life-tab-btn" onclick="showLifeTab(event, 'testimonials')">Testimonials</button>
+            </div>
+
+            <!-- Biography chapters container (12 headers, no numbering) -->
+            <div id="biography-chapters" class="life-sub-content active biography-content" style="margin-top: 10px;">
+                <!-- will be injected by loadBiographyChapters() -->
+            </div>
+
+            <!-- Testimonials container (7 blocks + poems) -->
+            <div id="testimonials" class="life-sub-content biography-content" style="margin-top: 10px; display:none;">
+                <!-- will be injected by loadTestimonials() -->
+            </div>
+        </div>
+
+        <footer>
+            <p style="font-size: 1.2rem;">♪♫ "Pancham Da's music transcends time, touching hearts across generations." ♫♪</p>
+            <p style="margin-top: 20px; font-weight: bold; font-size: 1.3rem;">🎵 Forever in our hearts - R.D. Burman (1939-1994) 🎶</p>
+        </footer>
+    </div>
+
+    <div class="audio-player-container" id="audioPlayerContainer">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white;">
+            <div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">🎵 No song playing</div>
+            <audio id="audioPlayer" controls controlsList="nodownload" style="flex: 2; max-width: 600px;"></audio>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = window.location.origin + '/api';
+        // existing constants (unchanged)
+        const driveFolders = [
+            { id: '1', name: '2 Songs on Same Tune', folderId: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1' },
+            { id: '2', name: 'A to M', folderId: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3' },
+            { id: '3', name: 'Asha && R.D_Bangla', folderId: '15W7_4PUUYRSxntCn7EUg95wETL0Alzsa' },
+            { id: '4', name: 'Gulzar_Asha_RD', folderId: '1vbTX12RNbNJSHNXenJ-es805NslwEClv' },
+            { id: '5', name: 'N to Z', folderId: '1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy' },
+            { id: '6', name: 'Pancham - Gulzar Remembers', folderId: '1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g' }
+        ];
+
+        function showTab(e, n) {
+            if(e) e.preventDefault();
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const target = document.getElementById(n);
+            if (!target) return;
+            target.classList.add('active');
+            if(e && e.currentTarget) e.currentTarget.classList.add('active');
+            if(n === 'video' && !document.getElementById('about-videos').dataset.loaded) loadVideos();
+            if(n === 'audio' && !document.getElementById('audioTreeContent').dataset.loaded) loadAudio();
+            if(n === 'about' && !document.getElementById('biography-chapters').dataset.loaded) loadBiographyChapters();
+        }
+
+        function showVideoTab(e, tabId) {
+            if(e) e.preventDefault();
+            document.querySelectorAll('.video-sub-content').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.video-tab-btn').forEach(b => b.classList.remove('active'));
+            const el = document.getElementById(tabId);
+            if (el) el.style.display = 'block';
+            if(e && e.currentTarget) e.currentTarget.classList.add('active');
+        }
+
+        function showLifeTab(e, tabId) {
+            if (e) e.preventDefault();
+            // hide all life sub-contents
+            document.querySelectorAll('.life-sub-content').forEach(t => {
+                t.classList.remove('active');
+                t.style.display = 'none';
+            });
+            // remove active class from buttons
+            document.querySelectorAll('.life-tab-btn').forEach(b => b.classList.remove('active'));
+            // show requested
+            const el = document.getElementById(tabId);
+            if (!el) return;
+            el.classList.add('active');
+            el.style.display = 'block';
+            // set button active
+            if(e && e.currentTarget) e.currentTarget.classList.add('active');
+
+            // lazy-load content where needed
+            if (tabId === 'biography-chapters' && !el.dataset.loaded) {
+                loadBiographyChapters();
+            } else if (tabId === 'testimonials' && !el.dataset.loaded) {
+                loadTestimonials();
+            }
+        }
+
+        function loadBiographyChapters() {
+            const container = document.getElementById('biography-chapters');
+            if (!container) return;
+
+            container.innerHTML = `
+<!-- BEGIN: Inserted CHAPTERS from Pancham_Master_Manuscript_Full.docx -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 1 — ORIGINS OF A RESTLESS GENIUS</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>Rahul Dev Burman—universally known as Pancham—was born into a musical dynasty that shaped the very evolution of Indian cinema. His father, the iconic S. D. Burman, carried within him the weight of classical tradition, the wisdom of folk roots, and an instinctive melodic purity that had already reshaped Hindi film music.</p>
+    <p>Yet, even as a child, Pancham showed signs of a different temperament—one driven not by inherited legacy but by an almost electric sense of curiosity. Where S. D. Burman glided like a river of timeless melody, Pancham moved like a spark that refused to stay still.</p>
+    <p>He was restless.  <br/>He was rhythmic.  <br/>He was experimental.  <br/>He was hungry.</p>
+    <p>Stories from his childhood describe him tapping rhythms on tabletops, tin boxes, drawers, metal railings—anything that could produce a sound. His ear sensed beats where others heard silence. His fingers found percussion where others found stillness.</p>
+    <h4>When the Son Became the Composer</h4>
+    <p>The turning point came when S. D. Burman fell critically ill during the production of two landmark films: Guide (1965) and Aradhana (1969). In those crucial days, a young and uncredited Pancham stepped forward.</p>
+    <p>Two songs—both destined to become immortal—were quietly composed by him:</p>
+    <p>“Gaata Rahe Mera Dil” (Guide)  <br/>“Kora Kagaz Tha Yeh Mann Mera” (Aradhana)</p>
+    <p>Both songs matched S. D. Burman’s standards, yet had a subtle undercurrent of newness, a youthful buoyancy that was undeniably Pancham. These were early signs that a revolution was on the horizon.</p>
+    <h4>A Unique Musical Mind</h4>
+    <p>People who worked with him described Pancham’s creative energy as “a storm in slow motion”—constantly thinking, inventing, hearing something new inside his head.</p>
+    <p>To many, he seemed mischievous, playful, spontaneous.  <br/>To musicians, he was a visionary.  <br/>To his close circle, he was a man who never stopped listening.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 2 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 2 — THE MAKING OF A MUSICAL LANGUAGE</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>By the late 1960s, Pancham was constructing his own musical vocabulary—something Bollywood had never experienced.</p>
+    <h4>1. Polyphony</h4>
+    <p>He introduced layered melodic movement—countermelodies and intertwined lines—borrowed from Western orchestration but fused with Indian emotion.</p>
+    <h4>2. Rhythmic Identity</h4>
+    <p>For Pancham, rhythm was character. Tabla tarang, madol, African percussion, Latin bongos—everything blended under his command.</p>
+    <h4>3. Harmonic Modernity</h4>
+    <p>He played with unexpected chord substitutions, suspended harmonies, jazz extensions, modal shifts—giving Hindi music new emotional densities.</p>
+    <h4>4. Texture as Storytelling</h4>
+    <p>Tape-speed effects, flangers, reverb chambers, synths—RD used sound as atmosphere, not ornament.</p>
+    <p>The Pancham Sound was born—a language neither Indian nor Western but uniquely his own.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 3 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 3 — EXPERIMENTS THAT CHANGED INDIAN MUSIC</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>For R. D. Burman, experimentation was not an event — it was a lifestyle. He approached sound with the mind of a scientist, the heart of a poet, and the curiosity of a child. Any object could become an instrument, any sonic accident could become a masterpiece, and any unexpected sound could become history.</p>
+    <h4>THE “MILLION-DOLLAR MISTAKE” — CHINGARI KOI BHADKE</h4>
+    <p>During the recording of “Chingari Koi Bhadke” from Amar Prem, guitarist Bhanu Gupta accidentally struck a wrong chord. Instead of stopping, Pancham asked him to repeat it. That accidental tension became the emotional spine of the entire prelude — now famously known as the “Million-Dollar Mistake.”</p>
+    <h4>DISTORTED VOCAL EFFECT — “DUNIYA MEIN LOGON KO”</h4>
+    <p>Long before digital processors existed, RD created a psychedelic vocal wobble through tape-speed manipulation, layered doubling, and EQ shaping. This became Bollywood’s first iconic vocal distortion.</p>
+    <h4>FLANGER EFFECT — “DHANNO KI AANKHON MEIN”</h4>
+    <p>RD introduced the analog flanger to Indian cinema, creating the swirling, liquid texture that defined the song’s mood.</p>
+    <h4>GARGLED SOUND — “SATTE PE SATTA”</h4>
+    <p>RD asked Annette Pinto to gargle water in rhythm to create the film’s comic sound signature — a daring experiment that became a cult favorite.</p>
+    <h4>BEER BOTTLE TONES — “MEHBOOBA MEHBOOBA”</h4>
+    <p>On a rainy evening, RD and his team blew across the mouths of half-filled beer bottles. Fifteen days later, that sound became part of the legendary “Mehbooba” rhythm structure.</p>
+    <h4>GUITAR AS “RHYTHMIC DHA”</h4>
+    <p>RD turned a single repeated guitar chord into the rhythmic heartbeat of many songs — a kind of “dha” that anchored his grooves.</p>
+    <h4>MADOL REVOLUTION — RANJIT GAZMER</h4>
+    <p>With Nepali arranger Ranjit Gazmer, RD introduced the madol into mainstream Bollywood rhythms — an earthy pulse that shaped many of his energetic tracks.</p>
+    <h4>MINIMALIST MASTERPIECE — “MUSAFIR HOON YAARON”</h4>
+    <p>RD crafted a wandering, introspective mood using sparse guitar, harmonica lines, and Kishore Kumar’s intimate voice. It was cinematic minimalism at its best.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 5 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 5 — THE PANCHAM SOUND MACHINE: HIS MUSICIANS</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>RD Burman’s orchestra was not merely a group of session players — it was a creative organism. His musicians were collaborators, innovators, and mind-readers who understood his impulses instantly.</p>
+    <h4>BHANU GUPTA — THE GUITAR POET</h4>
+    <p>His guitar narrated emotions. From “Chura Liya Hai Tumne” to the accidental chord in “Chingari Koi Bhadke,” his fingerprints define RD’s lyrical guitar soundscape.</p>
+    <h4>MANOHARI SINGH — THE SAXOPHONE SOUL</h4>
+    <p>Manohari’s sax created sensuality, nostalgia, and cinematic smoothness, most famously in “Roop Tera Mastana.”</p>
+    <h4>MARUTI RAO — THE PERCUSSION MYSTIC</h4>
+    <p>A master of tabla tarang, duggi, and folk-hybrid rhythms, Maruti added emotional architecture to RD’s beats.</p>
+    <h4>KERSI LORD — THE ELECTRONIC VISIONARY</h4>
+    <p>Moog synths, clavinets, multiphonic layering — Kersi’s innovations powered Pancham’s futuristic sound.</p>
+    <h4>RANJIT GAZMER (“KANCHA”) — THE MADOL MAGICIAN</h4>
+    <p>His Nepali madol rhythms became the backbone of RD’s earthy, tribal pulses.</p>
+    <h4>STRING MASTERS — UTTAM SINGH & BASU CHAKRABORTY</h4>
+    <p>They sculpted lush orchestral textures that deepened RD’s emotional canvases.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 6 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 6 — BACKGROUND SCORE GENIUS</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <h4>SHOLAY</h4>
+    <p>RD’s Sholay score became a character in itself: Gabbar’s ominous theme, atmospheric bottle tones, flute-led melancholy, chase rhythms that redefined action scoring.</p>
+    <h4>TEESRI MANZIL</h4>
+    <p>Electric guitars, rock rhythms, jazz brass — RD created the template for Indian thriller soundtracks.</p>
+    <h4>SATTE PE SATTA — BABU’S THEME</h4>
+    <p>RD constructed a darker, heavier variation of the main theme to shape Babu’s sinister persona.</p>
+    <h4>BETAAB — HERO ENTRY</h4>
+    <p>A fusion of rock guitars, synth-brass, and orchestral energy became the prototype for 80s hero introduction themes.</p>
+    <h4>PARICHAY — THE SOUND OF QUIET</h4>
+    <p>Minimal harmonica, gentle guitars, soft winds — RD crafted introspective scoring that matched Gulzar’s contemplative cinema.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 7 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 7 — THE RISE, THE FRENZY, THE CULT OF PANCHAM</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>When Pancham entered the music scene, he reshaped the soundscape of modern India. College and youth culture shifted around his rhythms. Students queued outside theatres not for the films, but for his music — for the riffs, grooves, flamboyance, and unpredictable brilliance. His songs represented freedom, rebellion, aspiration, and joy.</p>
+    <p>Pancham had only one ambition: the madness of music itself. He chased newness. He chased sound.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 8 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 8 — AHEAD OF HIS TIME</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>By the late 1980s, the industry moved toward cheaper synthesizers, formula tracks, and predictable melodies. Pancham’s elaborate, layered arrangements were considered “too modern,” “too expensive,” and “too experimental.”</p>
+    <p>Work slowed. Directors hesitated. Trends changed.  Musicians recall him saying quietly:</p>
+    <p>“Do mahine ho gaye… koi gaana record nahi kiya.”</p>
+    <p>He felt the silence deeply.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 9 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 9 — LONELINESS AND THE WOUND OF FAILURE</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>The failure of Sagar hurt him. He kept repeating: “Music toh acha tha…” He needed reassurance the industry didn’t always provide. His belief in people’s love made him vulnerable. He withdrew into himself, though he remained generous, fun-loving, childlike, and full of warmth.</p>
+    <p>He lived king-size: gadgets, jokes, fast cars, parties — but inside, he carried a private sorrow.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 10 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 10 — THE LAST MOMENT OF GLORY</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>On New Year’s Eve during 1942: A Love Story, as Pancham walked down the steps at a party, “Ek Ladki Ko Dekha” began playing. The entire crowd danced. Someone said: “It was the last moment of glory we saw him live.” He passed away shortly after, never seeing the world celebrate his final masterpiece.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 11 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 11 — AFTERLIFE OF A GENIUS</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>Every decade, RD becomes relevant again. Producers, students, global musicians, and remix artists rediscover him. His techniques are studied. His songs are revived. His influence spreads.</p>
+    <p>There is no “next RD Burman.”  There is only RD Burman.</p>
+  </div>
+</div>
+
+<!-- CHAPTER 12 -->
+<div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
+  <div class="life-sub-header">CHAPTER 12 — LEGACY IN POETRY</div>
+  <div style="font-size: 1rem; color: #333; line-height: 1.7;">
+    <p>Gulzar’s words echo Pancham’s philosophy:</p>
+    <p>“Aur tum yun hi do kadam chalkar…”  <br/>“Pancham chaal hai.”  <br/>“Jeevan ke din…”</p>
+    <p>Pancham lived fully, honestly, musically — and left behind a universe.</p>
+  </div>
+</div>
+<!-- END: Inserted CHAPTERS -->
+            `;
+
+            container.dataset.loaded = 'true';
+        }
+
+        function loadTestimonials() {
+            const container = document.getElementById('testimonials');
+            if (!container) return;
+
+            // Each block uses a distinct color and includes the person's image at the top-left
+            container.innerHTML = `
+<!-- BEGIN: TESTIMONIALS (Blocks 1-7) + Poems -->
+<div class="testimonial-block" style="background: linear-gradient(135deg,#fff9c4 0%, #ffe0b2 100%);">
+  <img class="testimonial-head-img" src="images/Gulzar.jpeg" alt="Gulzar">
+  <div style="overflow:hidden;">
+    <h3 style="margin-top:4px; color:#5d4037;">Gulzar — The Poet Who Walked With Pancham</h3>
+    <p style="line-height:1.7; margin-top:8px;">
+      Among all of R. D. Burman’s collaborators, Gulzar shared the most intuitive, intimate connection with him. Their partnership was more than professional—poetry and melody blended into one creative breath.
+    </p>
+    <h4>THE COSMIC COINCIDENCE — “116 Chand Ki Raatein”</h4>
+    <p>While writing “Mera Kuch Saamaan Tumhare Paas Pada Hai” (Ijaazat), Gulzar penned the lines: “Ek sau solah chaand ki raatein, Ek tumhaare kaandhe ka til.” Years later, anthologists discovered that Pancham had composed music for exactly <strong>116</strong> of Gulzar’s songs.</p>
+    <p><em>“He lived only for music.”</em></p>
+  </div>
+</div>
+
+<div class="testimonial-block" style="background: linear-gradient(135deg,#e0f7fa 0%, #b2ebf2 100%);">
+  <img class="testimonial-head-img" src="images/Javed Akhtar.jpeg" alt="Javed Akhtar">
+  <div style="overflow:hidden;">
+    <h3 style="margin-top:4px; color:#006064;">Javed Akhtar — The Voice That Explained Pancham To The Future</h3>
+    <p style="line-height:1.7; margin-top:8px;">
+      Javed Akhtar understood both the genius and the tragedy of R. D. Burman. He said: <strong>“RD Burman kisi ek waqt ke nahin… wo tamaam waqt ke hote hain.”</strong> He described RD as timeless — a composer future generations would rediscover.
+    </p>
+    <p>Akhtar recalled RD’s hunger for world sounds and his frustration with an industry that sought formula over diamonds.</p>
+  </div>
+</div>
+
+<div class="testimonial-block" style="background: linear-gradient(135deg,#fce4ec 0%, #f8bbd0 100%);">
+  <img class="testimonial-head-img" src="images/Ramesh Sippy.jpeg" alt="Ramesh Sippy">
+  <div style="overflow:hidden;">
+    <h3 style="margin-top:4px; color:#880e4f;">Ramesh Sippy — The Filmmaker Who Saw “The Man Of Tomorrow”</h3>
+    <p style="line-height:1.7; margin-top:8px;">
+      Ramesh Sippy recognized RD’s brilliance early on. “Here is a man of tomorrow,” he said after hearing Pancham’s music. Their collaborations — Seeta Aur Geeta, Sholay, Shaan, Shakti, Sagar — showcased RD’s range from exuberant to haunting.
+    </p>
+    <p>Sippy remembered RD’s heartbreak after Sagar: “Music toh acha tha…”</p>
+  </div>
+</div>
+
+<div class="testimonial-block" style="background: linear-gradient(135deg,#fff3e0 0%, #ffe0b2 100%);">
+  <img class="testimonial-head-img" src="images/Amitabh Bachchan.jpeg" alt="Amitabh Bachchan">
+  <div style="overflow:hidden;">
+    <h3 style="margin-top:4px; color:#6d4c41;">Amitabh Bachchan — The Legend Who Saw Pancham’s Silence</h3>
+    <p style="line-height:1.7; margin-top:8px;">
+      Amitabh recalled Pancham’s company — laughter, experiments, and deep sadness in later years. He wrote that Pancham felt the industry had discarded his talent. He also remembered the origin of “Pancham” — the pa note — as a childhood trademark.
+    </p>
+    <p>About 1942: A Love Story: “He did not live to see how beautifully his music was used.”</p>
+  </div>
+</div>
+
+<div class="testimonial-block" style="background: linear-gradient(135deg,#e8f5e9 0%, #c8e6c9 100%);">
+  <img class="testimonial-head-img" src="images/Asha Bhosle.jpeg" alt="Asha Bhosle">
+  <div style="overflow:hidden;">
+    <h3 style="margin-top:4px; color:#2e7d32;">Asha Bhosle — The Voice That Loved Him</h3>
+    <p style="line-height:1.7; margin-top:8px;">
+      Asha’s memories are intimate and musical. She recalled anonymous flowers from Pancham, his infatuation with her voice, and their electrifying collaborations: “Piya Tu Ab Toh Aaja”, “Duniya Mein Logon Ko”, “Mera Kuch Saamaan”.
+    </p>
+    <p><em>“I miss him.”</em></p>
+  </div>
+</div>
+
+<div class="testimonial-block" style="background: linear-gradient(135deg,#ede7f6 0%, #d1c4e9 100%);">
+  <img class="testimonial-head-img" src="images/Lata Mangeshkar.jpeg" alt="Lata Mangeshkar">
+  <div style="overflow:hidden;">
+    <h3 style="margin-top:4px; color:#4527a0;">Lata Mangeshkar — The Nightingale Who Saw His Brilliance And Pain</h3>
+    <p style="line-height:1.7; margin-top:8px;">
+      Lata ji praised RD’s versatility and lamented his lonely final years: “He died too young. Too unhappy.” She recorded parts of 1942: A Love Story after his death and remembered the pain of his absence in the studio.
+    </p>
+  </div>
+</div>
+
+<!-- Block 7: Gulshan Bawra (explicit content requested by user) -->
+<div class="testimonial-block" style="background: linear-gradient(135deg,#fff 0%, #f1f8e9 100%); border: 1px solid #e0e0e0;">
+  <img class="testimonial-head-img" src="images/Gulshan Bawra.jpeg" alt="Gulshan Bawra">
+  <div style="overflow:hidden;">
+    <h3 style="margin-top:4px; color:#37474f;">Gulshan Bawra</h3>
+    <p style="line-height:1.7; margin-top:8px;">
+      Gulshan Bawra spoke about his long-standing friendship and creative partnership with R.D. Burman, often recalling spontaneous moments of music creation like the hit song "Kitne Bhi Tu Karle Sitam". Bawra described Burman's dedication to music, seeing his lights on late at night, and his unique musical approach, such as using a spoon to create the tune for "Kitne Bhi Tu Karle Sitam". He also reminisced about their shared moments, including deep discussions about cooking and jamming together, highlighting their close bond and shared creative process.
+    </p>
+    <ul style="margin-top:8px; line-height:1.7;">
+      <li><strong>Friendship and collaboration:</strong> Bawra and Burman were close friends and collaborators, sharing a long creative partnership in which they would jam and drink together, often getting lost in their work even with looming deadlines.</li>
+      <li><strong>Spontaneous creativity:</strong> Bawra recounted how a tune for "Kitne Bhi Tu Karle Sitam" was born from Burman absentmindedly playing with a spoon ("chamach") in his kitchen, leading to the spontaneous creation of the melody.</li>
+      <li><strong>Dedication to music:</strong> Bawra observed Burman's immense dedication, often seeing the lights on in his apartment late at night, indicating he was either working on music or watching a movie to find inspiration.</li>
+      <li><strong>Shared moments:</strong> Their friendship extended beyond music; Bawra mentioned how he and Burman would have endless discussions about cooking, highlighting a more personal side of their relationship.</li>
+      <li><strong>Legacy:</strong> After Burman's death, Bawra, along with other friends and colleagues like Asha Bhosle, paid tribute to the music composer and their shared work.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- POEMS (Gulzar's poem) -->
+<div class="testimonial-block" style="background: linear-gradient(135deg,#fff8e1 0%, #fff3e0 100%);">
+  <h3 style="color:#7b5e57;">Poems — Gulzar’s Poetic Tribute</h3>
+  <p style="line-height:1.8; margin-top:8px; font-style:italic;">
+    "Do you remember that rainy day, Pancham, when in the valley below the hill, the railway tracks would appear and disappear as they slipped through the drifting mist?... I remain here, alone in the mist."
+  </p>
+  <p style="text-align:right; font-weight:bold; margin-top:8px;">— Gulzar</p>
+</div>
+
+<!-- END: TESTIMONIALS -->
+            `;
+
+            // mark as loaded
+            container.dataset.loaded = 'true';
+        }
+
+        function loadIndexAppendix() {
+            // removed by user request — this function intentionally left minimal
+            const container = document.querySelector('#index-appendix .biography-content');
+            if (container) {
+                container.innerHTML = `<p>Index & Appendix removed as per request.</p>`;
+                document.getElementById('index-appendix').dataset.loaded = 'true';
+            }
+        }
+
+        // placeholder functions for videos/audio to maintain original behavior
+        function loadVideos() {
+            // minimal lazy-load placeholder for video grids; mark as loaded
+            document.getElementById('about-videos').dataset.loaded = 'true';
+        }
+        function loadAudio() {
+            document.getElementById('audioTreeContent').dataset.loaded = 'true';
+        }
+
+        // initialize scrolling images track if desired
+        (function initScrollingTrack() {
+            const track = document.getElementById('scrollingTrack');
+            const imgs = ['Gulzar.jpeg','Javed Akhtar.jpeg','Ramesh Sippy.jpeg','Amitabh Bachchan.jpeg','Asha Bhosle.jpeg','Lata Mangeshkar.jpeg','Gulshan Bawra.jpeg'];
+            imgs.forEach(name => {
+                const img = document.createElement('img');
+                img.src = 'images/' + name;
+                img.className = 'scrolling-image';
+                img.alt = name.replace(/\.[^.]+$/, '');
+                track.appendChild(img);
+            });
+            // duplicate for continuous scroll effect
+            imgs.forEach(name => {
+                const img = document.createElement('img');
+                img.src = 'images/' + name;
+                img.className = 'scrolling-image';
+                img.alt = name.replace(/\.[^.]+$/, '');
+                track.appendChild(img.cloneNode());
+            });
+        })();
+
+        // when page loaded, lazy-load biography
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBiographyChapters();
+        });
+    </script>
+</body>
+</html>

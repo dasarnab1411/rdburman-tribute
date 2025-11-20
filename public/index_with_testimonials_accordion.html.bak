@@ -544,6 +544,7 @@
                         <li>Parichay (1972): "Musafir Hoon Yaaro," "Beeti Na Bitai Raina"</li>
                         <li>Aandhi (1975): "Tere Bina Zindagi Se," "Tum Aagaye Ho Noor Aagaya Hai," "Is Mod Se Jate Hain"</li>
                         <li>Khushboo (1975): "Chhoti Si Kahani Se"</li>
+                        <li>Mausam (1975): "Dil Dhoonta Hai," "Rukey Rukey Se Qadam," "Chari Re Chari"</li>
                         <li>Khubsoorat (1980): "Piya Bawri," "Sun Sun Sun Didi," "O Manjhi Re"</li>
                         <li>Ghar (1978): "Aaj Kal Paon," "Aap Ki Aankhon Mein," "Tere Bina Jya Jai Na"</li>
                         <li>Angoor (1982): "Roz Roz Dali Dali"</li>
@@ -765,9 +766,9 @@
         const youtubeVideos = {
             about: [
                 'ROYNffYphro','Acx881M41wQ','TxRxKXPfzw4','h_bYlWFho9I','1qGaUw9E_uA',
-                '1KS6m6-Wkhc','zpL0eXRdKBg','X1RMCW0MVuk',
+                'R2votX-RwpU','1KS6m6-Wkhc','zpL0eXRdKBg','X1RMCW0MVuk','8hZ1LsydZjE',
                 'It_AdKqB-_I','8HW02AUZOug','ccoCW5TPscU','Lp7-iVdz764','x-cylptahIg',
-                'JGcU8a8tMp4','0sOPGESz1c8','0FM69eKX1JU','cT0eB9tF32s','DUs5SW_FLzY','PphOSrnMfG4','rGjN9ZIFdq0'
+                'JGcU8a8tMp4','0sOPGESz1c8','0FM69eKX1JU','cT0eB9tF32s','DUs5SW_FLzY','PphOSrnMfG4'
             ],
             composing: ['-S-vrvv1NnE','_oJmKeBPj84','K0mUTccDgNE','3F4NT2Y-SPM','ftbqxSdyiDs','Ggh36-xzktU','43Zg7_4TQnE','BkuDrXDJMUo','HbUjtluZsws','pwUyw_hYEVA'],
             unreleased: ['DyS1s3vVSMU','sdxb7Ntmgtw','cXgoIGjnMok','KDwwO9sRM1U','Iz1fky4vJOo','sqBsvPYUles','ElfWOyqeRyA','6qRG7Ifdnjo','GKn-UjnrINY','MRzyX1sHdIo','p45iHsSDYQM','OB_cAZvwpK8','lMVdeLYSXcQ','aP-yIFPsU7g','JDHbojwRZ0M','UwgLdlanTYc','D_jXLMwVes8','V46zxzcEBag','hWBtpwMnSUo','HAPLc3AeaXk','iBYzUB0UY2Q','Qild_H1Eg4M','2sk3agwRibI']

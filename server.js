@@ -1,22 +1,18 @@
 // RD Burman Tribute Website - Backend Server
-// Complete Node.js + Express Server with API integrations
-
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const { google } = require('googleapis');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-process.env.DEBUG = 'googleapis:*';
 // ============================================
-// MIDDLEWARE CONFIGURATION
+// MIDDLEWARE
 // ============================================
-
-// Enable CORS for all routes
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
         ? ['https://yourdomain.com'] 
@@ -24,16 +20,10 @@ app.use(cors({
     credentials: true
 }));
 
-// Parse JSON bodies
 app.use(express.json());
-
-// Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
-
-// Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Request logging middleware
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
     next();
@@ -42,107 +32,76 @@ app.use((req, res, next) => {
 // ============================================
 // CONFIGURATION
 // ============================================
-
 const CONFIG = {
     YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
     GOOGLE_DRIVE_API_KEY: process.env.GOOGLE_DRIVE_API_KEY,
-    GOOGLE_DRIVE_CLIENT_ID: process.env.GOOGLE_DRIVE_CLIENT_ID,
-    GOOGLE_DRIVE_CLIENT_SECRET: process.env.GOOGLE_DRIVE_CLIENT_SECRET,
-    GOOGLE_DRIVE_REDIRECT_URI: process.env.GOOGLE_DRIVE_REDIRECT_URI || 'http://localhost:3001/api/drive/callback',
-    DRIVE_FOLDER_ID: process.env.DRIVE_FOLDER_ID || '1FQNqgfrnppArFoYqkL7eL67-r1GS_ar6',
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
 };
 
 // ============================================
-// HEALTH CHECK ENDPOINT
+// HEALTH CHECK
 // ============================================
-
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development',
         apis: {
             youtube: !!CONFIG.YOUTUBE_API_KEY,
-            driveApiKey: !!CONFIG.GOOGLE_DRIVE_API_KEY,
-            drive: !!CONFIG.GOOGLE_DRIVE_CLIENT_ID,
-            spotify: !!CONFIG.SPOTIFY_CLIENT_ID
+            drive: !!CONFIG.GOOGLE_DRIVE_API_KEY
         }
     });
 });
 
 // ============================================
-// IMAGE LISTING ENDPOINT
+// IMAGE LISTING
 // ============================================
-
-const fs = require('fs');
-
 app.get('/api/images/list', (req, res) => {
     try {
         const imagesDir = path.join(__dirname, 'public', 'images');
-        
-        // Check if images directory exists
         if (!fs.existsSync(imagesDir)) {
-            return res.json({
-                success: true,
-                images: [],
-                message: 'Images directory not found'
-            });
+            return res.json({ success: true, images: [] });
         }
-        
-        // Read all files in the images directory
         const files = fs.readdirSync(imagesDir);
-        
-        // Filter only image files
         const imageFiles = files.filter(file => {
             const ext = path.extname(file).toLowerCase();
             return ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'].includes(ext);
         });
-        
-        res.json({
-            success: true,
-            images: imageFiles,
-            count: imageFiles.length
-        });
-        
+        res.json({ success: true, images: imageFiles, count: imageFiles.length });
     } catch (error) {
-        console.error('Error listing images:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to list images',
-            details: error.message
-        });
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
 // ============================================
-// GOOGLE DRIVE AUDIO STREAMING PROXY
+// GOOGLE DRIVE AUDIO STREAMING
 // ============================================
-
 app.get('/api/drive/stream/:fileId', async (req, res) => {
     try {
         const { fileId } = req.params;
+        console.log(`\n=== STREAMING REQUEST ===`);
+        console.log(`File ID: ${fileId}`);
+        console.log(`API Key: ${CONFIG.GOOGLE_DRIVE_API_KEY ? 'Present' : 'Missing'}`);
         
-        console.log(`Streaming request for file: ${fileId}`);
-        
-        // Use API key since folders are publicly shared
         const drive = google.drive({ 
             version: 'v3', 
-            auth: CONFIG.GOOGLE_DRIVE_API_KEY || CONFIG.YOUTUBE_API_KEY 
+            auth: CONFIG.GOOGLE_DRIVE_API_KEY 
         });
         
-        // Get file metadata to check size and type
+        // Get metadata
+        console.log('Fetching file metadata...');
         const metadata = await drive.files.get({
             fileId: fileId,
             fields: 'name,mimeType,size',
             supportsAllDrives: true
         });
         
-        console.log(`File metadata:`, metadata.data);
+        console.log(`File: ${metadata.data.name}`);
+        console.log(`Type: ${metadata.data.mimeType}`);
+        console.log(`Size: ${metadata.data.size} bytes`);
         
-        // Get the file content as a stream
+        // Stream file
+        console.log('Starting file stream...');
         const fileStream = await drive.files.get({
             fileId: fileId,
             alt: 'media',
@@ -151,26 +110,19 @@ app.get('/api/drive/stream/:fileId', async (req, res) => {
             responseType: 'stream'
         });
         
-        // Set appropriate headers for audio streaming (disable download)
+        // Set headers
         res.setHeader('Content-Type', metadata.data.mimeType || 'audio/mpeg');
         res.setHeader('Content-Length', metadata.data.size);
         res.setHeader('Accept-Ranges', 'bytes');
+        res.setHeader('Content-Disposition', 'inline');
         res.setHeader('Cache-Control', 'public, max-age=3600');
         
-        // IMPORTANT: Prevent download - display inline only
-        res.setHeader('Content-Disposition', 'inline');
-        res.setHeader('X-Content-Type-Options', 'nosniff');
-        
-        // Disable right-click download
-        res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-        
-        // Handle range requests for seeking
-        if (req.headers.range) {
-            res.status(206); // Partial Content
-        }
-        
-        // Pipe the stream to the response
+        // Pipe stream
         fileStream.data.pipe(res);
+        
+        fileStream.data.on('end', () => {
+            console.log('Stream completed successfully');
+        });
         
         fileStream.data.on('error', (error) => {
             console.error('Stream error:', error);
@@ -180,383 +132,38 @@ app.get('/api/drive/stream/:fileId', async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Drive Stream Error:', error.message);
+        console.error('\n=== STREAMING ERROR ===');
+        console.error('Error:', error.message);
+        console.error('Code:', error.code);
         console.error('Full error:', error);
         
-        if (error.response?.status === 403 || error.code === 403) {
-            return res.status(403).json({
+        if (!res.headersSent) {
+            res.status(500).json({
                 success: false,
-                error: 'Access denied. Please ensure the folder is shared publicly.',
-                details: error.message
+                error: error.message,
+                code: error.code
             });
         }
-        
-        if (error.response?.status === 404 || error.code === 404) {
-            return res.status(404).json({
-                success: false,
-                error: 'File not found',
-                details: error.message
-            });
-        }
-        
-        res.status(500).json({
-            success: false,
-            error: 'Failed to stream audio',
-            details: error.message
-        });
     }
 });
 
 // ============================================
-// YOUTUBE API ENDPOINTS
+// GOOGLE DRIVE FOLDER CONTENTS
 // ============================================
-
-// Search YouTube for RD Burman content
-app.get('/api/youtube/search', async (req, res) => {
-    try {
-        if (!CONFIG.YOUTUBE_API_KEY) {
-            return res.status(500).json({
-                success: false,
-                error: 'YouTube API key not configured'
-            });
-        }
-
-        const searchTerms = [
-            'RD Burman documentary',
-            'RD Burman Pancham Da',
-            'RD Burman interview rare',
-            'RD Burman live performance',
-            'RD Burman tribute concert',
-            'RD Burman making of songs',
-            'Pancham Unmixed documentary',
-            'RD Burman Asha Bhosle'
-        ];
-        
-        let allVideos = [];
-        
-        // Search for each term
-        for (const term of searchTerms) {
-            try {
-                const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
-                    params: {
-                        part: 'snippet',
-                        q: term,
-                        type: 'video',
-                        maxResults: 3,
-                        key: CONFIG.YOUTUBE_API_KEY,
-                        relevanceLanguage: 'en',
-                        safeSearch: 'none',
-                        order: 'relevance',
-                        videoDuration: 'any'
-                    }
-                });
-                
-                if (response.data.items) {
-                    allVideos.push(...response.data.items);
-                }
-            } catch (error) {
-                console.error(`Error searching for "${term}":`, error.message);
-            }
-        }
-        
-        // Remove duplicates based on video ID
-        const uniqueVideos = Array.from(
-            new Map(allVideos.map(v => [v.id.videoId, v])).values()
-        );
-        
-        res.json({
-            success: true,
-            count: uniqueVideos.length,
-            videos: uniqueVideos.slice(0, 24), // Limit to 24 videos
-            timestamp: new Date().toISOString()
-        });
-        
-    } catch (error) {
-        console.error('YouTube API Error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to fetch YouTube videos',
-            details: error.response?.data?.error?.message || error.message
-        });
-    }
-});
-
-// Get specific video details
-app.get('/api/youtube/video/:videoId', async (req, res) => {
-    try {
-        if (!CONFIG.YOUTUBE_API_KEY) {
-            return res.status(500).json({
-                success: false,
-                error: 'YouTube API key not configured'
-            });
-        }
-
-        const response = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
-            params: {
-                part: 'snippet,contentDetails,statistics',
-                id: req.params.videoId,
-                key: CONFIG.YOUTUBE_API_KEY
-            }
-        });
-        
-        if (!response.data.items || response.data.items.length === 0) {
-            return res.status(404).json({
-                success: false,
-                error: 'Video not found'
-            });
-        }
-        
-        res.json({
-            success: true,
-            video: response.data.items[0]
-        });
-        
-    } catch (error) {
-        console.error('YouTube Video Error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to fetch video details',
-            details: error.message
-        });
-    }
-});
-
-// ============================================
-// GOOGLE DRIVE API ENDPOINTS
-// ============================================
-
-let oauth2Client;
-
-// Initialize Google Drive OAuth client
-function initDriveClient() {
-    if (!oauth2Client && CONFIG.GOOGLE_DRIVE_CLIENT_ID && CONFIG.GOOGLE_DRIVE_CLIENT_SECRET) {
-        oauth2Client = new google.auth.OAuth2(
-            CONFIG.GOOGLE_DRIVE_CLIENT_ID,
-            CONFIG.GOOGLE_DRIVE_CLIENT_SECRET,
-            CONFIG.GOOGLE_DRIVE_REDIRECT_URI
-        );
-    }
-    return oauth2Client;
-}
-
-// Start OAuth flow
-app.get('/api/drive/auth', (req, res) => {
-    try {
-        const client = initDriveClient();
-        
-        if (!client) {
-            return res.status(500).json({
-                success: false,
-                error: 'Google Drive API not configured'
-            });
-        }
-        
-        const authUrl = client.generateAuthUrl({
-            access_type: 'offline',
-            scope: ['https://www.googleapis.com/auth/drive.readonly']
-        });
-        
-        res.json({ 
-            success: true,
-            authUrl 
-        });
-    } catch (error) {
-        console.error('Drive Auth Error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to generate auth URL'
-        });
-    }
-});
-
-// OAuth callback
-app.get('/api/drive/callback', async (req, res) => {
-    const { code } = req.query;
-    
-    try {
-        const client = initDriveClient();
-        const { tokens } = await client.getToken(code);
-        client.setCredentials(tokens);
-        
-        // In production, store tokens securely in a database
-        res.send(`
-            <html>
-                <head>
-                    <title>Authentication Successful</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            height: 100vh;
-                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                            color: white;
-                        }
-                        .container {
-                            text-align: center;
-                            padding: 40px;
-                            background: rgba(255,255,255,0.1);
-                            border-radius: 20px;
-                            backdrop-filter: blur(10px);
-                        }
-                        h1 { margin-bottom: 20px; }
-                        p { font-size: 1.2rem; }
-                        button {
-                            margin-top: 20px;
-                            padding: 15px 30px;
-                            background: white;
-                            color: #764ba2;
-                            border: none;
-                            border-radius: 25px;
-                            font-size: 1.1rem;
-                            cursor: pointer;
-                            font-weight: bold;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1>✅ Authentication Successful!</h1>
-                        <p>Google Drive has been connected successfully.</p>
-                        <button onclick="window.close()">Close Window</button>
-                    </div>
-                </body>
-            </html>
-        `);
-        
-    } catch (error) {
-        console.error('Drive Callback Error:', error.message);
-        res.status(500).send(`
-            <html>
-                <head>
-                    <title>Authentication Failed</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            height: 100vh;
-                            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                            color: white;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div style="text-align: center;">
-                        <h1>❌ Authentication Failed</h1>
-                        <p>${error.message}</p>
-                    </div>
-                </body>
-            </html>
-        `);
-    }
-});
-
-// List files in Google Drive folder
-app.post('/api/drive/list', async (req, res) => {
-    try {
-        const { accessToken } = req.body;
-        
-        const client = initDriveClient();
-        if (!client) {
-            return res.status(500).json({
-                success: false,
-                error: 'Google Drive API not configured'
-            });
-        }
-        
-        if (accessToken) {
-            client.setCredentials({ access_token: accessToken });
-        }
-        
-        const drive = google.drive({ version: 'v3', auth: client });
-        
-        const response = await drive.files.list({
-            q: `'${CONFIG.DRIVE_FOLDER_ID}' in parents`,
-            fields: 'files(id, name, mimeType, webViewLink, iconLink, thumbnailLink, size, createdTime)',
-            orderBy: 'name',
-            pageSize: 100
-        });
-        
-        const files = response.data.files || [];
-        const folders = files.filter(f => f.mimeType === 'application/vnd.google-apps.folder');
-        const audioFiles = files.filter(f => 
-            f.mimeType.includes('audio') || 
-            f.name.match(/\.(mp3|wav|flac|m4a|aac)$/i)
-        );
-        
-        res.json({
-            success: true,
-            folders: folders,
-            audioFiles: audioFiles,
-            totalCount: files.length,
-            timestamp: new Date().toISOString()
-        });
-        
-    } catch (error) {
-        console.error('Drive List Error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to list Drive files',
-            details: error.message
-        });
-    }
-});
-
-// Get files from a specific subfolder
-app.post('/api/drive/folder/:folderId', async (req, res) => {
-    try {
-        const { accessToken } = req.body;
-        const { folderId } = req.params;
-        
-        const client = initDriveClient();
-        if (accessToken) {
-            client.setCredentials({ access_token: accessToken });
-        }
-        
-        const drive = google.drive({ version: 'v3', auth: client });
-        
-        const response = await drive.files.list({
-            q: `'${folderId}' in parents`,
-            fields: 'files(id, name, mimeType, webViewLink, iconLink, size)',
-            orderBy: 'name',
-            pageSize: 100
-        });
-        
-        res.json({
-            success: true,
-            files: response.data.files || []
-        });
-        
-    } catch (error) {
-        console.error('Drive Folder Error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to list folder contents',
-            details: error.message
-        });
-    }
-});
-
-// Get folder contents with subfolders and audio files (PUBLIC ACCESS)
 app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
     try {
         const { folderId } = req.params;
+        console.log(`\n=== FOLDER REQUEST ===`);
+        console.log(`Folder ID: ${folderId}`);
         
-        // Use Google Drive API key for public access
         const drive = google.drive({ 
             version: 'v3', 
-            auth: CONFIG.GOOGLE_DRIVE_API_KEY || CONFIG.YOUTUBE_API_KEY
+            auth: CONFIG.GOOGLE_DRIVE_API_KEY
         });
         
-        console.log(`Fetching contents for folder: ${folderId}`);
-        
-        // List all files in the folder
         const response = await drive.files.list({
             q: `'${folderId}' in parents and trashed=false`,
-            fields: 'files(id, name, mimeType, webViewLink, iconLink, thumbnailLink, size, fileExtension)',
+            fields: 'files(id, name, mimeType, webViewLink, size, fileExtension)',
             orderBy: 'name',
             pageSize: 1000,
             supportsAllDrives: true,
@@ -564,20 +171,18 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
         });
         
         const files = response.data.files || [];
+        console.log(`Found ${files.length} files`);
         
-        console.log(`Found ${files.length} files in folder ${folderId}`);
-        
-        // Separate folders and audio files
         const folders = files.filter(f => 
             f.mimeType === 'application/vnd.google-apps.folder'
         );
         
         const audioFiles = files.filter(f => 
-            f.mimeType.includes('audio') || 
-            ['mp3', 'wav', 'flac', 'm4a', 'aac', 'ogg', 'wma'].includes(f.fileExtension?.toLowerCase())
+            f.mimeType && f.mimeType.includes('audio') || 
+            (f.fileExtension && ['mp3', 'wav', 'flac', 'm4a', 'aac', 'ogg', 'wma'].includes(f.fileExtension.toLowerCase()))
         );
         
-        console.log(`Folders: ${folders.length}, Audio files: ${audioFiles.length}`);
+        console.log(`Folders: ${folders.length}, Audio: ${audioFiles.length}`);
         
         res.json({
             success: true,
@@ -590,145 +195,79 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
                 id: f.id,
                 name: f.name.replace(/\.(mp3|wav|flac|m4a|aac|ogg|wma)$/i, ''),
                 extension: f.fileExtension,
-                size: f.size,
-                thumbnail: f.thumbnailLink
+                size: f.size
             })),
             totalCount: files.length
         });
         
     } catch (error) {
-        console.error('Drive Folder Contents Error:', error.message);
-        console.error('Full error:', error);
-        
-        // More detailed error message
-        let errorMessage = 'Failed to access folder';
-        if (error.message.includes('403') || error.code === 403) {
-            errorMessage = 'Access denied. Please ensure the folder is shared publicly (Anyone with the link can view).';
-        } else if (error.message.includes('404') || error.code === 404) {
-            errorMessage = 'Folder not found. Please check the folder ID.';
-        } else if (error.message.includes('401') || error.code === 401) {
-            errorMessage = 'API key is invalid or expired. Please check your Google Drive API key.';
-        }
+        console.error('\n=== FOLDER ERROR ===');
+        console.error('Error:', error.message);
+        console.error('Code:', error.code);
         
         res.status(500).json({
             success: false,
-            error: errorMessage,
-            details: error.message,
+            error: error.message,
             folderId: req.params.folderId
         });
     }
 });
 
 // ============================================
-// SPOTIFY API (Optional)
+// YOUTUBE API
 // ============================================
-
-let spotifyToken = null;
-let spotifyTokenExpiry = null;
-
-async function getSpotifyToken() {
-    if (spotifyToken && spotifyTokenExpiry > Date.now()) {
-        return spotifyToken;
-    }
-    
-    if (!CONFIG.SPOTIFY_CLIENT_ID || !CONFIG.SPOTIFY_CLIENT_SECRET) {
-        throw new Error('Spotify API not configured');
-    }
-    
-    const auth = Buffer.from(
-        `${CONFIG.SPOTIFY_CLIENT_ID}:${CONFIG.SPOTIFY_CLIENT_SECRET}`
-    ).toString('base64');
-    
+app.get('/api/youtube/search', async (req, res) => {
     try {
-        const response = await axios.post(
-            'https://accounts.spotify.com/api/token',
-            'grant_type=client_credentials',
-            {
-                headers: {
-                    'Authorization': `Basic ${auth}`,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }
-        );
-        
-        spotifyToken = response.data.access_token;
-        spotifyTokenExpiry = Date.now() + (response.data.expires_in * 1000);
-        
-        return spotifyToken;
-        
-    } catch (error) {
-        throw new Error('Failed to authenticate with Spotify');
-    }
-}
+        if (!CONFIG.YOUTUBE_API_KEY) {
+            return res.status(500).json({ success: false, error: 'YouTube API key not configured' });
+        }
 
-app.get('/api/spotify/artist', async (req, res) => {
-    try {
-        const token = await getSpotifyToken();
+        const searchTerms = [
+            'RD Burman documentary',
+            'RD Burman Pancham Da',
+            'RD Burman interview',
+            'RD Burman live performance'
+        ];
         
-        const response = await axios.get(
-            'https://api.spotify.com/v1/search',
-            {
-                params: {
-                    q: 'R.D. Burman',
-                    type: 'artist',
-                    limit: 1
-                },
-                headers: {
-                    'Authorization': `Bearer ${token}`
+        let allVideos = [];
+        
+        for (const term of searchTerms) {
+            try {
+                const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+                    params: {
+                        part: 'snippet',
+                        q: term,
+                        type: 'video',
+                        maxResults: 3,
+                        key: CONFIG.YOUTUBE_API_KEY
+                    }
+                });
+                if (response.data.items) {
+                    allVideos.push(...response.data.items);
                 }
+            } catch (error) {
+                console.error(`Error searching "${term}":`, error.message);
             }
+        }
+        
+        const uniqueVideos = Array.from(
+            new Map(allVideos.map(v => [v.id.videoId, v])).values()
         );
         
         res.json({
             success: true,
-            artist: response.data.artists.items[0]
+            count: uniqueVideos.length,
+            videos: uniqueVideos.slice(0, 24)
         });
         
     } catch (error) {
-        console.error('Spotify Error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to fetch Spotify data',
-            details: error.message
-        });
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
 // ============================================
-// CONTENT AGGREGATION
+// ERROR HANDLERS
 // ============================================
-
-app.get('/api/aggregate/all', async (req, res) => {
-    try {
-        const results = await Promise.allSettled([
-            axios.get(`http://localhost:${PORT}/api/youtube/search`),
-            // Add more API calls here as needed
-        ]);
-        
-        const aggregated = {
-            youtube: results[0].status === 'fulfilled' ? results[0].value.data : null,
-        };
-        
-        res.json({
-            success: true,
-            data: aggregated,
-            timestamp: new Date().toISOString()
-        });
-        
-    } catch (error) {
-        console.error('Aggregation Error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to aggregate content'
-        });
-    }
-});
-
-// ============================================
-// ERROR HANDLING
-// ============================================
-
-// 404 handler for API routes
 app.use('/api/*', (req, res) => {
     res.status(404).json({
         success: false,
@@ -737,75 +276,35 @@ app.use('/api/*', (req, res) => {
     });
 });
 
-// Serve index.html for all other routes (SPA support)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
     console.error('Server Error:', err);
     res.status(500).json({
         success: false,
-        error: 'Internal server error',
-        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+        error: 'Internal server error'
     });
 });
 
 // ============================================
 // START SERVER
 // ============================================
-
 app.listen(PORT, () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════╗
-║                                                       ║
-║   🎵 RD BURMAN TRIBUTE API SERVER                    ║
-║                                                       ║
-║   🚀 Server running on port ${PORT}                   ║
-║   🌐 Local: http://localhost:${PORT}                  ║
-║   📊 Health: http://localhost:${PORT}/api/health      ║
-║   🎬 Environment: ${process.env.NODE_ENV || 'development'}                       ║
-║                                                       ║
+║   🎵 RD BURMAN TRIBUTE SERVER                        ║
+║   Port: ${PORT}                                        ║
+║   URL: http://localhost:${PORT}                       ║
 ╚═══════════════════════════════════════════════════════╝
 
-📋 API Endpoints Available:
-──────────────────────────────────────────────────────
-YouTube API:
-  GET  /api/youtube/search           - Search videos
-  GET  /api/youtube/video/:id        - Get video details
+API Status:
+  YouTube: ${CONFIG.YOUTUBE_API_KEY ? '✅' : '❌'}
+  Drive:   ${CONFIG.GOOGLE_DRIVE_API_KEY ? '✅' : '❌'}
 
-Google Drive API:
-  GET  /api/drive/auth               - Start OAuth
-  POST /api/drive/list               - List folder contents
-  POST /api/drive/folder/:id         - Get subfolder files
-  GET  /api/drive/folder-contents/:id - Get folder contents
-  GET  /api/drive/stream/:fileId     - Stream audio file 🎵
-
-Spotify API:
-  GET  /api/spotify/artist           - Get artist info
-
-General:
-  GET  /api/health                   - Health check
-  GET  /api/aggregate/all            - Aggregate all content
-──────────────────────────────────────────────────────
-
-⚙️  API Status:
-  YouTube: ${CONFIG.YOUTUBE_API_KEY ? '✅ Configured' : '❌ Not configured'}
-  Drive API Key: ${CONFIG.GOOGLE_DRIVE_API_KEY ? '✅ Configured' : '❌ Not configured'}
-  Drive OAuth: ${CONFIG.GOOGLE_DRIVE_CLIENT_ID ? '✅ Configured' : '❌ Not configured'}
-  Spotify: ${CONFIG.SPOTIFY_CLIENT_ID ? '✅ Configured' : '❌ Not configured'}
-
-${!CONFIG.YOUTUBE_API_KEY ? '⚠️  WARNING: YouTube API key not found. Please configure in .env file\n' : ''}
-${!CONFIG.GOOGLE_DRIVE_API_KEY ? '⚠️  WARNING: Google Drive API key not found. Audio streaming may not work.\n' : ''}
-Ready to serve requests! 🎶
+Ready! 🎶
     `);
-});
-
-// Handle graceful shutdown
-process.on('SIGTERM', () => {
-    console.log('SIGTERM received. Shutting down gracefully...');
-    process.exit(0);
 });
 
 module.exports = app;

@@ -151,11 +151,18 @@ app.get('/api/drive/stream/:fileId', async (req, res) => {
             responseType: 'stream'
         });
         
-        // Set appropriate headers for audio streaming
+        // Set appropriate headers for audio streaming (disable download)
         res.setHeader('Content-Type', metadata.data.mimeType || 'audio/mpeg');
         res.setHeader('Content-Length', metadata.data.size);
         res.setHeader('Accept-Ranges', 'bytes');
         res.setHeader('Cache-Control', 'public, max-age=3600');
+        
+        // IMPORTANT: Prevent download - display inline only
+        res.setHeader('Content-Disposition', 'inline');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        
+        // Disable right-click download
+        res.setHeader('X-Frame-Options', 'SAMEORIGIN');
         
         // Handle range requests for seeking
         if (req.headers.range) {
@@ -538,9 +545,13 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
     try {
         const { folderId } = req.params;
         
-        // Use Service Account or API Key
-        const auth = getDriveAuth();
-        const drive = google.drive({ version: 'v3', auth });
+        // Use Google Drive API key for public access
+        const drive = google.drive({ 
+            version: 'v3', 
+            auth: CONFIG.GOOGLE_DRIVE_API_KEY || CONFIG.YOUTUBE_API_KEY
+        });
+        
+        console.log(`Fetching contents for folder: ${folderId}`);
         
         // List all files in the folder
         const response = await drive.files.list({
@@ -554,6 +565,8 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
         
         const files = response.data.files || [];
         
+        console.log(`Found ${files.length} files in folder ${folderId}`);
+        
         // Separate folders and audio files
         const folders = files.filter(f => 
             f.mimeType === 'application/vnd.google-apps.folder'
@@ -563,6 +576,8 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
             f.mimeType.includes('audio') || 
             ['mp3', 'wav', 'flac', 'm4a', 'aac', 'ogg', 'wma'].includes(f.fileExtension?.toLowerCase())
         );
+        
+        console.log(`Folders: ${folders.length}, Audio files: ${audioFiles.length}`);
         
         res.json({
             success: true,
@@ -588,11 +603,11 @@ app.get('/api/drive/folder-contents/:folderId', async (req, res) => {
         // More detailed error message
         let errorMessage = 'Failed to access folder';
         if (error.message.includes('403') || error.code === 403) {
-            errorMessage = 'Access denied. Please ensure the service account has access to this folder.';
+            errorMessage = 'Access denied. Please ensure the folder is shared publicly (Anyone with the link can view).';
         } else if (error.message.includes('404') || error.code === 404) {
             errorMessage = 'Folder not found. Please check the folder ID.';
         } else if (error.message.includes('401') || error.code === 401) {
-            errorMessage = 'Authentication failed. Please check your service account credentials.';
+            errorMessage = 'API key is invalid or expired. Please check your Google Drive API key.';
         }
         
         res.status(500).json({

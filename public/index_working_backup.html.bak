@@ -1436,7 +1436,7 @@
   <!-- BLOCK 7: RAJESH KHANNA -->
   <div class="accordion-item">
     <div class="accordion-header collapsed" data-target="t7" onclick="toggleAccordion(event, 't7')">
-      RAJESH KHANNA – “A soul like his doesn’t fade”
+      RAJESH KHANNA – “A SOUL LIKE HIS DOESN'T FADE”
       <span class="chev">▶</span>
     </div>
     <div id="t7" class="accordion-body">
