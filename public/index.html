@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -8,7 +8,23 @@
 		history.scrollRestoration = 'manual';
 	  }
 	</script>	
+    <title>R.D. Burman - Pancham Da Tribute</title> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script>
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+    </script>	
     <title>R.D. Burman - Pancham Da Tribute</title>
+
+    <!-- Favicon for the site -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -19,6 +35,74 @@
             min-height: 100vh;
             color: #2c3e50;
         }
+		/* Subtle overlay asking user to start theme music */
+        .music-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+        }
+        .music-overlay.hidden {
+            display: none;
+        }
+        .music-overlay-inner {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 18px;
+            padding: 20px 24px;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+        .music-overlay-inner h3 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        .music-overlay-inner p {
+            font-size: 0.95rem;
+            margin-bottom: 14px;
+            color: #636e72;
+        }
+        .music-overlay-button {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 22px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ff7675 0%, #fdcb6e 100%);
+            color: #2c3e50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+        .music-overlay-button:hover {
+            transform: translateY(-1px);
+        }
+
+/* When DevTools is detected, lightly lock the UI */
+        body.devtools-open {
+            filter: blur(3px);
+            pointer-events: none;
+            user-select: none;
+        }
+        body.devtools-open::before {
+            content: 'Developer tools detected. Viewing / copying is restricted on this tribute site.';
+            position: fixed;
+            z-index: 9999;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 1.4rem;
+            text-align: center;
+            padding: 20px;
+        }
+
         @keyframes gradientShift {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -57,7 +141,7 @@
             position: relative;
             overflow: hidden;
         }
-        header::before {
+        <!-- header::before {
             content: '🎸 🎹 🎺 🥁 🎻 🎷 🪕 🎼 🎵 🎶 ♪ ♫ ♩ ♬ 🎸 🎹 🎺 🥁 🎻 🎷';
             position: absolute;
             top: 0;
@@ -74,12 +158,17 @@
             animation: instrumentFloat 20s linear infinite;
             pointer-events: none;
             filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
-        }
-        @keyframes instrumentFloat {
+        } -->
+			
+		<!-- Updated to put the musical instruments backwords     --> 
+		
+		
+		
+        <!-- @keyframes instrumentFloat {
             0% { transform: translateX(0) translateY(0); }
             100% { transform: translateX(-50%) translateY(-20px); }
-        }
-        header::after {
+        } -->
+        <!-- header::after {
             content: '🎤 🪘 🎺 🎸 🎻 🥁 🎹 🎷 🪕 🎼 🎵 🎶 ♪ ♫ 🎤 🪘 🎺 🎸';
             position: absolute;
             bottom: 0;
@@ -105,6 +194,65 @@
             margin: 20px auto;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        } -->
+
+<!-- Updated to put the musical instruments backwords     --> 
+
+		header::before {
+			content: '🎸 🎹 🎺 🥁 🎻 🎷 🪕 🎼 🎵 🎶 ♪ ♫ ♩ ♬ 🎸 🎹 🎺 🥁 🎻 🎷';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 200%;
+			height: 100%;
+			font-size: 4.5rem;
+			opacity: 0.35;
+			color: rgba(255, 215, 0, 0.8);
+			display: flex;
+			flex-wrap: wrap;
+			gap: 50px;
+			padding: 30px;
+			animation: instrumentFloat 20s linear infinite;
+			pointer-events: none;
+			filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+			z-index: 0; /* NEW: keep instruments behind content */
+		}
+
+		header::after {
+			content: '🎤 🪘 🎺 🎸 🎻 🥁 🎹 🎷 🪕 🎼 🎵 🎶 ♪ ♫ 🎤 🪘 🎺 🎸';
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			width: 200%;
+			height: 100%;
+			font-size: 4rem;
+			opacity: 0.3;
+			color: rgba(255, 182, 193, 0.8);
+			display: flex;
+			flex-wrap: wrap;
+			gap: 45px;
+			padding: 25px;
+			animation: instrumentFloat 25s linear infinite reverse;
+			pointer-events: none;
+			filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+			z-index: 0; /* NEW */
+		}
+
+		.main-video-container {
+			width: 300px;
+			height: 300px;
+			border-radius: 50%;
+			border: 8px solid #ff6b6b;
+			margin: 20px auto;
+			overflow: hidden;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+			position: relative; /* NEW */
+			z-index: 1;         /* NEW: profile video above instruments */
+		}
+
+        @keyframes instrumentFloat {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-20px); }
         }
         .main-video { width: 100%; height: 100%; object-fit: cover; }
         h1 {
@@ -319,6 +467,27 @@
     </style>
 </head>
 <body>
+	
+	<!-- Background theme audio (hidden) -->
+    <audio
+        id="bgTheme"
+        src="Tune/Sagar - a theme music.mp3"
+        preload="auto"
+        loop
+        style="display:none;">
+    </audio>
+
+    <!-- Subtle tap-to-start overlay -->
+    <div id="musicOverlay" class="music-overlay">
+        <div class="music-overlay-inner">
+            <h3>Tap to start the theme</h3>
+            <p>A gentle Pancham instrumental will play in the background.</p>
+            <button type="button" id="musicOverlayBtn" class="music-overlay-button">
+                🎵 Begin with Pancham’s theme
+            </button>
+        </div>
+    </div>
+	
     <div class="scrolling-header" aria-hidden="true">
         <div class="scrolling-track" id="scrollingTrack"></div>
     </div>
@@ -354,7 +523,7 @@
                 </div>
                 <p>Pancham Da orchestrated a revolution! He brought rock, jazz, and electronic sounds into Bollywood. His collaboration with Asha Bhosle, Kishore Kumar, and Lata Mangeshkar produced immortal melodies.</p>
                 <div class="highlight">
-                    <strong>The Numbers:</strong> <strong>331 films</strong> - 292 in Hindi, 31 in Bengali. From "Mehbooba Mehbooba" to "Tere Bina Zindagi Se."
+                    <strong>The Numbers:</strong> <strong>331 films</strong> - 292 in Hindi, 31 in Bengali, 3 in Telugu, 2 in Oriya, 2 in Tamil, 1 in Marathi. From "Mehbooba Mehbooba" to "Tere Bina Zindagi Se."
                 </div>
             </div>
         </div>
@@ -746,13 +915,31 @@
         </footer>
     </div>
 
-    <div class="audio-player-container" id="audioPlayerContainer">
+    <!-- <div class="audio-player-container" id="audioPlayerContainer">
         <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white;">
             <div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">🎵 No song playing</div>
             <audio id="audioPlayer" controls controlsList="nodownload" style="flex: 2; max-width: 600px;"></audio>
         </div>
+    </div> -->
+	
+	<div class="audio-player-container" id="audioPlayerContainer">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white; flex-wrap: wrap;">
+            <div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">🎵 No song playing</div>
+            <audio id="audioPlayer" controls controlsList="nodownload" style="flex: 2; max-width: 600px;"></audio>
+            <!-- NEW stop button -->
+            <button type="button"
+                    id="stopAudioBtn"
+                    onclick="stopAudio()"
+                    style="padding: 8px 16px; border-radius: 20px; border: none; background:#e74c3c; color:#fff; cursor:pointer; white-space: nowrap;">
+                ⏹ Stop
+            </button>
+        </div>
     </div>
 
+	
+	
+	
+	<script src="https://www.youtube.com/iframe_api"></script>
     <script>
         /* ============= 
            Data & config (kept original)
@@ -774,8 +961,8 @@
             about: [
                 'ROYNffYphro','Acx881M41wQ','TxRxKXPfzw4','h_bYlWFho9I','1qGaUw9E_uA',
                 '1KS6m6-Wkhc','zpL0eXRdKBg','X1RMCW0MVuk',
-                'It_AdKqB-_I','8HW02AUZOug','ccoCW5TPscU','Lp7-iVdz764','x-cylptahIg',
-                'JGcU8a8tMp4','0sOPGESz1c8','0FM69eKX1JU','cT0eB9tF32s','DUs5SW_FLzY','PphOSrnMfG4','rGjN9ZIFdq0'
+                'It_AdKqB-_I','8HW02AUZOug','ccoCW5TPscU','Lp7-iVdz764','x-cylptahIg','WQ66t244OjA','sTTmMdAHRFQ',
+                'JGcU8a8tMp4','0sOPGESz1c8','0FM69eKX1JU','cT0eB9tF32s','DUs5SW_FLzY','PphOSrnMfG4','rGjN9ZIFdq0','M_mA1M44Bwc','lGpLxvBe-DE'
             ],
             composing: ['-S-vrvv1NnE','_oJmKeBPj84','K0mUTccDgNE','3F4NT2Y-SPM','ftbqxSdyiDs','Ggh36-xzktU','43Zg7_4TQnE','BkuDrXDJMUo','HbUjtluZsws','pwUyw_hYEVA'],
             unreleased: ['DyS1s3vVSMU','sdxb7Ntmgtw','cXgoIGjnMok','KDwwO9sRM1U','Iz1fky4vJOo','sqBsvPYUles','ElfWOyqeRyA','6qRG7Ifdnjo','GKn-UjnrINY','MRzyX1sHdIo','p45iHsSDYQM','OB_cAZvwpK8','lMVdeLYSXcQ','aP-yIFPsU7g','JDHbojwRZ0M','UwgLdlanTYc','D_jXLMwVes8','V46zxzcEBag','hWBtpwMnSUo','HAPLc3AeaXk','iBYzUB0UY2Q','Qild_H1Eg4M','2sk3agwRibI']
@@ -826,11 +1013,75 @@
             el.style.display = 'block';
             if (e && e.currentTarget) e.currentTarget.classList.add('active');
         }
+		/* ===========================================
+           YouTube single-playback helpers 21/11/2025
+           =========================================== */
+        let ytPlayers = [];
+
+        function attachYouTubePlayers() {
+            if (!window.YT || !YT.Player) return;
+
+            const iframes = document.querySelectorAll('iframe.video-embed');
+            iframes.forEach(iframe => {
+                if (iframe.dataset.playerAttached === 'true') return;
+
+                const player = new YT.Player(iframe, {
+                    events: {
+                        onStateChange: (event) => {
+                            if (event.data === YT.PlayerState.PLAYING) {
+                                ytPlayers.forEach(p => {
+                                    if (p !== player) {
+                                        try { p.pauseVideo(); } catch (e) {}
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+
+                iframe.dataset.playerAttached = 'true';
+                ytPlayers.push(player);
+            });
+        }
+
+        // Called automatically when the YouTube Iframe API is ready
+        function onYouTubeIframeAPIReady() {
+            attachYouTubePlayers();
+        }
 
         /* ===========================================
            Load videos into grids (YouTube embeds)
            =========================================== */
-        function loadVideos() {
+
+
+
+
+        /* ===========================================
+           Load videos into grids (YouTube embeds)
+           =========================================== */
+        //function loadVideos() {
+        //    const aboutGrid = document.getElementById('aboutVideosGrid');
+        //    const compGrid = document.getElementById('composingVideosGrid');
+        //    const unrelGrid = document.getElementById('unreleasedVideosGrid');
+        //    if (!aboutGrid || !compGrid || !unrelGrid) return;
+
+        //    function createCard(videoId) {
+        //        const wrapper = document.createElement('div');
+        //        wrapper.className = 'content-card';
+        //        wrapper.innerHTML = `<iframe class="video-embed" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        //        return wrapper;
+        //    }
+
+        //    youtubeVideos.about.forEach(id => aboutGrid.appendChild(createCard(id)));
+        //    youtubeVideos.composing.forEach(id => compGrid.appendChild(createCard(id)));
+        //    youtubeVideos.unreleased.forEach(id => unrelGrid.appendChild(createCard(id)));
+
+        //    document.getElementById('about-videos').dataset.loaded = 'true';
+        //    document.getElementById('composing-videos').dataset.loaded = 'true';
+        //    document.getElementById('unreleased-videos').dataset.loaded = 'true';
+        //}
+		
+		function loadVideos() {
             const aboutGrid = document.getElementById('aboutVideosGrid');
             const compGrid = document.getElementById('composingVideosGrid');
             const unrelGrid = document.getElementById('unreleasedVideosGrid');
@@ -839,7 +1090,15 @@
             function createCard(videoId) {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'content-card';
-                wrapper.innerHTML = `<iframe class="video-embed" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                // NOTE: enablejsapi=1 is required so the API can control the iframe
+                wrapper.innerHTML = `
+                    <iframe 
+                        class="video-embed" 
+                        src="https://www.youtube.com/embed/${videoId}?enablejsapi=1" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>`;
                 return wrapper;
             }
 
@@ -850,7 +1109,11 @@
             document.getElementById('about-videos').dataset.loaded = 'true';
             document.getElementById('composing-videos').dataset.loaded = 'true';
             document.getElementById('unreleased-videos').dataset.loaded = 'true';
+
+            // Attach / refresh YouTube players for the newly added iframes
+            attachYouTubePlayers();
         }
+		
 
         /* ===========================================
            Load audio folder list (placeholder + Drive integration if available)
@@ -1604,7 +1867,7 @@ function loadPoems() {
         (function initScrollingTrack() {
             const track = document.getElementById('scrollingTrack');
             if (!track) return;
-            const imgs = ['Gulzar.jpeg','Javed Akhtar.jpeg','Ramesh Sippy.jpeg','Amitabh Bachchan.jpeg','Asha Bhosle.jpeg','Lata Mangeshkar.jpeg','Gulshan Bawra.jpeg'];
+            const imgs = ['Pancham10.png','Pancham12.png','Pancham16.png','Pancham17.png','Pancham18.png','Pancham19.png','Pancham20.png','Pancham21.png','Pancham22.png','Pancham23.png','Pancham25.png','Pancham26.png','Pancham27.png','Pancham28.png','Pancham29.png','Pancham3.png','Pancham30.png','Pancham4.png','Pancham5.png','Pancham6.png','Pancham7.png','Pancham8.png','Pancham9.png','rd-burman-2.png','rd-burman-3.png','rd-burman-4.png','rd-burman-single-color1.png','RD.png','RD.png','rd1.png','RD1_imresizer.jpg'];
             imgs.forEach(name => {
                 const img = document.createElement('img');
                 img.src = 'images/' + name;
@@ -1651,13 +1914,159 @@ function loadPoems() {
             }, 180);
         }
 
-        // When page loaded, lazy-load testimonials + poems and ensure flags
+        <!-- // When page loaded, lazy-load testimonials + poems and ensure flags
+        //document.addEventListener('DOMContentLoaded', () => {
+        //    loadTestimonials();
+        //    loadPoems();
+        //    const aboutVideo = document.getElementById('about-videos'); if (aboutVideo) aboutVideo.dataset.loaded = '';
+        //    const audioTree = document.getElementById('audioTreeContent'); if (audioTree) audioTree.dataset.loaded = '';
+        //}); -->
+
+	// When page loaded, lazy-load testimonials + poems and ensure flags
         document.addEventListener('DOMContentLoaded', () => {
             loadTestimonials();
             loadPoems();
             const aboutVideo = document.getElementById('about-videos'); if (aboutVideo) aboutVideo.dataset.loaded = '';
             const audioTree = document.getElementById('audioTreeContent'); if (audioTree) audioTree.dataset.loaded = '';
-        });
+
+            // Background theme music (best-effort autoplay)
+            //const bgAudio = document.getElementById('bgTheme');
+            //if (bgAudio) {
+            //    bgAudio.volume = 0.4; // softer background level
+
+            //    const tryPlay = () => {
+            //        bgAudio.play().catch(() => {
+            //            // Autoplay may be blocked; we'll retry on user interaction
+            //        });
+            //    };
+
+                // Initial attempt
+            //    tryPlay();
+
+                // On first interaction, ensure playback starts (for browsers that block autoplay)
+            //    const resumeOnInteraction = () => {
+            //        tryPlay();
+            //        document.removeEventListener('click', resumeOnInteraction);
+            //        document.removeEventListener('keydown', resumeOnInteraction);
+            //    };
+            //    document.addEventListener('click', resumeOnInteraction);
+            //    document.addEventListener('keydown', resumeOnInteraction);
+            //}
+			    // Background theme music via subtle overlay
+				const bgAudio = document.getElementById('bgTheme');
+				const overlay = document.getElementById('musicOverlay');
+				const overlayBtn = document.getElementById('musicOverlayBtn');
+
+				if (bgAudio && overlay && overlayBtn) {
+					bgAudio.volume = 0.4; // softer background level
+
+					const startTheme = () => {
+						bgAudio.play().catch(() => {
+							// If even this fails, we just hide overlay anyway.
+						});
+						overlay.classList.add('hidden');
+						overlayBtn.removeEventListener('click', startTheme);
+					};
+
+					overlayBtn.addEventListener('click', startTheme);
+				} else {
+					// If something is missing, make sure overlay doesn't block the page
+					if (overlay) overlay.classList.add('hidden');
+				}
+					});
+
+
+        /* =========================================================
+           Soft browser restrictions (best-effort, not bullet-proof)
+           ========================================================= */
+        (function hardenViewer() {
+            // 1. Disable right-click context menu
+            document.addEventListener('contextmenu', function (event) {
+                event.preventDefault();
+            });
+
+            // 2. Intercept common shortcuts for new tab, view source, DevTools, print, save, etc.
+            document.addEventListener('keydown', function (e) {
+                const key = (e.key || '').toLowerCase();
+                const ctrlOrCmd = e.ctrlKey || e.metaKey;
+
+                // New tab / new window / reopen closed tab
+                if (
+                    (ctrlOrCmd && (key === 't' || key === 'n')) ||           // Ctrl+T, Ctrl+N / Cmd+T, Cmd+N
+                    (ctrlOrCmd && e.shiftKey && key === 't')                 // Ctrl+Shift+T / Cmd+Shift+T
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+
+                // View source: Ctrl+U / Cmd+Option+U (we can only catch Ctrl/Cmd+U)
+                if (ctrlOrCmd && key === 'u') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+
+                // DevTools: F12, Ctrl+Shift+I/J/C, Cmd+Option+I (we catch the Ctrl/Cmd variants)
+                if (
+                    key === 'f12' ||
+                    (ctrlOrCmd && e.shiftKey && (key === 'i' || key === 'j' || key === 'c'))
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+
+                // Print & Save: Ctrl+P / Ctrl+S
+                if (ctrlOrCmd && (key === 'p' || key === 's')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+
+                // Attempt to react to PrintScreen key
+                if (key === 'printscreen') {
+                    // Best-effort: try to overwrite clipboard if allowed
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(
+                            'Screenshots are restricted on this tribute page.'
+                        ).catch(() => { /* ignore errors */ });
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            });
+
+            // 3. Override window.open so this page itself can't spawn new tabs/windows.
+            //    (Does NOT stop the user manually opening tabs in the browser UI.)
+            const originalOpen = window.open;
+            window.open = function () {
+                console.warn('Opening new tabs/windows from this tribute site is disabled.');
+                return null;
+            };
+
+            // 4. Light DevTools detection: when devtools is likely open, add body.devtools-open
+            let devtoolsOpen = false;
+            const threshold = 160; // px difference often seen when DevTools is docked
+
+            function checkDevTools() {
+                const widthDiff = window.outerWidth - window.innerWidth;
+                const heightDiff = window.outerHeight - window.innerHeight;
+                const isOpen = (widthDiff > threshold) || (heightDiff > threshold);
+
+                if (isOpen && !devtoolsOpen) {
+                    devtoolsOpen = true;
+                    document.body.classList.add('devtools-open');
+                } else if (!isOpen && devtoolsOpen) {
+                    devtoolsOpen = false;
+                    document.body.classList.remove('devtools-open');
+                }
+            }
+
+            // Check periodically; works in Chrome, Edge, Firefox, and most Chromium forks (e.g. Comet)
+            setInterval(checkDevTools, 1000);
+        })();
     </script>
 </body>
 </html>

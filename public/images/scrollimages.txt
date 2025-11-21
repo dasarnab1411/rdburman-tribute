@@ -1,0 +1,51 @@
+ Volume in drive C has no label.
+ Volume Serial Number is 4CAB-2C94
+
+ Directory of c:\BCCL\Arnab\AI\rdburman-tribute\public\images
+
+20-11-2025  22:20    <DIR>          .
+20-11-2025  21:56    <DIR>          ..
+19-11-2025  11:41             5,071 Amitabh Bachchan.jpeg
+19-11-2025  11:41             4,961 Asha Bhosle.jpeg
+19-11-2025  22:45             8,015 Dev Anand.jpeg
+19-11-2025  11:42             4,569 Gulshan Bawra.jpeg
+19-11-2025  11:40             3,618 Gulzar.jpeg
+19-11-2025  11:40             5,367 Javed Akhtar.jpeg
+19-11-2025  11:42             3,367 Lata Mangeshkar.jpeg
+17-11-2025  15:40             5,037 Pancham10.jpeg
+17-11-2025  15:40             7,220 Pancham12.jpeg
+17-11-2025  15:41             7,923 Pancham16.jpeg
+17-11-2025  15:42            12,136 Pancham17.jpeg
+17-11-2025  15:42             8,311 Pancham18.jpeg
+17-11-2025  15:42             8,241 Pancham19.jpeg
+17-11-2025  15:42             8,166 Pancham20.jpeg
+17-11-2025  15:43             9,714 Pancham21.jpeg
+17-11-2025  15:43             9,587 Pancham22.jpeg
+17-11-2025  15:43            10,238 Pancham23.jpeg
+17-11-2025  15:44             6,799 Pancham25.jpeg
+17-11-2025  15:44             6,039 Pancham26.jpeg
+17-11-2025  15:44            10,086 Pancham27.jpeg
+17-11-2025  15:45             9,061 Pancham28.jpeg
+17-11-2025  15:45             6,695 Pancham29.jpeg
+17-11-2025  15:38             3,884 Pancham3.jpeg
+17-11-2025  15:46             7,964 Pancham30.jpeg
+17-11-2025  15:39             4,860 Pancham4.jpeg
+17-11-2025  15:39            10,115 Pancham5.jpeg
+17-11-2025  15:39             9,793 Pancham6.jpeg
+17-11-2025  15:39             6,968 Pancham7.jpeg
+17-11-2025  15:40             6,776 Pancham8.jpeg
+17-11-2025  15:40             8,252 Pancham9.jpeg
+19-11-2025  22:44             6,106 Rajesh Khanna.jpeg
+19-11-2025  11:40             4,142 Ramesh Sippy.jpeg
+18-11-2025  11:51             5,668 rd-burman-2.jpeg
+12-11-2025  21:26            22,649 rd-burman-3.jpeg
+18-11-2025  11:51            11,828 rd-burman-4.jpeg
+11-11-2025  16:06            81,605 rd-burman-single-color1.png
+03-04-2025  09:22             6,601 RD.jpeg
+12-11-2025  22:14           343,642 RD.mp4
+12-11-2025  21:30           125,343 RD.png
+16-10-2024  16:35             6,524 rd1.jpeg
+12-11-2025  21:32            11,781 RD1_imresizer.jpg
+20-11-2025  22:20                 0 scrollimages.txt
+              42 File(s)        844,722 bytes
+               2 Dir(s)  93,984,935,936 bytes free
