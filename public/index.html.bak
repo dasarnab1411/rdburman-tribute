@@ -309,6 +309,7 @@
         .tab-btn:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
         .tab-btn:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
         .tab-btn:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+		.tab-btn:nth-child(5) { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: white; }
         .tab-btn.active { transform: scale(1.1); }
         .tab-content { 
             display: none !important;
@@ -511,6 +512,7 @@
             <button class="tab-btn" onclick="showTab(event, 'audio')">🎧 Audio</button>
             <!-- RENAMED: 'My Life' -> 'His Life' -->
             <button class="tab-btn" onclick="showTab(event, 'about')">📖 His Life</button>
+			<button class="tab-btn" onclick="showTab(event, 'boss')">👔 My Boss</button>
         </nav>
 
         <!-- HOME -->
@@ -961,12 +963,25 @@
             about: [
                 'ROYNffYphro','Acx881M41wQ','TxRxKXPfzw4','h_bYlWFho9I','1qGaUw9E_uA',
                 '1KS6m6-Wkhc','zpL0eXRdKBg','X1RMCW0MVuk',
-                'It_AdKqB-_I','8HW02AUZOug','ccoCW5TPscU','Lp7-iVdz764','x-cylptahIg','WQ66t244OjA','sTTmMdAHRFQ'
+                'It_AdKqB-_I','8HW02AUZOug','ccoCW5TPscU','Lp7-iVdz764','x-cylptahIg','WQ66t244OjA','sTTmMdAHRFQ',
                 'JGcU8a8tMp4','0sOPGESz1c8','0FM69eKX1JU','cT0eB9tF32s','DUs5SW_FLzY','PphOSrnMfG4','rGjN9ZIFdq0','M_mA1M44Bwc','lGpLxvBe-DE'
             ],
             composing: ['-S-vrvv1NnE','_oJmKeBPj84','K0mUTccDgNE','3F4NT2Y-SPM','ftbqxSdyiDs','Ggh36-xzktU','43Zg7_4TQnE','BkuDrXDJMUo','HbUjtluZsws','pwUyw_hYEVA'],
             unreleased: ['DyS1s3vVSMU','sdxb7Ntmgtw','cXgoIGjnMok','KDwwO9sRM1U','Iz1fky4vJOo','sqBsvPYUles','ElfWOyqeRyA','6qRG7Ifdnjo','GKn-UjnrINY','MRzyX1sHdIo','p45iHsSDYQM','OB_cAZvwpK8','lMVdeLYSXcQ','aP-yIFPsU7g','JDHbojwRZ0M','UwgLdlanTYc','D_jXLMwVes8','V46zxzcEBag','hWBtpwMnSUo','HAPLc3AeaXk','iBYzUB0UY2Q','Qild_H1Eg4M','2sk3agwRibI']
         };
+        // Helper: pause background theme music (if playing)
+        function pauseBackgroundTheme() {
+            const bg = document.getElementById('bgTheme');
+            if (bg && !bg.paused) {
+                try {
+                    bg.pause();
+                } catch (e) {
+                    console.warn('Could not pause background theme:', e);
+                }
+            }
+        }
+
+
 
         /* ==============
            Tab / UI logic
@@ -1016,6 +1031,37 @@
 		/* ===========================================
            YouTube single-playback helpers 21/11/2025
            =========================================== */
+        //let ytPlayers = [];
+
+        //function attachYouTubePlayers() {
+        //    if (!window.YT || !YT.Player) return;
+
+        //    const iframes = document.querySelectorAll('iframe.video-embed');
+        //    iframes.forEach(iframe => {
+        //        if (iframe.dataset.playerAttached === 'true') return;
+
+        //        const player = new YT.Player(iframe, {
+        //            events: {
+        //                onStateChange: (event) => {
+        //                    if (event.data === YT.PlayerState.PLAYING) {
+        //                        ytPlayers.forEach(p => {
+        //                            if (p !== player) {
+        //                                try { p.pauseVideo(); } catch (e) {}
+        //                            }
+        //                        });
+        //                    }
+        //                }
+        //            }
+        //        });
+
+        //        iframe.dataset.playerAttached = 'true';
+        //        ytPlayers.push(player);
+        //    });
+        //}
+
+        /* ===========================================
+           YouTube single-playback helpers 21/11/2025
+           =========================================== */
         let ytPlayers = [];
 
         function attachYouTubePlayers() {
@@ -1029,11 +1075,15 @@
                     events: {
                         onStateChange: (event) => {
                             if (event.data === YT.PlayerState.PLAYING) {
+                                // Pause other YouTube players
                                 ytPlayers.forEach(p => {
                                     if (p !== player) {
                                         try { p.pauseVideo(); } catch (e) {}
                                     }
                                 });
+
+                                // NEW: also pause background theme music
+                                pauseBackgroundTheme();
                             }
                         }
                     }
@@ -1043,6 +1093,10 @@
                 ytPlayers.push(player);
             });
         }
+
+
+
+
 
         // Called automatically when the YouTube Iframe API is ready
         function onYouTubeIframeAPIReady() {
@@ -1249,6 +1303,10 @@
             const player = document.getElementById('audioPlayer');
             const container = document.getElementById('audioPlayerContainer');
             const nowPlaying = document.getElementById('nowPlaying');
+			
+			
+		// NEW: stop background theme when song playback starts
+            pauseBackgroundTheme();
 
             nowPlaying.textContent = '⏳ Loading: ' + fileName;
             container.classList.add('active');
@@ -1267,6 +1325,27 @@
             player.onpause = () => { if (player.currentTime > 0 && player.currentTime < player.duration) nowPlaying.textContent = '⏸️ Paused: ' + fileName; };
             player.onplay = () => nowPlaying.textContent = '🎵 Playing: ' + fileName;
         }
+		
+		function stopAudio() {
+			const audioPlayer = document.getElementById('audioPlayer');
+			const audioPlayerContainer = document.getElementById('audioPlayerContainer');
+			const nowPlaying = document.getElementById('nowPlaying');
+
+			if (audioPlayer) {
+				audioPlayer.pause();
+				audioPlayer.currentTime = 0;
+			}
+
+			if (nowPlaying) {
+				nowPlaying.textContent = '⏹ Stopped';
+			}
+
+			if (audioPlayerContainer) {
+				audioPlayerContainer.classList.remove('active');
+				audioPlayerContainer.style.display = 'none';
+			}
+		}
+
 
         /* =========================================
            Testimonials and Poems (inserted verbatim)
