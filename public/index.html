@@ -22,6 +22,10 @@
             animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             color: #2c3e50;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 		/* Subtle overlay asking user to start theme music */
         .music-overlay {
@@ -352,6 +356,15 @@
         
         /* Disable right-click and selection on all media elements */
         audio, video, iframe {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Disable right-click on Background Scores section */
+        .boss-category.no-right-click,
+        .boss-category.no-right-click * {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -1569,7 +1582,7 @@
 						🎵 Select any composition below to start playing
 					</div>
 <button onclick="stopBossVideo()" style="padding: 8px 16px; border-radius: 20px; border: none; background: #e74c3c; color: white; font-weight: bold; cursor: pointer; white-space: nowrap;">
-						⏹ Stop Video
+						⏹ Stop Video to move to other Sections
 					</button>
 </div>
 <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" class="video-embed" frameborder="0" id="bossFavIframe" src="">
@@ -1588,24 +1601,52 @@
 					</div>
 </div>
 <!-- 2. Background Music 🎵 -->
-<div class="boss-category">
-<div class="boss-category-title">🎬 Background Music – Score Moments 🎵</div>
+<div class="boss-category no-right-click">
+<div class="boss-category-title">🎬 Background,Theme and Title Music – Score Moments 🎵</div>
 <div class="myboss-song-list">
-<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/honflNZTKHk?si=hv9Hx8Mp2K5HNxDy', 'Background Score 1');">
-							🎵 Background Score 1
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=LVfTCov8P_0&list=RDLVfTCov8P_0&start_radio=1', 'Background Score 1');">
+							🎵 Betaab
 						</a>
 <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/sxvB0cCQBSg?si=nKHilaVWLS7HPpxw', 'Background Score 2');">
-							🎵 Background Score 2
+							🎵 Teri Kasam
 						</a>
 <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/uQvOHHGrMjg?si=tdRtS57yk-lMb4SH', 'Background Score 3');">
-							🎵 Background Score 3
+							🎵 Sagar
 						</a>
 <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/pHJiYu69C4c?si=xskoVED0slaCnzR5', 'Background Score 4');">
-							🎵 Background Score 4
+							🎵 Satte pe Satta Gargling by Annette
 						</a>
 <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/PBLmRYnFs7E?si=vSkvSgeTqBKEt3sO', 'Background Score 5');">
-							🎵 Background Score 5
+							🎵 Arjun
 						</a>
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/shorts/4SBibAhMXr8', 'Background Score 6');">
+							🎵 Deewar
+						</a>
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=wUb2NMmO2Po&t=10s', 'Background Score 7');">
+							🎵 Sholay Tabla by PT. Shamta Prasad
+						</a>
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=Sz-herPtZPY', 'Background Score 8');">
+							🎵 Sholay
+						</a>
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=MJsCgUZAANE', 'Background Score 9');">
+							🎵 Sholay
+						</a>
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=Z6Jz91g16Z4&list=RDZ6Jz91g16Z4&start_radio=1', 'Background Score 10');">
+							🎵 Dacait
+						</a>	
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=r1bo3XcQeVI&list=RDr1bo3XcQeVI&start_radio=1', 'Background Score 11');">
+							🎵 Teesri Manzil
+						</a>
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=XsGuaAFK4zI&list=RDXsGuaAFK4zI&start_radio=1', 'Background Score 12');">
+							🎵 Gardish
+						</a>
+<a href="#" onclick="return openBossVideo(event, 'https: //www.youtube.com/watch?v=BBO1lMrrxg0&list=RDBBO1lMrrxg0&start_radio=1', 'Background Score 13');">
+							🎵 The Burning Train Clock Ticking effect by Maruti Rao
+						</a>
+<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=CVifJI5Ykzs&list=RDCVifJI5Ykzs&start_radio=1', 'Background Score 14');">
+							🎵 Drohi
+						</a>
+						
 </div>
 </div>
 <!-- 3. My Favourite Songs 🎵 -->
@@ -1708,11 +1749,11 @@
 <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/K-GPX2PzDKM?si=CujGtpU8GCbhp6KW', 'Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)');"> 
 						 🎵 Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)</a>
 <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/EEe4tVkaDWY?si=oxHls-A0lyQ4F5jy', 'Kotha Hoyechhilo | (Troyee 1982)');"> 
-						 🎵 Kotha Hoyechhilo | (Troyee 1982)</a>
+						 🎵 Kotha Hoyechhilo | (Troyee 1982) Bengali</a>
 <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/cesHYOjDcvg?si=LXAw8IC9GHrw_bkF', 'Mon Theke Mone Ki Kore Je Jabo | (Shwet Pathorer Thala 1992)');">
-						 🎵 Mon Theke Mone Ki Kore Je Jabo | (Shwet Pathorer Thala 1992)</a>
+						 🎵 Mon Theke Mone Ki Kore Je Jabo | Bengali (Shwet Pathorer Thala 1992)</a>
 <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/G0oOtkYjdFo?si=SF4z5UxjIwhh_U7d', 'Ki Kore Janle Tumi | (Debota 1990)');">
-						 🎵 Ki Kore Janle Tumi | (Debota 1990)</a>
+						 🎵 Ki Kore Janle Tumi | (Debota 1990) Bengali</a>
 </div>
 <!-- <div class="boss-small-note">
 						(Rename the Song 01 / 02 labels to actual titles whenever you like – colours are handled automatically by CSS.)
@@ -1873,11 +1914,132 @@
 		  
 		  // Re-apply periodically as backup
 		  setInterval(disableMediaContextMenu, 2000);
+		  
+		  // Disable right-click specifically on Background Scores section
+		  function disableBackgroundScoresRightClick() {
+			const bgScoresSections = document.querySelectorAll('.boss-category.no-right-click');
+			bgScoresSections.forEach(function(section) {
+			  section.addEventListener('contextmenu', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			  }, true);
+			  
+			  // Also disable on all child elements
+			  const children = section.querySelectorAll('*');
+			  children.forEach(function(child) {
+				child.addEventListener('contextmenu', function(e) {
+				  e.preventDefault();
+				  e.stopPropagation();
+				  return false;
+				}, true);
+			  });
+			});
+		  }
+		  
+		  // Run on page load
+		  disableBackgroundScoresRightClick();
+		  
+		  // Watch for dynamically added sections
+		  const bgScoresObserver = new MutationObserver(function(mutations) {
+			disableBackgroundScoresRightClick();
+		  });
+		  
+		  bgScoresObserver.observe(document.body, {
+			childList: true,
+			subtree: true
+		  });
 
-		  // 2. Intercept common shortcuts for new tab, view source, DevTools, print, save, etc.
+		  // 2. Disable text selection and copying
+		  document.addEventListener('selectstart', function(e) {
+			e.preventDefault();
+			return false;
+		  });
+		  
+		  document.addEventListener('copy', function(e) {
+			e.preventDefault();
+			e.clipboardData.setData('text/plain', 'Content copying is disabled on this tribute site.');
+			return false;
+		  });
+		  
+		  document.addEventListener('cut', function(e) {
+			e.preventDefault();
+			return false;
+		  });
+		  
+		  // 3. Disable drag and drop
+		  document.addEventListener('dragstart', function(e) {
+			e.preventDefault();
+			return false;
+		  });
+		  
+		  // 4. Disable image dragging
+		  document.addEventListener('DOMContentLoaded', function() {
+			const images = document.querySelectorAll('img');
+			images.forEach(function(img) {
+			  img.setAttribute('draggable', 'false');
+			  img.style.userSelect = 'none';
+			  img.style.webkitUserSelect = 'none';
+			  img.style.mozUserSelect = 'none';
+			  img.style.msUserSelect = 'none';
+			});
+		  });
+		  
+		  // 5. Prevent console manipulation
+		  (function() {
+			const noop = function() {};
+			const methods = ['log', 'debug', 'info', 'warn', 'error', 'table', 'trace', 'dir', 'group', 'groupCollapsed', 'groupEnd', 'clear'];
+			const originalConsole = {};
+			
+			methods.forEach(function(method) {
+			  originalConsole[method] = console[method];
+			});
+			
+			// Detect if console is open
+			let devtoolsOpen = false;
+			const element = new Image();
+			Object.defineProperty(element, 'id', {
+			  get: function() {
+				devtoolsOpen = true;
+				throw new Error('DevTools detected');
+			  }
+			});
+			
+			setInterval(function() {
+			  devtoolsOpen = false;
+			  console.clear();
+			  console.log(element);
+			  if (devtoolsOpen) {
+				document.body.classList.add('devtools-open');
+			  }
+			}, 1000);
+		  })();
+		  
+		  // 6. Disable common debugging shortcuts
 		  document.addEventListener('keydown', function (e) {
 			const key = (e.key || '').toLowerCase();
 			const ctrlOrCmd = e.ctrlKey || e.metaKey;
+
+			// Disable Ctrl+A (Select All)
+			if (ctrlOrCmd && key === 'a') {
+			  e.preventDefault();
+			  e.stopPropagation();
+			  return false;
+			}
+			
+			// Disable Ctrl+C (Copy)
+			if (ctrlOrCmd && key === 'c') {
+			  e.preventDefault();
+			  e.stopPropagation();
+			  return false;
+			}
+			
+			// Disable Ctrl+X (Cut)
+			if (ctrlOrCmd && key === 'x') {
+			  e.preventDefault();
+			  e.stopPropagation();
+			  return false;
+			}
 
 			// New tab / new window / reopen closed tab
 			if (
@@ -2357,6 +2519,11 @@
                 
                 // Click to load actual iframe
                 wrapper.addEventListener('click', function() {
+                    // Pause background music when video starts playing
+                    if (window.pauseBackgroundTheme) {
+                        window.pauseBackgroundTheme();
+                    }
+                    
                     const thumbDiv = wrapper.querySelector('.video-thumbnail');
                     if (thumbDiv) {
                         const vid = thumbDiv.dataset.videoId;
@@ -2520,6 +2687,12 @@
 
         function playAudio(fileId, fileName, event) {
             event.stopPropagation();
+            
+            // Pause background music when audio starts playing
+            if (window.pauseBackgroundTheme) {
+                window.pauseBackgroundTheme();
+            }
+            
             const player = document.getElementById('audioPlayer');
             const container = document.getElementById('audioPlayerContainer');
             const nowPlaying = document.getElementById('nowPlaying');
@@ -2539,7 +2712,13 @@
             player.onerror = (e) => { console.error('Audio error:', e); nowPlaying.textContent = '❌ Failed to load: ' + fileName; };
             player.onended = () => nowPlaying.textContent = '✅ Finished: ' + fileName;
             player.onpause = () => { if (player.currentTime > 0 && player.currentTime < player.duration) nowPlaying.textContent = '⏸️ Paused: ' + fileName; };
-            player.onplay = () => nowPlaying.textContent = '🎵 Playing: ' + fileName;
+            player.onplay = () => {
+                nowPlaying.textContent = '🎵 Playing: ' + fileName;
+                // Pause background music when audio plays
+                if (window.pauseBackgroundTheme) {
+                    window.pauseBackgroundTheme();
+                }
+            };
         }
 </script>		
 <script>
@@ -2706,6 +2885,11 @@
 			// YT.PlayerState.UNSTARTED = -1
 
 			if (playerState === 1) { // Playing
+			  // Pause background music when video starts playing
+			  if (window.pauseBackgroundTheme) {
+				window.pauseBackgroundTheme();
+			  }
+			  
 			  // Check if another video is already playing or paused
 			  if (currentPlayingPlayer && currentPlayingPlayer !== playerId) {
 				// Get the current state of the previous player
@@ -3770,6 +3954,11 @@
         function openBossVideo(e, url, title) {
             if (e) e.preventDefault();
             
+            // Pause background music when video starts playing
+            if (window.pauseBackgroundTheme) {
+                window.pauseBackgroundTheme();
+            }
+            
             const player = document.getElementById('bossFavPlayer');
             const iframe = document.getElementById('bossFavIframe');
             const nowPlaying = document.getElementById('bossFavNowPlaying');
@@ -3796,6 +3985,9 @@
                     isBossVideoPlaying = true;
                     toggleTabsAccess(true); // Disable tabs
                     
+                    // Disable right-click on iframe
+                    disableBossIframeRightClick(iframe);
+                    
                     // Scroll to player
                     player.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return false;
@@ -3811,11 +4003,39 @@
                 isBossVideoPlaying = true;
                 toggleTabsAccess(true); // Disable tabs
                 
+                // Disable right-click on iframe
+                disableBossIframeRightClick(iframe);
+                
                 // Scroll to player
                 player.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
             
             return false;
+        }
+        
+        // Function to disable right-click on Boss video iframe
+        function disableBossIframeRightClick(iframe) {
+            if (!iframe || iframe.dataset.contextDisabled) return;
+            
+            // Mark as processed
+            iframe.dataset.contextDisabled = 'true';
+            
+            // Prevent right-click on the iframe element itself
+            iframe.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }, true);
+            
+            // Add a transparent overlay div to block interactions
+            const wrapper = iframe.parentElement;
+            if (wrapper && !wrapper.querySelector('.iframe-overlay-boss')) {
+                const overlay = document.createElement('div');
+                overlay.className = 'iframe-overlay-boss';
+                overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+                wrapper.style.position = 'relative';
+                wrapper.appendChild(overlay);
+            }
         }
 		
 	</script>
