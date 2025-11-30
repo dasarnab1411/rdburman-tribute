@@ -1,7 +1,24 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://rdburman-tribute-production.up.railway.app/api/:path*" },
-    { "source": "/(.*)", "destination": "/public/$1" }
+    { 
+      "source": "/api/(.*)", 
+      "destination": "https://rdburman-tribute-production.up.railway.app/api/$1" 
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://rdburman-tribute-production.up.railway.app/api/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1"
+    }
   ]
 }
