@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 3001;
 const allowedOrigins = [
   'http://localhost:3001',
   'http://127.0.0.1:3001',
-  'https://rdburman-tribute.vercel.app'  // your Vercel URL
+  'https://rdburman-tribute.vercel.app/'  // your Vercel URL
 ];
 
 	app.use(cors({
