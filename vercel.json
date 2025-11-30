@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { 
+    {
       "source": "/api/(.*)",
       "destination": "https://rdburman-tribute-production.up.railway.app/$1"
     }
