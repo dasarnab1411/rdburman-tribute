@@ -42,6 +42,50 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Security headers middleware
+app.use((req, res, next) => {
+    // Prevent clickjacking
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    
+    // Prevent MIME type sniffing
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    
+    // Enable XSS protection
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    
+    // Content Security Policy
+    res.setHeader('Content-Security-Policy', 
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.google.com; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data: https: http:; " +
+        "font-src 'self' data:; " +
+        "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; " +
+        "media-src 'self' https: http: blob:; " +
+        "connect-src 'self' https://www.googleapis.com https://drive.google.com;"
+    );
+    
+    // Referrer Policy
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    
+    // Permissions Policy (formerly Feature Policy)
+    res.setHeader('Permissions-Policy', 
+        'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
+    );
+    
+    // Strict Transport Security (HTTPS only)
+    if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+    }
+    
+    // Disable caching for sensitive content
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    
+    next();
+});
+
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
     next();
