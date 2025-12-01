@@ -3,8 +3,8 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://rdburman-tribute-production.up.railway.app/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://rdburman-tribute-production.up.railway.app/api/:path*"
     }
   ],
   "headers": [
