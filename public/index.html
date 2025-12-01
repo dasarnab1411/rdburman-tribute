@@ -413,6 +413,9 @@
             display: none;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
         }
+        .audio-player-container.active {
+            display: block !important;
+        }
         .video-tab-btn.active { transform: scale(1.1); opacity: 1; }
         .video-tab-btn { opacity: 0.8; }
         .life-tab-btn.active { transform: scale(1.05); opacity: 1; }
@@ -1312,7 +1315,7 @@
 </div>
 </div>
 <!-- CHAPTER 12 -->
-<div class="accordion-item">
+<!-- <div class="accordion-item">
 <div class="accordion-header collapsed" data-target="c12" onclick="toggleAccordion(event, 'c12')">
 						  LEGACY IN POETRY
 						  <span class="chev">▶</span>
@@ -1322,7 +1325,7 @@
 <p>“Aur tum yun hi do kadam chalkar…”<br/>“Pancham chaal hai.”<br/>“Jeevan ke din…”</p>
 <p>Pancham lived fully, honestly, musically — and left behind a universe.</p>
 </div>
-</div>
+</div> -->
 </div> <!-- end accordion -->
 </div>
 <!-- Testimonials inserted below biography -->
@@ -1615,7 +1618,7 @@
 						🎵 Select any composition below to start playing
 					</div>
 <button onclick="stopBossVideo()" style="padding: 8px 16px; border-radius: 20px; border: none; background: #e74c3c; color: white; font-weight: bold; cursor: pointer; white-space: nowrap;">
-						⏹ Stop Video to move to other Sections
+						⏹ To Stop the Video Press Here
 					</button>
 </div>
 <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" class="video-embed" frameborder="0" id="bossFavIframe" src="">
@@ -1626,7 +1629,7 @@
 <div class="boss-category-title">🎬 Title Music – Boss’s Opening Themes 🎵</div>
 <div class="myboss-song-list">
 <a href="#" onclick="return openBossVideo(event, 'https://youtube.com/playlist?list=PLt1_3oWrtFTOFpilXV5DEwZoxKjdXR6Ra&amp;si=bFkh3u6LiG3dssjF', 'Chhote Nawab – Boss\'s Themes');">
-							🎵 Chhote Nawab – Boss's Frist Title Track
+							🎵 Chhote Nawab – Boss's First Title Track
 						</a>
 <!-- </div>
 <div class="boss-small-note">
@@ -1882,23 +1885,27 @@
 			</p>
 <!-- Blank space kept intentionally for your own text / audio / video embeds -->
 </div>
-<!-- <div class="audio-player-container" id="audioPlayerContainer">
-			<div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white;">
-				<div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">🎵 No song playing</div>
-				<audio id="audioPlayer" controls controlsList="nodownload" style="flex: 2; max-width: 600px;"></audio>
-			</div>
-		</div> -->
+</div>
+<!-- End of My Boss tab-content -->
+
+<footer>
+    <p style="font-size: 1.2rem;">♪♫ "Pancham Da's music transcends time, touching hearts across generations." ♫♪</p>
+    <p style="margin-top: 20px; font-weight: bold; font-size: 1.3rem;">🎵 Forever in our hearts - R.D. Burman (1939-1994) 🎶</p>
+</footer>
+</div>
+<!-- End of main container -->
+
 <div class="audio-player-container" id="audioPlayerContainer">
 <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white; flex-wrap: wrap;">
-<div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">🎵 No song playing</div>
-<audio controls="" controlslist="nodownload" id="audioPlayer" style="flex: 2; max-width: 600px;"></audio>
+<div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold; min-width: 200px;">🎵 No song playing</div>
+<audio controls="" controlslist="nodownload" id="audioPlayer" style="flex: 2; max-width: 600px; min-width: 300px;"></audio>
 <!-- NEW stop button -->
-<!-- <button type="button"
+<button type="button"
 						id="stopAudioBtn"
 						onclick="stopAudio()"
-						style="padding: 8px 16px; border-radius: 20px; border: none; background:#e74c3c; color:#fff; cursor:pointer; white-space: nowrap;">
+						style="padding: 8px 16px; border-radius: 20px; border: none; background:#e74c3c; color:#fff; cursor:pointer; white-space: nowrap; font-weight: bold;">
 					⏹ Stop
-				</button> -->
+				</button>
 </div>
 </div>
 <script src="https://www.youtube.com/iframe_api"></script>
@@ -2748,12 +2755,6 @@
 
         function playAudio(fileId, fileName, event) {
             event.stopPropagation();
-            
-            // Pause background music when audio starts playing
-            if (window.pauseBackgroundTheme) {
-                window.pauseBackgroundTheme();
-            }
-            
             const player = document.getElementById('audioPlayer');
             const container = document.getElementById('audioPlayerContainer');
             const nowPlaying = document.getElementById('nowPlaying');
@@ -2773,13 +2774,28 @@
             player.onerror = (e) => { console.error('Audio error:', e); nowPlaying.textContent = '❌ Failed to load: ' + fileName; };
             player.onended = () => nowPlaying.textContent = '✅ Finished: ' + fileName;
             player.onpause = () => { if (player.currentTime > 0 && player.currentTime < player.duration) nowPlaying.textContent = '⏸️ Paused: ' + fileName; };
-            player.onplay = () => {
-                nowPlaying.textContent = '🎵 Playing: ' + fileName;
-                // Pause background music when audio plays
-                if (window.pauseBackgroundTheme) {
-                    window.pauseBackgroundTheme();
-                }
-            };
+            player.onplay = () => nowPlaying.textContent = '🎵 Playing: ' + fileName;
+        }
+
+        function stopAudio() {
+            const player = document.getElementById('audioPlayer');
+            const container = document.getElementById('audioPlayerContainer');
+            const nowPlaying = document.getElementById('nowPlaying');
+            
+            if (player) {
+                player.pause();
+                player.currentTime = 0;
+                player.src = '';
+            }
+            
+            if (container) {
+                container.classList.remove('active');
+                container.style.display = 'none';
+            }
+            
+            if (nowPlaying) {
+                nowPlaying.textContent = '🎵 No song playing';
+            }
         }
 </script>		
 <script>
