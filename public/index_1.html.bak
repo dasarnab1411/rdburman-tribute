@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script>
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+    </script>	
+    <title>R.D. Burman - Pancham Da Tribute</title>
+
+    <!-- Favicon for the site -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Georgia, serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 25%, #48dbfb 50%, #ff9ff3 75%, #54a0ff 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+		/* Subtle overlay asking user to start theme music */
+        .music-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+        }
+        .music-overlay.hidden {
+            display: none;
+        }
+		.music-overlay-inner {
+			/* make the wrapper invisible so only the button shows */
+			background: transparent;
+			box-shadow: none;
+
+			/* reduce padding so there’s no extra white halo around the button */
+			padding: 0;
+
+			/* keep the rest as-is so layout doesn’t break */
+			border-radius: 18px;
+			max-width: 320px;
+			text-align: center;
+		}
+        .music-overlay-inner h3 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        .music-overlay-inner p {
+            font-size: 0.95rem;
+            margin-bottom: 14px;
+            color: #636e72;
+        }
+        .music-overlay-button {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 22px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ff7675 0%, #fdcb6e 100%);
+            color: #2c3e50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+        .music-overlay-button:hover {
+            transform: translateY(-1px);
+        }
+
+/* When DevTools is detected, lightly lock the UI */
+        body.devtools-open {
+            filter: blur(3px);
+            pointer-events: none;
+            user-select: none;
+        }
+        body.devtools-open::before {
+            content: 'Developer tools detected. Viewing / copying is restricted on this tribute site.';
+            position: fixed;
+            z-index: 9999;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 1.4rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .scrolling-header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .scrolling-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            width: fit-content;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .scrolling-image {
+            height: 80px;
+            width: auto;
+            margin: 0 15px;
+            border-radius: 10px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 2; }
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }	
+
+/* Floating instrument emojis over the header */
+		header::before {
+			content: '🎸 🎹 🎺 🥁 🎻 🎷 🪕 🎼 🎵 🎶 ♪ ♫ ♩ ♬ 🎸 🎹 🎺 🥁 🎻 🎷';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 200%;
+			height: 100%;
+			font-size: 4.5rem;
+			opacity: 0.35;
+			color: rgba(255, 215, 0, 0.8);
+			display: flex;
+			flex-wrap: wrap;
+			gap: 50px;
+			padding: 30px;
+			animation: instrumentFloat 20s linear infinite;
+			pointer-events: none;
+			filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+			z-index: 0; /* stay behind the profile content */
+		}
+
+		header::after {
+			content: '🎤 🪘 🎺 🎸 🎻 🥁 🎹 🎷 🪕 🎼 🎵 🎶 ♪ ♫ 🎤 🪘 🎺 🎸';
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			width: 200%;
+			height: 100%;
+			font-size: 4rem;
+			opacity: 0.3;
+			color: rgba(255, 182, 193, 0.8);
+			display: flex;
+			flex-wrap: wrap;
+			gap: 45px;
+			padding: 25px;
+			animation: instrumentFloat 25s linear infinite reverse;
+			pointer-events: none;
+			filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+			z-index: 0;
+		}
+
+		@keyframes instrumentFloat {
+			0%   { transform: translateX(0) translateY(0); }
+			100% { transform: translateX(-50%) translateY(-20px); }
+		}
+
+
+		.main-video-container {
+			width: 300px;
+			height: 300px;
+			border-radius: 50%;
+			border: 8px solid #ff6b6b;
+			margin: 20px auto;
+			overflow: hidden;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+			position: relative; /* NEW */
+			z-index: 1;         /* NEW: profile video above instruments */
+		}
+
+        @keyframes instrumentFloat {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-20px); }
+        }
+        .main-video { width: 100%; height: 100%; object-fit: cover; }
+        h1 {
+            font-size: 3.5rem;
+            color: #ff6b6b;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin: 20px 0;
+            font-weight: bold;
+            position: relative;
+            z-index: 10;
+        }
+        .dates {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            font-weight: bold;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            display: inline-block;
+            border-radius: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+        }
+        .subtitle { 
+            font-size: 1.5rem; 
+            color: #ffeaa7; 
+            font-style: italic; 
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .tab-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .tab-btn:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .tab-btn:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .tab-btn:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .tab-btn:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+		.tab-btn:nth-child(5) { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: white; }
+        .tab-btn.active { transform: scale(1.1); }
+        .tab-content { 
+            display: none !important;
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 40px; 
+            border-radius: 20px;
+            min-height: 500px;
+            max-height: none;
+            overflow-y: auto;
+        }
+        .tab-content.active { 
+            display: block !important;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #about {
+            height: auto !important;
+            max-height: none !important;
+        }
+        #about > div {
+            display: block !important;
+            visibility: visible !important;
+            height: auto !important;
+        }
+        #about > div > div {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .home-summary { line-height: 1.8; font-size: 1.15rem; }
+        .home-summary h2 { color: #8e44ad; font-size: 2.2rem; margin-bottom: 20px; text-align: center; }
+        .home-summary .highlight { background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 20px; border-radius: 15px; margin: 25px 0; }
+        .biography-content {
+            line-height: 1.8;
+            font-size: 1.05rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: block !important;
+            visibility: visible !important;
+        }
+        .biography-content > div {
+            display: block !important;
+            visibility: visible !important;
+            margin-bottom: 30px;
+        }
+        .folder-item {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .folder-item:hover { transform: translateX(5px); }
+        .song-item {
+            background: white;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .song-item:hover { background: #f8f9fa; }
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .content-card { background: white; padding: 25px; border-radius: 15px; border-left: 5px solid #e74c3c; }
+        .video-embed { width: 100%; aspect-ratio: 16/9; border-radius: 10px; }
+        .loading { text-align: center; padding: 40px; }
+        .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #e74c3c; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .audio-player-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 20px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+        }
+        .video-tab-btn.active { transform: scale(1.1); opacity: 1; }
+        .video-tab-btn { opacity: 0.8; }
+        .life-tab-btn.active { transform: scale(1.05); opacity: 1; }
+        .life-tab-btn { opacity: 0.9; padding: 10px 18px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; transition: transform 0.2s, opacity 0.2s; background: linear-gradient(135deg,#ffd89b 0%, #ff9ff3 100%); }
+        .life-tabs { display:flex; gap:12px; flex-wrap:wrap; margin: 18px 0 30px 0; }
+        .life-sub-content { display: none; }
+        .life-sub-content.active { display: block; }
+        .life-sub-header { font-size: 1.6rem; margin-bottom: 12px; color: #2c3e50; font-weight: bold; }
+
+		/* Background music control buttons (top-right) */
+		.bg-music-controls {
+			position: fixed;
+			top: 12px;
+			right: 12px;
+			z-index: 1300;
+			display: flex;
+			gap: 8px;
+		}
+		.bg-music-controls button {
+			padding: 6px 12px;
+			border-radius: 999px;
+			border: none;
+			font-size: 0.8rem;
+			font-weight: 600;
+			cursor: pointer;
+			background: linear-gradient(135deg,#ffeaa7,#fab1a0);
+			color: #2c3e50;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+			white-space: nowrap;
+			opacity: 0.4;                    /* 40% visible by default */
+			transition: 
+				opacity 0.2s ease,
+				transform 0.2s ease,
+				box-shadow 0.2s ease;
+		}
+		.bg-music-controls button:hover {
+			opacity: 1;                      /* fully visible on hover */
+			transform: translateY(-1px);
+			box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+		}
+
+
+
+	/* --- My Boss: Favourite Compositions section --- */
+        .boss-fav-section {
+            margin-top: 24px;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        .boss-fav-section h3 {
+            font-size: 1.35rem;
+            margin-bottom: 10px;
+            color: #8e44ad;
+        }
+        .boss-fav-section p.section-intro {
+            margin-bottom: 18px;
+            color: #444;
+        }
+        
+		.boss-category {
+            margin-bottom: 26px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #fffdf3, #ffe8c2);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+        }
+        
+		.boss-category-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #e67e22;
+        }
+		
+        .myboss-song-list {
+            margin-top: 6px;
+        }
+		
+        .myboss-song-list a {
+            display: block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.98rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+        }
+        .myboss-song-list a:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.14);
+            opacity: 0.95;
+        }
+/* Colourful blocks inside “The Genius that he is” */
+        #boss-genius p {
+            background: none; /* keep base clean */
+        }
+
+        .genius-song-block {
+            display: block;
+            padding: 16px 20px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* Collapsible wrapper for "The Genius that he is" */
+        .genius-accordion {
+            margin-top: 20px;
+        }
+
+        /* Use the same base accordion styling you already have */
+        .genius-accordion .accordion-item {
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        /* Make headers colourful using the existing song classes 🎵 */
+        .genius-accordion .accordion-header.song-1,
+        .genius-accordion .accordion-header.song-2,
+        .genius-accordion .accordion-header.song-3,
+        .genius-accordion .accordion-header.song-4,
+        .genius-accordion .accordion-header.song-5,
+        .genius-accordion .accordion-header.song-6,
+        .genius-accordion .accordion-header.song-7,
+        .genius-accordion .accordion-header.song-8,
+        .genius-accordion .accordion-header.song-9,
+        .genius-accordion .accordion-header.song-10,
+        .genius-accordion .accordion-header.song-11,
+        .genius-accordion .accordion-header.song-12,
+        .genius-accordion .accordion-header.song-13,
+        .genius-accordion .accordion-header.song-bg {
+            color: inherit;
+        }
+
+        /* Song text block inside the accordion bodies – neat paragraphs */
+        .genius-accordion-body .genius-song-block {
+            padding: 16px 22px;
+            margin: 0;
+            border-radius: 0;
+            white-space: normal;      /* normal wrapping */
+            text-align: justify;      /* neater paragraphs */
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Remove the old placeholder paragraph that was leaving a big blank gap */
+        #boss-genius > p:first-of-type {
+            display: none;
+        }
+
+        /* Different background + text colour for each song 🎵 */
+        .genius-song-block.song-1 {
+            background: #ffeaa7;
+            color: #4a2600;
+        }
+        .genius-song-block.song-2 {
+            background: #ff9ff3;
+            color: #3b003b;
+        }
+        .genius-song-block.song-3 {
+            background: #74b9ff;
+            color: #002244;
+        }
+        .genius-song-block.song-4 {
+            background: #55efc4;
+            color: #004433;
+        }
+        .genius-song-block.song-5 {
+            background: #fab1a0;
+            color: #4a1f00;
+        }
+        .genius-song-block.song-6 {
+            background: #d1d8e0;
+            color: #1e272e;
+        }
+        .genius-song-block.song-7 {
+            background: #ffe6f7;
+            color: #4b214b;
+        }
+        .genius-song-block.song-8 {
+            background: #c8ffb0;
+            color: #1e3a09;
+        }
+        .genius-song-block.song-bg {
+            background: #f5e6ff;
+            color: #3b1e5e;
+        }
+
+        /* Match accordion headers to each song’s colours 🎵 */
+        .genius-accordion .accordion-header.song-1 {
+            background: #ffeaa7;
+            color: #4a2600;
+        }
+        .genius-accordion .accordion-header.song-2 {
+            background: #ff9ff3;
+            color: #3b003b;
+        }
+        .genius-accordion .accordion-header.song-3 {
+            background: #74b9ff;
+            color: #002244;
+        }
+        .genius-accordion .accordion-header.song-4 {
+            background: #55efc4;
+            color: #004433;
+        }
+        .genius-accordion .accordion-header.song-5 {
+            background: #fab1a0;
+            color: #4a1f00;
+        }
+        .genius-accordion .accordion-header.song-6 {
+            background: #d1d8e0;
+            color: #1e272e;
+        }
+        .genius-accordion .accordion-header.song-7 {
+            background: #ffe6f7;
+            color: #4b214b;
+        }
+        .genius-accordion .accordion-header.song-8 {
+            background: #c8ffb0;
+            color: #1e3a09;
+        }
+        .genius-accordion .accordion-header.song-bg {
+            background: #f5e6ff;
+            color: #3b1e5e;
+        }
+
+		/* Inside the body, keep your colourful blocks but avoid double padding */
+
+		.genius-accordion-body .genius-song-block {
+			padding: 16px 22px;
+			margin: 0;
+			border-radius: 0;
+			white-space: normal;        /* no weird spacing from line-breaks */
+			text-align: justify;        /* neater paragraphs */
+			line-height: 1.6;
+			font-size: 0.95rem;
+		}
+		/* Remove the old placeholder paragraph that was leaving a big blank gap */
+			#boss-genius > p:first-of-type {
+			display: none;
+		}
+
+		/* Different background + text colour for each song 🎵 */
+		.genius-song-block.song-1 {
+			background: #ffeaa7;
+			color: #4a2600;
+		}
+		.genius-song-block.song-2 {
+			background: #ff9ff3;
+			color: #3b003b;
+		}
+		.genius-song-block.song-3 {
+			background: #74b9ff;
+			color: #002244;
+		}
+		.genius-song-block.song-4 {
+			background: #55efc4;
+			color: #004433;
+		}
+		.genius-song-block.song-5 {
+			background: #fab1a0;
+			color: #4a1f00;
+		}
+		.genius-song-block.song-6 {
+			background: #d1d8e0;
+			color: #1e272e;
+		}
+		.genius-song-block.song-7 {
+			background: #ffe6f7;
+			color: #4b214b;
+		}
+		.genius-song-block.song-8 {
+			background: #c8ffb0;
+			color: #1e3a09;
+		}
+		.genius-song-block.song-bg {
+			background: #f5e6ff;
+			color: #3b1e5e;
+		}
+		/* Match accordion headers to each song’s colours 🎵 */
+        .genius-accordion .accordion-header.song-1 {
+            background: #ffeaa7;
+            color: #4a2600;
+        }
+        .genius-accordion .accordion-header.song-2 {
+            background: #ff9ff3;
+            color: #3b003b;
+        }
+        .genius-accordion .accordion-header.song-3 {
+            background: #74b9ff;
+            color: #002244;
+        }
+        .genius-accordion .accordion-header.song-4 {
+            background: #55efc4;
+            color: #004433;
+        }
+        .genius-accordion .accordion-header.song-5 {
+            background: #fab1a0;
+            color: #4a1f00;
+        }
+        .genius-accordion .accordion-header.song-6 {
+            background: #d1d8e0;
+            color: #1e272e;
+        }
+        .genius-accordion .accordion-header.song-7 {
+            background: #ffe6f7;
+            color: #4b214b;
+        }
+        .genius-accordion .accordion-header.song-8 {
+            background: #c8ffb0;
+            color: #1e3a09;
+        }
+        .genius-accordion .accordion-header.song-bg {
+            background: #f5e6ff;
+            color: #3b1e5e;
+        }
+/* ////////////////////////// */
+		/* === My Boss → Main Page : R.D. Burman Saga === */
+		.boss-saga {
+			max-width: 1100px;
+			margin: 0 auto;
+			padding: 25px 20px 40px;
+		}
+
+		.boss-saga-heading {
+			font-size: 1.4rem;
+			color: #e74c3c;
+			text-align: center;
+			margin-bottom: 10px;
+		}
+
+		.boss-saga-intro {
+			text-align: justify;
+			line-height: 1.7;
+			margin-bottom: 18px;
+			color: #333;
+		}
+
+		.boss-saga-accordion {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.boss-saga-section {
+			border-radius: 14px;
+			overflow: hidden;
+			background: linear-gradient(135deg, #ffeaa7, #fad0c4);
+			box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+		}
+
+		.boss-saga-section summary {
+			list-style: none;
+			cursor: pointer;
+			padding: 10px 16px;
+			font-weight: 600;
+			font-size: 0.98rem;
+			background: linear-gradient(135deg,#ff9a9e,#fecfef);
+			color: #4a148c;
+		}
+
+		.boss-saga-section[open] summary {
+			background: linear-gradient(135deg,#f6d365,#fda085);
+		}
+
+		.boss-saga-section summary::-webkit-details-marker {
+			display: none;
+		}
+
+		.boss-saga-body {
+			padding: 12px 18px 18px;
+			background: rgba(255,255,255,0.96);
+			font-size: 0.93rem;
+			line-height: 1.7;
+			color: #333;
+		}
+
+		.boss-saga-body h4 {
+			margin: 10px 0 4px;
+			font-size: 0.97rem;
+			color: #c0392b;
+		}
+
+		.boss-saga-body p {
+			margin: 0 0 0.6em;
+		}
+
+		.boss-saga-outro {
+			margin-top: 10px;
+			font-weight: 600;
+			text-align: center;
+		}
+
+
+        /* Each song chip gets a different background / foreground colour 🎵 */
+        .myboss-song-list a:nth-child(8n+1) {
+            background:#ffeaa7; color:#5c3300;
+        }
+        .myboss-song-list a:nth-child(8n+2) {
+            background:#ff9ff3; color:#3b003b;
+        }
+        .myboss-song-list a:nth-child(8n+3) {
+            background:#74b9ff; color:#001933;
+        }
+        .myboss-song-list a:nth-child(8n+4) {
+            background:#55efc4; color:#004432;
+        }
+        .myboss-song-list a:nth-child(8n+5) {
+            background:#fab1a0; color:#4a2100;
+        }
+        .myboss-song-list a:nth-child(8n+6) {
+            background:#d1d8e0; color:#1e272e;
+        }
+        .myboss-song-list a:nth-child(8n+7) {
+            background:#ffe6f7; color:#4b214b;
+        }
+        .myboss-song-list a:nth-child(8n+8) {
+            background:#c8ffb0; color:#1e3a09;
+        }
+
+        .boss-small-note {
+            font-size: 0.9rem;
+            color:#555;
+            margin-top: 6px;
+        }
+
+
+        /* Accordion/Collapsible styles for chapters */
+        .accordion { width: 100%; border-radius: 12px; overflow: hidden; }
+        .accordion-item { margin-bottom: 12px; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .accordion-header {
+            background: linear-gradient(135deg, #fff7e6, #ffeccf);
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.15rem;
+        }
+        .accordion-header .chev { font-size: 1.2rem; opacity: 0.8; transition: transform 0.25s; }
+        .accordion-header.collapsed .chev { transform: rotate(0deg); }
+        .accordion-header.expanded .chev { transform: rotate(90deg); }
+        .accordion-body { padding: 18px 20px; display: none; line-height: 1.8; color: #333; font-size: 1rem; background: #fff; }
+        .accordion-body.visible { display: block; }
+
+        /* testimonials and poem styling */
+        .testimonial { display:flex; gap:18px; padding:18px; border-radius:12px; margin-bottom:16px; align-items:flex-start; box-shadow:0 8px 20px rgba(0,0,0,.06); }
+        .testimonial img { width:86px; height:86px; object-fit:cover; border-radius:50%; border:3px solid rgba(255,255,255,0.8); box-shadow:0 6px 18px rgba(0,0,0,0.15); flex:0 0 86px; }
+        .testimonial .content { flex:1; }
+        .testimonial h3 { font-size:1.15rem; margin-bottom:8px; color:#2c3e50; }
+        .testimonial p { font-size:1rem; line-height:1.7; color:#222; }
+        .t-gulzar { background: linear-gradient(135deg,#fff7e6,#ffeccf); }
+        .t-javed { background: linear-gradient(135deg,#e8f6ff,#dff6ff); }
+        .t-ramesh { background: linear-gradient(135deg,#fdeef8,#f7e7ff); }
+        .t-amitabh { background: linear-gradient(135deg,#fff7f0,#fff1e6); }
+        .t-asha { background: linear-gradient(135deg,#f0fff4,#e6fff1); }
+        .t-lata { background: linear-gradient(135deg,#f6f4ff,#ece9ff); }
+        .t-gulshan { background: linear-gradient(135deg,#fff8f8,#fff3f5); }
+
+        .poem-block { background: linear-gradient(135deg,#e8f8f5,#e0f0ff); padding:18px; border-radius:12px; margin-top:18px; }
+        .poem-block .poem-text { white-space: pre-wrap; font-family: Georgia, serif; font-size:1.02rem; line-height:1.8; color:#2b2b2b; }
+
+        footer { 
+            text-align: center; 
+            padding: 30px; 
+            margin-top: 50px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        footer p {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* small responsive tweaks */
+        @media (max-width: 700px) {
+            .tab-btn { padding: 10px 16px; font-size: 1rem; }
+            .life-tab-btn { padding: 8px 12px; font-size: 0.95rem; }
+            header::before, header::after { display: none; }
+            .testimonial { flex-direction:column; align-items:center; text-align:center; }
+            .testimonial img { margin-bottom:10px; }
+        }
+    </style>
+	<style>
+	/* Fallback instrument layers (JS-created) */
+	.instrument-layer-top,
+	.instrument-layer-bottom {
+	  position: absolute;
+	  width: 200%;
+	  height: 100%;
+	  display: flex;
+	  flex-wrap: wrap;
+	  pointer-events: none;
+	  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+	  z-index: 0;
+	}
+
+	.instrument-layer-top {
+	  top: 0;
+	  left: 0;
+	  font-size: 4.5rem;
+	  opacity: 0.35;
+	  color: rgba(255, 215, 0, 0.8);
+	  padding: 30px;
+	  gap: 50px;
+	  animation: instrumentFloatFallback 20s linear infinite;
+	}
+
+	.instrument-layer-bottom {
+	  bottom: 0;
+	  right: 0;
+	  font-size: 4rem;
+	  opacity: 0.3;
+	  color: rgba(255, 182, 193, 0.8);
+	  padding: 25px;
+	  gap: 45px;
+	  animation: instrumentFloatFallback 25s linear infinite reverse;
+	}
+
+	@keyframes instrumentFloatFallback {
+	  0%   { transform: translateX(0) translateY(0); }
+	  100% { transform: translateX(-50%) translateY(-20px); }
+	}
+	</style>
+
+</head>
+<body>
+	
+	<!-- Background theme audio (hidden) -->
+    <audio
+        id="bgTheme"
+        src="Tune/Sagar - a theme music.mp3"
+        preload="auto"
+        loop
+        style="display:none;">
+    </audio>
+
+    <!-- Subtle tap-to-start overlay -->
+    <div id="musicOverlay" class="music-overlay">
+        <div class="music-overlay-inner">
+<!--             <h3>Tap to start the theme</h3>
+            <p>A gentle Pancham instrumental will play in the background.</p> -->
+            <button type="button" id="musicOverlayBtn" class="music-overlay-button">
+                🎵 Play Panchamda’s Theme
+            </button>
+        </div>
+		    <!-- Top-right controls for background theme music -->
+    </div>
+	
+    <div class="scrolling-header" aria-hidden="true">
+        <div class="scrolling-track" id="scrollingTrack"></div>
+    </div>
+	<div class="bg-music-controls">
+			<button type="button" onclick="pauseBackgroundTheme()">
+				⏸ Pause Background Music
+			</button>
+			<button type="button" onclick="stopBackgroundTheme()">
+				⏹ Stop Background Music
+			</button>
+	</div>
+    <div class="container">
+        <header>
+            <div class="main-video-container">
+                <video class="main-video" autoplay loop muted playsinline>
+                    <source src="images/RD.mp4" type="video/mp4">
+                </video>
+            </div>
+            <h1>R.D. BURMAN</h1>
+            <div class="subtitle">🎵 Pancham Da - The Musical Genius 🎶</div>
+            <div class="dates">27 June 1939 - 4 January 1994</div>
+            <p style="margin-top: 20px; font-size: 1.2rem; color: #ffeaa7; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); position: relative; z-index: 10;">"The Innovator who Revolutionized Bollywood Music"</p>
+        </header>
+
+        <nav>
+			<button class="tab-btn active" onclick="showTab(event, 'home')">🏠 Home 🎵</button>
+			<button class="tab-btn" onclick="showTab(event, 'video')">📹 Video 🎵</button>
+			<button class="tab-btn" onclick="showTab(event, 'audio')">🎧 Audio 🎵</button>
+			<!-- RENAMED: 'My Life' -> 'His Life' -->
+			<button class="tab-btn" onclick="showTab(event, 'about')">📖 His Life 🎵</button>
+			<button class="tab-btn" onclick="showTab(event, 'boss')">👔 My Boss 🎵</button>			
+		</nav>
+
+        <!-- HOME -->
+        <div id="home" class="tab-content active">
+            <div class="home-summary">
+                <h2>🎼 Welcome to Pancham Da's Musical Legacy</h2>
+                <p>Rahul Dev Burman, known as <strong>Pancham Da</strong>, was born on 27th June 1939 in Calcutta. His nickname came from a legend – his baby cries resonated with the fifth note (Pa) of the Indian musical scale!</p>
+                <div class="highlight">
+                    <strong>Born into Musical Royalty:</strong> Son of Sachin Dev Burman, he composed his first song at age nine for <em>Funtoosh</em> (1956).
+                </div>
+                <p>Pancham Da orchestrated a revolution! He brought rock, jazz, and electronic sounds into Bollywood. His collaboration with Asha Bhosle, Kishore Kumar, and Lata Mangeshkar produced immortal melodies.</p>
+                <div class="highlight">
+                    <strong>The Numbers:</strong> <strong>331 films</strong> - 292 in Hindi, 31 in Bengali, 3 in Telugu, 2 in Oriya, 2 in Tamil, 1 in Marathi. From "Mehbooba Mehbooba" to "Tere Bina Zindagi Se."
+                </div>
+            </div>
+        </div>
+
+        <!-- VIDEO -->
+        <div id="video" class="tab-content">
+            <h2 style="color: #e74c3c; font-size: 2.5rem; margin-bottom: 30px;">📹 Video Collection 🎵</h2>
+            <div style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;">
+                <button class="video-tab-btn active" onclick="showVideoTab(event, 'about-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">About Pancham</button>
+                <button class="video-tab-btn" onclick="showVideoTab(event, 'composing-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">Composing</button>
+                <button class="video-tab-btn" onclick="showVideoTab(event, 'unreleased-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">Unreleased Songs</button>
+            </div>
+
+            <div id="about-videos" class="video-sub-content active">
+                <div class="content-grid" id="aboutVideosGrid"></div>
+            </div>
+
+            <div id="composing-videos" class="video-sub-content" style="display: none;">
+                <div class="content-grid" id="composingVideosGrid"></div>
+            </div>
+
+            <div id="unreleased-videos" class="video-sub-content" style="display: none;">
+                <div class="content-grid" id="unreleasedVideosGrid"></div>
+            </div>
+        </div>
+
+        <!-- AUDIO -->
+        <div id="audio" class="tab-content">
+            <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 30px;">🎧 Audio Collection 🎵</h2>
+            <div id="audioTreeContent">
+                <div class="loading"><div class="spinner"></div><p>Loading audio collection...</p></div>
+            </div>
+        </div>
+
+        <!-- ABOUT / HIS LIFE -->
+        <div id="about" class="tab-content">
+            <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 10px;">📖 His Life 🎵</h2>
+            <div style="line-height: 2; font-size: 1.2rem; margin-bottom: 8px;">
+                <p>Explore Pancham Da's life through a biographical portrait, testimonials and poems.</p>
+            </div>
+
+            <!-- Life sub-tabs (kept only biography) -->
+            <div class="life-tabs" role="tablist" aria-label="His Life Sections">
+                <button class="life-tab-btn active" onclick="showLifeTab(event, 'biography-chapters')">R. D. BURMAN (PANCHAM) — A BIOGRAPHICAL PORTRAIT</button>
+            </div>
+
+            <!-- Biography chapters container (12 collapsible) -->
+            <div id="biography-chapters" class="life-sub-content active biography-content" style="margin-top: 10px;">
+                <div class="accordion" id="chaptersAccordion">

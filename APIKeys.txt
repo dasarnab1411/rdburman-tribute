@@ -1,0 +1,6 @@
+Google Drive :- AIzaSyAVyPLIzAuCB4q_kfIgVPsp5fVbs0sHFvM
+Youtube :- AIzaSyDul2b6qoWG1vMVt8aBmA56Gs7qwpTACrA
+O Auth Client ID - 468756812580-u77fn2j4i6t077665jv7e1o4jse3ipf6.apps.googleusercontent.com
+Google Drive Link :- 13WPCb0yhLnDu_V_oxtSxVj3YoCX_n25B
+Spotify Client ID : 86c03a3e35bd487685011aa38ec23171
+	Client Secret : ada028ca60eb4f4f9a38147dce45f2cc
