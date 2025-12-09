@@ -1462,96 +1462,6 @@
                 border-color: rgba(255, 255, 255, 0.9);
             }
         }
-		/* ===== Video modal (My Favourite Boss's Compositions) ===== */
-
-		.video-modal.hidden {
-		  display: none;
-		}
-
-		.video-modal {
-		  position: fixed;
-		  inset: 0;
-		  z-index: 9999;
-		  display: flex;
-		  align-items: center;
-		  justify-content: center;
-		  pointer-events: none; /* enabled only on dialog/backdrop */
-		}
-
-		.video-modal-backdrop {
-		  position: absolute;
-		  inset: 0;
-		  background: rgba(0, 0, 0, 0.75);
-		  pointer-events: auto;
-		}
-
-		.video-modal-dialog {
-		  position: relative;
-		  z-index: 1;
-		  background: #111;
-		  border-radius: 12px;
-		  padding: 16px 16px 20px;
-		  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-		  pointer-events: auto;
-		  max-width: 640px;              /* around the look of your screenshot */
-		  width: min(640px, 95vw);       /* responsive on smaller screens */
-		  color: #fff;
-
-		  /* max-width: 1280px; */
-		  /* width: min(1280px, 95vw) */;
-		  /* color: #fff; */
-		}
-
-		/* 16:9 frame wrapper – keeps approx 1280x720 ratio */
-		.video-modal-frame-wrapper {
-		  position: relative;
-		  width: 100%;
-		  aspect-ratio: 16 / 9;
-		  background: #000;
-		  overflow: hidden;
-		  border-radius: 8px;
-		}
-
-		.video-modal-frame-wrapper iframe {
-		  width: 100%;
-		  height: 100%;
-		  border: 0;
-		}
-
-		.video-modal-header {
-		  margin-bottom: 10px;
-		  font-weight: 600;
-		  font-size: 1.1rem;
-		}
-
-		.video-modal-close-btn {
-		  display: block;
-		  margin: 14px auto 0;
-		  padding: 8px 20px;
-		  border-radius: 999px;
-		  border: none;
-		  background: #e74c3c;
-		  color: #fff;
-		  font-weight: 600;
-		  cursor: pointer;
-		  font-size: 0.95rem;
-		}
-
-		.video-modal-close-btn:hover {
-		  background: #c0392b;
-		}
-
-		body.modal-open {
-		  overflow: hidden;
-		}
-		
-	@media (max-width: 480px) {
-		.video-modal-dialog {
-		max-width: 95vw;
-		padding: 12px 12px 16px;
-		}
-	}
-
   </style>
 </head>
 <body>
@@ -1632,7 +1542,7 @@
 
     <!-- VIDEO -->
     <section id="video" class="tab-content">
-      <h2 style="color: red; text-align:center;">🎥🎥           "Video Stories &amp; Sessions"           🎥🎥</h2>
+      <h2>🎥 Video Stories &amp; Sessions</h2>
       <div style="margin:10px 0 14px;">
         <button class="video-tab-btn life-tab-btn active" onclick="showVideoTab(event, 'about-videos')">
           About Pancham
@@ -1658,7 +1568,7 @@
 
     <!-- AUDIO -->
     <section id="audio" class="tab-content">
-      <h2 style="color: Green; text-align:center;">🎧🎧     "Audio Archives"     🎧🎧</h2>
+      <h2>🎧 Audio Archives</h2>
       <p>
         Browse themed folders – Rare songs, Compilations, Asha–Pancham Bengali gems,
         and more. Click a folder to drill down, then hit ▶ Play on any track to stream it here.
@@ -1670,7 +1580,7 @@
 
     <!-- HIS LIFE -->
     <section id="life" class="tab-content">
-      <h2 style="color: blue; text-align:center;">📖📖    His Life – Chapters, Memories &amp; Tributes    📖📖</h2>
+      <h2>📖 His Life – Chapters, Memories &amp; Tributes</h2>
       <div class="biography-content">
         <div id="chaptersAccordion" class="accordion">
           <div class="accordion-item">
@@ -2029,7 +1939,7 @@
 
         <!-- Testimonials inserted below biography -->
         <div id="testimonials" class="biography-content" style="margin-top:20px;">
-          <h3 class="section-heading">THEIR VIEWS </h3>
+          <h3 class="section-heading">THEIR VIEWS/h3>
           <div class="accordion" id="testimonialsAccordion">
 
             <!-- BLOCK 1: GULZAR -->
@@ -2841,9 +2751,27 @@
       </div>
     </section>
 
+<!-- MY BOSS -->
+<!-- <section id="boss" class="tab-content">
+  <h2 style="color: #e67e22; font-size: 2.2rem; margin-bottom: 20px;">👔 My Boss</h2>
+
+  <div class="life-tabs" id="life-sub-tabs-boss" aria-label="My Boss Sections">
+    <button class="life-tab-btn boss-tab-btn active"
+            onclick="showBossTab(event, 'boss-main');">
+      Why he is my BOSS
+    </button>
+    <button class="life-tab-btn boss-tab-btn"
+            onclick="showBossTab(event, 'boss-genius');">
+      🎼 Genius Song Notes
+    </button>
+    <button class="life-tab-btn boss-tab-btn"
+            onclick="showBossTab(event, 'boss-favourites');">
+      🎵 My Favourite Boss's Compositions
+    </button>
+  </div> -->
 <!-- MY BOSS -->  
 	<section id="boss" class="tab-content">
-	  <h2 style="color: #e67e22; font-size: 2.2rem; margin-bottom: 20px; text-align:center;">👔👔 My Boss👔👔</h2>
+	  <h2 style="color: #e67e22; font-size: 2.2rem; margin-bottom: 20px;">👔 My Boss</h2>
 	<!-- 	<div class="life-tabs">
        [buttons]
      </div> -->
@@ -2855,7 +2783,6 @@
 		<iframe
 		  id="bossFavIframe"
 		  class="video-embed"
-		  loading="lazy"
 		  src=""
 		  frameborder="0"
 		  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -2902,49 +2829,49 @@
 			<p>Boss never treated background score as filler; for him, it was another powerful character in the story, shaping every emotion from fear to longing. He gave fear its own sound, love its own echo, and tension its own heartbeat, making even silences feel scored.</p>
 			<h4>🔥 Sholay (1975)</h4>
 			<p><strong>The Terror of Gabbar:</strong> Instead of bombarding us with loud drums, Boss chose a low, groaning cello with brass, creating that slow, creeping sense of doom every time Gabbar’s presence looms.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=MJsCgUZAANE', 'Background Score 9');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=MJsCgUZAANE', 'Background Score 9');">
 									🎵 Sholay 
 									</a>
 			<p><strong>The Swing:</strong> That eerie, metallic squeak of the swing during the massacre sequence is classic Panchamda—pure sound design that makes silence deafening.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=SHZD55uQS2Q', 'Background Score 8');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=SHZD55uQS2Q', 'Background Score 8');">
 									🎵 Sholay 
 									</a>
 			<p><strong>The Chase:</strong> In the horse chases, galloping percussion locks perfectly with the hooves so that rhythm itself becomes adrenaline.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=wUb2NMmO2Po&t=10s', 'Background Score 7');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=wUb2NMmO2Po&t=10s', 'Background Score 7');">
 									🎵 Sholay Tabla by PT. Shamta Prasad 
 									</a>
-									<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=Sz-herPtZPY', 'Background Score 8');">
+									<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=Sz-herPtZPY', 'Background Score 8');">
 									🎵 Sholay
 									</a>
 			<h4>🏙️ Deewaar (1975)</h4>
 			<p><strong>Urban Angst:</strong> For Amitabh’s Angry Young Man, Boss strips away lush melodies and gives us a pulsing bassline and jazz drums, capturing gritty urban frustration.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/shorts/4SBibAhMXr8', 'Background Score 6');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/shorts/4SBibAhMXr8', 'Background Score 6');">
 									🎵 Deewar
 								</a>
 			<p><strong>The Watch:</strong> Amplified ticking blended with snare builds unbearable tension in smuggling scenes—cool, minimal, very Pancham.</p>
 			<h4>❤️ Betaab (1983)</h4>
 			<p>Set in the valleys, Boss paints the landscape with sweeping strings that feel like mountain winds. A gentle humming leitmotif becomes the film’s heartbeat whenever Sunny and Amrita meet.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=LVfTCov8P_0&list=RDLVfTCov8P_0&start_radio=1', 'Background Score 1');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=LVfTCov8P_0&list=RDLVfTCov8P_0&start_radio=1', 'Background Score 1');">
 									🎵 Betaab
 								</a>
 			<h4>🕶️ Arjun (1985)</h4>
 			<p>Panchamda goes full synth-warrior, drenching rainy Bombay streets in dark industrial textures. The BGM doesn’t just support Arjun’s rebellion—it roars with him.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PBLmRYnFs7E?si=vSkvSgeTqBKEt3sO', 'Background Score 5');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/PBLmRYnFs7E?si=vSkvSgeTqBKEt3sO', 'Background Score 5');">
 									🎵 Arjun
 								</a>
 			<h4>🤣 Satte Pe Satta (1982)</h4>
 			<p>For Babu, Boss has Annette Pinto gargle water into the mic to get that weird, spine-tingling sound—equal parts creepy and comic. The brothers’ harmonica theme becomes their identity.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/pHJiYu69C4c?si=xskoVED0slaCnzR5', 'Background Score 4');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/pHJiYu69C4c?si=xskoVED0slaCnzR5', 'Background Score 4');">
 									🎵 Satte pe Satta Gargling by Annette
 								</a>
 			<h4>🌊 Saagar (1985)</h4>
 			<p>The sea becomes a permanent character; “swish-swish” waves are recreated on synthesizers so smoothly you can almost smell the salt.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/uQvOHHGrMjg?si=tdRtS57yk-lMb4SH', 'Background Score 3');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/uQvOHHGrMjg?si=tdRtS57yk-lMb4SH', 'Background Score 3');">
 									🎵 Sagar
 								</a>
 			<h4>🕵️ Shaan (1980)</h4>
 			<p>Bold brass and sleek electronic beats, especially in Shakal’s island sequences, create a Bond-meets-Bollywood sound—stylish, sci-fi, swaggering Pancham.</p>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=k5BPLATclns&list=RDk5BPLATclns&start_radio=1', 'Background Score 3');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=k5BPLATclns&list=RDk5BPLATclns&start_radio=1', 'Background Score 3');">
 									🎵 Shaan
 								</a>
 			</div>
@@ -3064,7 +2991,7 @@
   </div>
 </div>
   <!-- Boss genius -->
-  <!-- <div id="boss-genius" class="boss-sub-content">
+  <div id="boss-genius" class="boss-sub-content">
     <div class="biography-content" style="background:#fff7e6; color:#4a2c00;">
       <h3>🎼 Why I call him “Genius” – Song Notes</h3>
       <p style="white-space:pre-wrap; line-height:1.9; font-size:1rem;">
@@ -3078,7 +3005,7 @@
 		…with all the instrumentation credits and geeky details you had earlier.
       </p>
     </div>
-  </div> -->
+  </div>
 
   <!-- Boss favourites with embedded player -->
   <div id="boss-favourites" class="boss-sub-content">
@@ -3106,46 +3033,46 @@
       <div class="boss-category-title">🎬 Background, Theme and Title Music – Score Moments 🎵</div>
       <!-- <div class="myboss-song-list"> -->
 	  <div class="myboss-song-list boss-bg-score-list">
-        <a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=V607EAqCTjY&list=RDV607EAqCTjY&start_radio=1', 'Background Score 1');">
+        <a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=V607EAqCTjY&list=RDV607EAqCTjY&start_radio=1', 'Background Score 1');">
 									🎵 Betaab
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/sxvB0cCQBSg?si=nKHilaVWLS7HPpxw', 'Background Score 2');">
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/sxvB0cCQBSg?si=nKHilaVWLS7HPpxw', 'Background Score 2');">
 									🎵 Teri Kasam
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/uQvOHHGrMjg?si=tdRtS57yk-lMb4SH', 'Background Score 3');">
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/uQvOHHGrMjg?si=tdRtS57yk-lMb4SH', 'Background Score 3');">
 									🎵 Sagar
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/pHJiYu69C4c?si=xskoVED0slaCnzR5', 'Background Score 4');">
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/pHJiYu69C4c?si=xskoVED0slaCnzR5', 'Background Score 4');">
 									🎵 Satte pe Satta Gargling by Annette
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PBLmRYnFs7E?si=vSkvSgeTqBKEt3sO', 'Background Score 5');">
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/PBLmRYnFs7E?si=vSkvSgeTqBKEt3sO', 'Background Score 5');">
 									🎵 Arjun
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/shorts/4SBibAhMXr8', 'Background Score 6');">
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/shorts/4SBibAhMXr8', 'Background Score 6');">
 									🎵 Deewar
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=wUb2NMmO2Po&t=10s', 'Background Score 7');">
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=wUb2NMmO2Po&t=10s', 'Background Score 7');">
 									🎵 Sholay - Tabla by PT. Shamta Prasad
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=Sz-herPtZPY', 'Background Score 8');">
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=Sz-herPtZPY', 'Background Score 8');">
 									🎵 Sholay
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=MJsCgUZAANE', 'Background Score 9');">
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=MJsCgUZAANE', 'Background Score 9');">
 									🎵 Sholay
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=Z6Jz91g16Z4&list=RDZ6Jz91g16Z4&start_radio=1', 'Background Score 10');">
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=Z6Jz91g16Z4&list=RDZ6Jz91g16Z4&start_radio=1', 'Background Score 10');">
 									🎵 Dacait
 								</a>	
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=r1bo3XcQeVI&list=RDr1bo3XcQeVI&start_radio=1', 'Background Score 11');">
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=r1bo3XcQeVI&list=RDr1bo3XcQeVI&start_radio=1', 'Background Score 11');">
 									🎵 Teesri Manzil
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=XsGuaAFK4zI&list=RDXsGuaAFK4zI&start_radio=1', 'Background Score 12');">
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=XsGuaAFK4zI&list=RDXsGuaAFK4zI&start_radio=1', 'Background Score 12');">
 									🎵 Gardish
 								</a>
-        <a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=BBO1lMrrxg0&list=RDBBO1lMrrxg0&start_radio=1', 'Background Score 13');">
+        <a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=BBO1lMrrxg0&list=RDBBO1lMrrxg0&start_radio=1', 'Background Score 13');">
 									🎵 The Burning Train Clock Ticking effect by Maruti Rao
 								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=CVifJI5Ykzs&list=RDCVifJI5Ykzs&start_radio=1', 'Background Score 14');">
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=CVifJI5Ykzs&list=RDCVifJI5Ykzs&start_radio=1', 'Background Score 14');">
 									🎵 Drohi
         </a>
       </div>
@@ -3155,115 +3082,115 @@
       <div class="boss-category-title">💖 My Favourite Songs – Pancham Forever 🎵</div>
       <!-- <div class="myboss-song-list" style="max-height:380px; overflow:auto;"> -->
 	  <div class="myboss-song-list boss-fav-songs-list" style="max-height:380px; overflow:auto;">
-        <a href="#" onclick="return openFavModal(event, 'https://youtu.be/CpYuH4Cc8Mk?si=qK5iGgqa3qsPRKH0', 'Rah Pe Rehte Hai | Namkeen ( 1982 )');"> 
+        <a href="#" onclick="return openBossVideo(event, 'https://youtu.be/CpYuH4Cc8Mk?si=qK5iGgqa3qsPRKH0', 'Rah Pe Rehte Hai | Namkeen ( 1982 )');"> 
 						 🎵 Rah Pe Rehte Hai | Namkeen ( 1982 )</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/C1w6p3TEVxI?si=CkHwXCKJOBhZwWkK', 'Aye Zindagi Hui Kahan Bhool Jiski  | (Namumkin 1988)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/C1w6p3TEVxI?si=CkHwXCKJOBhZwWkK', 'Aye Zindagi Hui Kahan Bhool Jiski  | (Namumkin 1988)');"> 
 								 🎵 Aye Zindagi Hui Kahan Bhool Jiski  | (Namumkin 1988)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/WaCRlPUPLhk?si=Nq_DXLhf7aS2DjGu', 'Na Jaane Din Kaise (Both Parts) | (Chala Murari Hero Banne 1977)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/WaCRlPUPLhk?si=Nq_DXLhf7aS2DjGu', 'Na Jaane Din Kaise (Both Parts) | (Chala Murari Hero Banne 1977)');"> 
 								 🎵 Na Jaane Din Kaise (Both Parts) | (Chala Murari Hero Banne 1977)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PleWU2pdK-I?si=PK_rAjjC72uEVZrZ', 'Main Shayar Badnam | (Namak Haraam 1973)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/PleWU2pdK-I?si=PK_rAjjC72uEVZrZ', 'Main Shayar Badnam | (Namak Haraam 1973)');"> 
 								 🎵 Main Shayar Badnam | (Namak Haraam 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/xkQpfIMj1UE?si=RerH28vnO62xX_s6', 'Mujhko Yuhi Udaas |  (Khushboo (1975)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/xkQpfIMj1UE?si=RerH28vnO62xX_s6', 'Mujhko Yuhi Udaas |  (Khushboo (1975)');"> 
 								 🎵 Mujhko Yuhi Udaas |  (Khushboo (1975)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/flFE-ps5yYo?si=C90tKlW2S2fhkswP', 'Tumne Mujhe Dekha | (Teesri Manzil 1966)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/flFE-ps5yYo?si=C90tKlW2S2fhkswP', 'Tumne Mujhe Dekha | (Teesri Manzil 1966)');"> 
 								 🎵 Tumne Mujhe Dekha | (Teesri Manzil 1966)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/tC11eSDHobE?si=LpParr0eIVJHpLeT', 'A Ri Pawan Dhunde Kise Tera Mann | ( Bemisaal 1982)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/tC11eSDHobE?si=LpParr0eIVJHpLeT', 'A Ri Pawan Dhunde Kise Tera Mann | ( Bemisaal 1982)');"> 
 								 🎵 Aye Ri Pawan Dhunde Kise Tera Mann | ( Bemisaal 1982)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/2fUVcrMA8Dg?si=bXt_fKwl3TEJiqiY', 'Kisi Baat Pe Main Kisise Khafa Hoon | ( Bemisaal 1982)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/2fUVcrMA8Dg?si=bXt_fKwl3TEJiqiY', 'Kisi Baat Pe Main Kisise Khafa Hoon | ( Bemisaal 1982)');"> 
 								 🎵 Kisi Baat Pe Main Kisise Khafa Hoon | ( Bemisaal 1982)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/0VbyQ5tdavI?si=IP277RozQo8C-FBe', 'Sawan Ke Jhoole| (Jurmana 1979)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/0VbyQ5tdavI?si=IP277RozQo8C-FBe', 'Sawan Ke Jhoole| (Jurmana 1979)');"> 
 								 🎵 Sawan Ke Jhoole | (Jurmana 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/iaLmf7L-B24?si=YV8cIZJ5yHJUapXE', 'Oh Hansini | (Zehreela Insaan 1974)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/iaLmf7L-B24?si=YV8cIZJ5yHJUapXE', 'Oh Hansini | (Zehreela Insaan 1974)');"> 
 								 🎵 Oh Hansini | (Zehreela Insaan 1974)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/RscsV4uuetw?si=HUEUjhme8qBCWgTd', 'Jidhar Dekhoon Teri Tasveer | (Mahaan 1983)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/RscsV4uuetw?si=HUEUjhme8qBCWgTd', 'Jidhar Dekhoon Teri Tasveer | (Mahaan 1983)');"> 
 								 🎵 Jidhar Dekhoon Teri Tasveer | (Mahaan 1983)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/ADYDEx1pvEg?si=WKjpAxfpZMgEWOOy', 'Kya Jaanu Sajan Hoti Hai | (Baharon Ke Sapne 1967)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/ADYDEx1pvEg?si=WKjpAxfpZMgEWOOy', 'Kya Jaanu Sajan Hoti Hai | (Baharon Ke Sapne 1967)');"> 
 								 🎵 Kya Jaanu Sajan Hoti Hai | (Baharon Ke Sapne 1967)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PZzK3CVzLKo?si=y9ntwMjpZFCPp6dU', 'Katra Katra Milti Hai Katra Katra Jeene Do | (Ijaazat 1987)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/PZzK3CVzLKo?si=y9ntwMjpZFCPp6dU', 'Katra Katra Milti Hai Katra Katra Jeene Do | (Ijaazat 1987)');"> 
 								 🎵 Katra Katra Milti Hai Katra Katra Jeene Do | (Ijaazat 1987)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wVlsl3QXwKU?si=u-ReqZGUQX_0Gi36', 'Dhanno Ki Aankhon Me | (Kitaab 1977) ');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/wVlsl3QXwKU?si=u-ReqZGUQX_0Gi36', 'Dhanno Ki Aankhon Me | (Kitaab 1977) ');"> 
 								 🎵 Dhanno Ki Aankhon Me | (Kitaab 1977) </a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/M_mA1M44Bwc?si=wwIEDgVbo6a2_DoT', 'Subha Serial Title Song | (Subah 1987)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/M_mA1M44Bwc?si=wwIEDgVbo6a2_DoT', 'Subha Serial Title Song | (Subah 1987)');"> 
 								 🎵 Subha Serial Title Song | (Subah 1987)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/t6iLjbkxBZo?si=IZYjFNUaK22H1qlN', 'Masterji ki aa gayi chitthi | (Kitaab 1977)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/t6iLjbkxBZo?si=IZYjFNUaK22H1qlN', 'Masterji ki aa gayi chitthi | (Kitaab 1977)');"> 
 								 🎵 Masterji ki aa gayi chitthi | (Kitaab 1977)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/8t5Rt_LWmpE?si=cVRNkFxngFAPwxtq', 'Samundar Mein Nahake | (Pukar 1983)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/8t5Rt_LWmpE?si=cVRNkFxngFAPwxtq', 'Samundar Mein Nahake | (Pukar 1983)');"> 
 								 🎵 Samundar Mein Nahake | (Pukar 1983)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/h34dmUw_yCQ?si=kBKlVoNxUkzEiJy3', 'Phir Wahi Raat | (Ghar 1978)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/h34dmUw_yCQ?si=kBKlVoNxUkzEiJy3', 'Phir Wahi Raat | (Ghar 1978)');"> 
 								 🎵 Phir Wahi Raat | (Ghar 1978)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PN0rH8dLn28?si=e7Cl0RcPnAV0NiH1', 'Tum Meri Zindegi Se | (Bombay to Goa 1971)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/PN0rH8dLn28?si=e7Cl0RcPnAV0NiH1', 'Tum Meri Zindegi Se | (Bombay to Goa 1971)');"> 
 								 🎵 Tum Meri Zindegi Mein | (Bombay to Goa 1971)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/kkTv_aUjd5Y?si=TCkKvKpl_76ovFE8', 'Phulon Ki Duniya Se | (Rickshawala 1973)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/kkTv_aUjd5Y?si=TCkKvKpl_76ovFE8', 'Phulon Ki Duniya Se | (Rickshawala 1973)');"> 
 								 🎵 Phulon Ki Duniya Se | (Rickshawala 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wKnWL8-6qWA?si=SqpxOfrM2GfL3Zbr', 'Maine Kaha Zid Chhod | (Rickshawala 1973)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/wKnWL8-6qWA?si=SqpxOfrM2GfL3Zbr', 'Maine Kaha Zid Chhod | (Rickshawala 1973)');"> 
 								 🎵 Maine Kaha Zid Chhod | (Rickshawala 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/lu5MjHcy6Lg?si=U_kUjhTdIKlHEPoE', 'Ek Baat Dil Mein Aayi Hai | (Rahi Badal Gaye 1984)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/lu5MjHcy6Lg?si=U_kUjhTdIKlHEPoE', 'Ek Baat Dil Mein Aayi Hai | (Rahi Badal Gaye 1984)');"> 
 								 🎵 Ek Baat Dil Mein Aayi Hai | (Rahi Badal Gaye 1984)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/XI2P7HgHK9M?si=dSGqPnPDrSF8l4r7', 'Silli Hawa Chhoo Gai | Libaas');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/XI2P7HgHK9M?si=dSGqPnPDrSF8l4r7', 'Silli Hawa Chhoo Gai | Libaas');"> 
 								 🎵 Silli Hawa Chhoo Gai | Libaas</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/aWJc-cT12Mc?si=A7qUwE_j4Nn_6PNN', 'Jahan Pe Savera Ho Basera | (Baseraa 1981) ');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/aWJc-cT12Mc?si=A7qUwE_j4Nn_6PNN', 'Jahan Pe Savera Ho Basera | (Baseraa 1981) ');"> 
 								 🎵 Jahan Pe Savera Ho Basera | (Baseraa 1981) </a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/UUHuIsaNTpM?si=c6vz-9Yk28HIyiL_', 'Kitne Sapne Kitne Armaan | (Mere Jeevan Saathi 1972)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/UUHuIsaNTpM?si=c6vz-9Yk28HIyiL_', 'Kitne Sapne Kitne Armaan | (Mere Jeevan Saathi 1972)');"> 
 								 🎵 Kitne Sapne Kitne Armaan | (Mere Jeevan Saathi 1972)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/uj5OLjty0l4?si=CBcss2RilACiME4U', 'Jab Chaha Yaara Tumne |(Zabardast 1985)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/uj5OLjty0l4?si=CBcss2RilACiME4U', 'Jab Chaha Yaara Tumne |(Zabardast 1985)');"> 
 								 🎵 Jab Chaha Yaara Tumne | (Zabardast 1985)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/30rLo4X4aI0?si=5z-mBemInLHG5BSY', 'Pyar Jab Na Diya Zindagi Ne Kabhi| (Sitamgar 1985)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/30rLo4X4aI0?si=5z-mBemInLHG5BSY', 'Pyar Jab Na Diya Zindagi Ne Kabhi| (Sitamgar 1985)');"> 
 								 🎵 Pyar Jab Na Diya Zindagi Ne Kabhi| (Sitamgar 1985)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/kT3rzroZSlw?si=oLL7SB-Ta9bbokKH', 'Phirte Hai Kabse Darbadar | (Duniya 1984) ');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/kT3rzroZSlw?si=oLL7SB-Ta9bbokKH', 'Phirte Hai Kabse Darbadar | (Duniya 1984) ');"> 
 								 🎵 Phirte Hai Kabse Darbadar | (Duniya 1984) </a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/6GSUGstpEwY?si=fv2IS9y7Ik5mZIUG', 'Thokar Mein Hai Meri Sara Zamana 4K | (Shehzada 1972)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/6GSUGstpEwY?si=fv2IS9y7Ik5mZIUG', 'Thokar Mein Hai Meri Sara Zamana 4K | (Shehzada 1972)');"> 
 								 🎵 Thokar Mein Hai Meri Sara Zamana 4K | (Shehzada 1972)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/W29sLG5YEEU?si=jeD1MNKqRDtYo9AB', 'Gumsum Kyun Hai Sanam | (Bhala Manas 1979)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/W29sLG5YEEU?si=jeD1MNKqRDtYo9AB', 'Gumsum Kyun Hai Sanam | (Bhala Manas 1979)');"> 
 								 🎵 Gumsum Kyun Hai Sanam | (Bhala Manas 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/CuX6iBnHCog?si=EiQBJU1f7jSJnO5V', 'Jaan Pehchan to Pehle se thi | (Bhala Manus 1979)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/CuX6iBnHCog?si=EiQBJU1f7jSJnO5V', 'Jaan Pehchan to Pehle se thi | (Bhala Manus 1979)');"> 
 								 🎵 Jaan Pehchan to Pehle se thi | (Bhala Manus 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/4yUauK-So28?si=SWzVaVGZ8Zv5mH_O', 'Yeh Zindagi Kuch Bhi Sahi |(Romance 1983)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/4yUauK-So28?si=SWzVaVGZ8Zv5mH_O', 'Yeh Zindagi Kuch Bhi Sahi |(Romance 1983)');"> 
 								 🎵 Yeh Zindagi Kuch Bhi Sahi | (Romance 1983)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/YQNb89xnKvQ?si=pyGPH6aMgEP0P8Kk', 'Tum Bin Jaoon Kahan |(Pyar Ka Mausam 1969)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/YQNb89xnKvQ?si=pyGPH6aMgEP0P8Kk', 'Tum Bin Jaoon Kahan |(Pyar Ka Mausam 1969)');"> 
 								 🎵 Tum Bin Jaoon Kahan | (Pyar Ka Mausam 1969)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/LblLAQQV6ko?si=-u1Xhzl87LyAqL1j', 'Na Koi Dil Mein Samaya|( Aa Gale Lag Jaa 1973)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/LblLAQQV6ko?si=-u1Xhzl87LyAqL1j', 'Na Koi Dil Mein Samaya|( Aa Gale Lag Jaa 1973)');"> 
 								 🎵 Na Koi Dil Mein Samaya | ( Aa Gale Lag Jaa 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/STOM6NZfcrs?si=gXLx-s67rWOO7HYm', 'Is Mod Se Jaate Hain| (Aandhi 1975 Songs)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/STOM6NZfcrs?si=gXLx-s67rWOO7HYm', 'Is Mod Se Jaate Hain| (Aandhi 1975 Songs)');"> 
 								 🎵 Is Mod Se Jaate Hain| (Aandhi 1975 Songs)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/XxbBN4AtFio?si=fc8UNPVlvOFWQnl7', 'Aaja Aaja Meri Jaan | (Aja Meri Jaan)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/XxbBN4AtFio?si=fc8UNPVlvOFWQnl7', 'Aaja Aaja Meri Jaan | (Aja Meri Jaan)');"> 
 								 🎵 Aaja Aaja Meri Jaan | (Aja Meri Jaan)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/WJyM13QI64E?si=0s3hgT9czCLz6uNY', 'Shikwa Koi Tumse Na Hai | (Joota Kahin Ka 1979)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/WJyM13QI64E?si=0s3hgT9czCLz6uNY', 'Shikwa Koi Tumse Na Hai | (Joota Kahin Ka 1979)');"> 
 								 🎵 Shikwa Koi Tumse Na Hai | (Joota Kahin Ka 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/lplaAZBWiqY?si=ZiIrD2b5F5RkKUMF', 'Bade Achhe Lagte Hain  | (Balika Badhu 1976)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/lplaAZBWiqY?si=ZiIrD2b5F5RkKUMF', 'Bade Achhe Lagte Hain  | (Balika Badhu 1976)');"> 
 								 🎵 Bade Achhe Lagte Hain  | (Balika Badhu 1976)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/g7QUMWO4fNA?si=ICdygdScrCB_E7ji', 'Kaho Kahan Chale Jahan Tum Le Chalo| (Bulundi 1981)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/g7QUMWO4fNA?si=ICdygdScrCB_E7ji', 'Kaho Kahan Chale Jahan Tum Le Chalo| (Bulundi 1981)');"> 
 								 🎵 Kaho Kahan Chale Jahan Tum Le Chalo | (Bulundi 1981)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/SNKJ1kWP7nU?si=25sXKWWQSOD_NWvN', 'Jeena To Hai Par Ae Dil Kahan | Daulat Ke Dushman-Panch Dushman-1981(73)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/SNKJ1kWP7nU?si=25sXKWWQSOD_NWvN', 'Jeena To Hai Par Ae Dil Kahan | Daulat Ke Dushman-Panch Dushman-1981(73)');"> 
 								 🎵 Jeena To Hai Par Ae Dil Kahan | Daulat Ke Dushman-Panch Dushman-1981(73)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/5XjqrXpmLOI?si=SqgTK_bD6ZbFCQYk', 'Tum Jo Mile To Laga Hai Jaise Mili Zindagi | (Drohi 1992)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/5XjqrXpmLOI?si=SqgTK_bD6ZbFCQYk', 'Tum Jo Mile To Laga Hai Jaise Mili Zindagi | (Drohi 1992)');"> 
 								 🎵 Tum Jo Mile To Laga Hai Jaise Mili Zindagi | (Drohi 1992)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/nhQuJuAyVlo?si=T0yl_Kydq9FeZR3X', 'Badal Jo Barse To Bheege Hum| (Gardish 1993)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/nhQuJuAyVlo?si=T0yl_Kydq9FeZR3X', 'Badal Jo Barse To Bheege Hum| (Gardish 1993)');"> 
 								 🎵 Badal Jo Barse To Bheege Hum | (Gardish 1993)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/qU3fSobl6Tg?si=-qD4ayWPRQ66kyvX', 'Kya Nazare Kya Sitare | (Jheel Ke Us Paar 1973)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/qU3fSobl6Tg?si=-qD4ayWPRQ66kyvX', 'Kya Nazare Kya Sitare | (Jheel Ke Us Paar 1973)');"> 
 								 🎵 Kya Nazare Kya Sitare | (Jheel Ke Us Paar 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/850bZDi_MD0?si=sQiLbdaGzzX1GcXh', 'Tum Ho Mere Dil Ki Dhadkan | (Manzil 1979)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/850bZDi_MD0?si=sQiLbdaGzzX1GcXh', 'Tum Ho Mere Dil Ki Dhadkan | (Manzil 1979)');"> 
 								 🎵 Tum Ho Mere Dil Ki Dhadkan | (Manzil 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/T1NtFQHEZhQ?si=nYibiAj47Tvf7N07', 'Do Naina Aur Ek Kahani | (Masoom 1983)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/T1NtFQHEZhQ?si=nYibiAj47Tvf7N07', 'Do Naina Aur Ek Kahani | (Masoom 1983)');"> 
 								 🎵 Do Naina Aur Ek Kahani | (Masoom 1983)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wJ1mqmbngO0?si=Da6UhpFc_5WlyXh-', 'Kaanta Lagaa| (Samadhi 1972) ');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/wJ1mqmbngO0?si=Da6UhpFc_5WlyXh-', 'Kaanta Lagaa| (Samadhi 1972) ');"> 
 								 🎵 Kaanta Lagaa | (Samadhi 1972)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/K-GPX2PzDKM?si=CujGtpU8GCbhp6KW', 'Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/K-GPX2PzDKM?si=CujGtpU8GCbhp6KW', 'Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)');"> 
 								 🎵 Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=uyjiK9QCU5U&list=RDuyjiK9QCU5U&start_radio=1', 'Chand Mera Dil | (Hum Kisi Se Kum Nahin 1977)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=uyjiK9QCU5U&list=RDuyjiK9QCU5U&start_radio=1', 'Chand Mera Dil | (Hum Kisi Se Kum Nahin 1977)');"> 
 								 🎵 Chand Mera Dil | (Hum Kisi Se Kum Nahin 1977)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=ToO-PkucJac&list=RDToO-PkucJac&start_radio=1', 'Pyar Hua Hai Jabse| (Abhiasha 1968)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=ToO-PkucJac&list=RDToO-PkucJac&start_radio=1', 'Pyar Hua Hai Jabse| (Abhiasha 1968)');"> 
 								 🎵 Pyar Hua Hai Jabse | (Abhiasha 1968)</a>						 
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=GbNVK92l5vI&list=RDGbNVK92l5vI&start_radio=1', 'Ek Bechara Pyar Ka Mara| (Waris 1969)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=GbNVK92l5vI&list=RDGbNVK92l5vI&start_radio=1', 'Ek Bechara Pyar Ka Mara| (Waris 1969)');"> 
 								 🎵 Ek Bechara Pyar Ka Mara | (Waris 1969)</a>						 
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=luaTQG0pvQY&list=RDluaTQG0pvQY&start_radio=1', 'Jago Sone walo| (Bhoot Bangla 1965)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=luaTQG0pvQY&list=RDluaTQG0pvQY&start_radio=1', 'Jago Sone walo| (Bhoot Bangla 1965)');"> 
 								 🎵 Jago Sone walo | (Bhoot Bangla 1965)</a> 
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=EA4qpsJS9uY&list=RDEA4qpsJS9uY&start_radio=1', 'Ek Hi Khwab| (Kinara 1977)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=EA4qpsJS9uY&list=RDEA4qpsJS9uY&start_radio=1', 'Ek Hi Khwab| (Kinara 1977)');"> 
 								 🎵 Ek Hi Khwab | (Kinara 1977)</a> 
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/EEe4tVkaDWY?si=oxHls-A0lyQ4F5jy', 'Kotha Hoyechhilo | (Troyee 1982)');"> 
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/EEe4tVkaDWY?si=oxHls-A0lyQ4F5jy', 'Kotha Hoyechhilo | (Troyee 1982)');"> 
 								 🎵 Kotha Hoyechhilo | (Troyee 1982) Bengali</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/cesHYOjDcvg?si=LXAw8IC9GHrw_bkF', 'Mon Theke Mone Ki Kore Je Jabo | (Shwet Pathorer Thala 1992)');">
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/cesHYOjDcvg?si=LXAw8IC9GHrw_bkF', 'Mon Theke Mone Ki Kore Je Jabo | (Shwet Pathorer Thala 1992)');">
 								 🎵 Mon Theke Mone Ki Kore Je Jabo | Bengali (Shwet Pathorer Thala 1992)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/G0oOtkYjdFo?si=SF4z5UxjIwhh_U7d', 'Ki Kore Janle Tumi | (Debota 1990)');">
+		<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/G0oOtkYjdFo?si=SF4z5UxjIwhh_U7d', 'Ki Kore Janle Tumi | (Debota 1990)');">
 								 🎵 Ki Kore Janle Tumi | (Debota 1990) Bengali</a>
       </div>
     </div>
@@ -3277,49 +3204,49 @@
 			<!-- <div class="myboss-song-list"> -->
 			<div class="myboss-song-list boss-cabaret-list">
 			<!-- Caravan (1971) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/46GGxF_Bwhg?si=hq_C9hVDlY1BWzP8', 'Piya Tu Ab To Aaja – Caravan (1971)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/46GGxF_Bwhg?si=hq_C9hVDlY1BWzP8', 'Piya Tu Ab To Aaja – Caravan (1971)');">
 										🎵 Piya Tu Ab To Aaja – Caravan (1971)
 									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/gT7dABHA92E?si=cH_-QrWURMCiyWcQ', 'Daiya Yeh Main Kahaan Aa Phansi – Caravan (1971)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/gT7dABHA92E?si=cH_-QrWURMCiyWcQ', 'Daiya Yeh Main Kahaan Aa Phansi – Caravan (1971)');">
 										🎵 Daiya Yeh Main Kahaan Aa Phansi – Caravan (1971)
 									</a>
 			<!-- The Train (1970) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/eXd7N0QsCH0?si=YJOsltdt56_T-bWv', 'Meri Jaan Maine Kaha – The Train (1970)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/eXd7N0QsCH0?si=YJOsltdt56_T-bWv', 'Meri Jaan Maine Kaha – The Train (1970)');">
 										🎵 Meri Jaan Maine Kaha – The Train (1970)
 									</a>
 			<!-- Teesri Manzil (1966) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/VR-ak1-RURU?si=0lL1P-pEMJJwdNKs', '🎵 O Haseena Zulfonwali – Teesri Manzil (1966)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/VR-ak1-RURU?si=0lL1P-pEMJJwdNKs', '🎵 O Haseena Zulfonwali – Teesri Manzil (1966)');">
 										🎵 O Haseena Zulfonwali – Teesri Manzil (1966)
 									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/EOgirs8vE_A?si=Q2RFfg0kT2ZxNYrb', 'Aaja Aaja Main Hoon Pyar Tera – Teesri Manzil (1966)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/EOgirs8vE_A?si=Q2RFfg0kT2ZxNYrb', 'Aaja Aaja Main Hoon Pyar Tera – Teesri Manzil (1966)');">
 										🎵 Aaja Aaja Main Hoon Pyar Tera – Teesri Manzil (1966)
 									</a>
 			<!-- Apna Desh (1972) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/cKFabjoRdJo?si=5cSF_PiIYlr3YrOL', 'Duniya Mein Logon Ko – Apna Desh (1972)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/cKFabjoRdJo?si=5cSF_PiIYlr3YrOL', 'Duniya Mein Logon Ko – Apna Desh (1972)');">
 										🎵 Duniya Mein Logon Ko – Apna Desh (1972)
 									</a>
 			<!-- Sanam Teri Kasam (1982) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/tfZrC59unRA?si=-oZYxIsqO_5emiNn', 'Jane Jaan O Meri Jane Jaan – Sanam Teri Kasam (1982)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/tfZrC59unRA?si=-oZYxIsqO_5emiNn', 'Jane Jaan O Meri Jane Jaan – Sanam Teri Kasam (1982)');">
 										🎵 Jane Jaan O Meri Jane Jaan – Sanam Teri Kasam (1982)
 									</a>
 			<!-- Other notable cabaret-style numbers -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/vywZigBV19s?si=AxhbdHHjOQzAuf-W', 'Sapna Mera Toot Gaya – Khel Khel Mein (1975)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/vywZigBV19s?si=AxhbdHHjOQzAuf-W', 'Sapna Mera Toot Gaya – Khel Khel Mein (1975)');">
 										🎵 Sapna Mera Toot Gaya – Khel Khel Mein (1975)
 									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/6J5nHIAUVpE?si=EOjZGpZTko_IcwXX', 'Aaj Ki Raat Koi Aane Ko Hai – Anamika (1973)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/6J5nHIAUVpE?si=EOjZGpZTko_IcwXX', 'Aaj Ki Raat Koi Aane Ko Hai – Anamika (1973)');">
 										🎵 Aaj Ki Raat Koi Aane Ko Hai – Anamika (1973)
 									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/JQC85Nq7V0s?si=G3COoVGv8eeosDkB', 'Mera Naam Hai Shabnam – Kati Patang (1971)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/JQC85Nq7V0s?si=G3COoVGv8eeosDkB', 'Mera Naam Hai Shabnam – Kati Patang (1971)');">
 										🎵 Mera Naam Hai Shabnam – Kati Patang (1971)
 									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/in1W2D24ohM?si=6mv1TBObzMBcWp4P', 'Aaja Sunle Sada – Gurudev (1992)');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/in1W2D24ohM?si=6mv1TBObzMBcWp4P', 'Aaja Sunle Sada – Gurudev (1992)');">
 										🎵 Aaja Sunle Sada – Gurudev (1992)
 									</a>
 			<!-- Compilations -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/mAvJ4SUb2DU?si=nHhuJ3A_o-_3MdmG', 'Cabaret Compilation 1 – Pancham Specials');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/mAvJ4SUb2DU?si=nHhuJ3A_o-_3MdmG', 'Cabaret Compilation 1 – Pancham Specials');">
 										🎵 Cabaret Compilation 1 – Pancham Specials
 									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/7roLau2vAV8?si=FEGj5Mb_RlZzx6gT', 'Cabaret Compilation 2 – Pancham Specials');">
+			<a href="#" onclick="return openBossVideo(event, 'https://youtu.be/7roLau2vAV8?si=FEGj5Mb_RlZzx6gT', 'Cabaret Compilation 2 – Pancham Specials');">
 										🎵 Cabaret Compilation 2 – Pancham Specials
 									</a>
 			</div>
@@ -3331,13 +3258,13 @@
 								</p>
 			<!-- <div class="myboss-song-list"> -->
 			<div class="myboss-song-list boss-actor-list">
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=morLqJId824&t=160s', 'Bhoot Bangla');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=morLqJId824&t=160s', 'Bhoot Bangla');">
 										🎵 Bhoot Bangla
 									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=CU0L7UA7bes', 'Pyar Ka Mausam 1');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=CU0L7UA7bes', 'Pyar Ka Mausam 1');">
 										🎵 Pyar Ka Mausam Scene 1
 									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=V2vMTctl9GI', 'Pyar Ka Mausam 2');">
+			<a href="#" onclick="return openBossVideo(event, 'https://www.youtube.com/watch?v=V2vMTctl9GI', 'Pyar Ka Mausam 2');">
 										🎵 Pyar Ka Mausam Scene 2
 									</a>
 				</div>						
@@ -3588,71 +3515,6 @@
       attachYouTubePlayers();
       return false;
     }
-	
-	/* ===== Modal for My Favourite Boss's Compositions ===== */
-
-	function openFavModal(e, rawUrl, niceTitle) {
-		  if (e) e.preventDefault();
-
-		  const modal    = document.getElementById('videoModal');
-		  const iframe   = document.getElementById('videoModalIframe');
-		  const titleEl  = document.getElementById('videoModalTitle');
-
-		  if (!modal || !iframe || !titleEl) return false;
-
-		  const embedUrl = extractYouTubeEmbedUrl(rawUrl); // already adds autoplay=1
-		  pauseBackgroundTheme(); // reuse your existing helper
-
-		  iframe.src = embedUrl;
-		  titleEl.textContent = `🎵 Now Playing: ${niceTitle}`;
-
-		  modal.classList.remove('hidden');
-		  document.body.classList.add('modal-open');
-
-		  return false;
-	}
-
-		function closeFavModal() {
-		  const modal   = document.getElementById('videoModal');
-		  const iframe  = document.getElementById('videoModalIframe');
-
-		  if (iframe) {
-			// Stop the video
-			iframe.src = '';
-		  }
-
-		  if (modal) {
-			modal.classList.add('hidden');
-		  }
-
-		  document.body.classList.remove('modal-open');
-		}
-
-		/* Hook up close interactions once DOM is ready */
-		document.addEventListener('DOMContentLoaded', () => {
-		  const modal      = document.getElementById('videoModal');
-		  const backdrop   = modal ? modal.querySelector('.video-modal-backdrop') : null;
-		  const closeBtn   = document.getElementById('videoModalClose');
-
-		  if (backdrop) {
-			backdrop.addEventListener('click', closeFavModal);
-		  }
-		  if (closeBtn) {
-			closeBtn.addEventListener('click', closeFavModal);
-		  }
-
-		  // ESC key closes modal
-		  document.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') {
-			  const isOpen = modal && !modal.classList.contains('hidden');
-			  if (isOpen) {
-				e.preventDefault();
-				closeFavModal();
-			  }
-			}
-		  });
-		});
-
 
     function loadVideos() {
       const aboutGrid = document.getElementById('aboutVideosGrid');
@@ -3665,7 +3527,6 @@
         w.className = 'content-card';
         w.innerHTML = `
           <iframe class="video-embed"
-			loading="lazy"
             src="https://www.youtube.com/embed/${id}?enablejsapi=1"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -4268,38 +4129,9 @@
       initScrollingTrack();
 
       // Load videos & audio once so everything is ready
-      // loadVideos();
-      //loadAudio();
+      loadVideos();
+      loadAudio();
     });
   </script>
-  <!-- Global video modal for My Favourite Boss's Compositions -->
-	<div id="videoModal" class="video-modal hidden" aria-hidden="true">
-	  <div class="video-modal-backdrop"></div>
-
-	  <div class="video-modal-dialog" role="dialog" aria-modal="true">
-		<div class="video-modal-header">
-		  <span id="videoModalTitle">🎵 Now Playing</span>
-		</div>
-
-		<div class="video-modal-body">
-		  <div class="video-modal-frame-wrapper">
-			<iframe
-			  id="videoModalIframe"
-			  class="video-embed"
-			  loading="lazy"
-			  src=""
-			  frameborder="0"
-			  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-			  allowfullscreen>
-			</iframe>
-		  </div>
-		</div>
-
-		<button id="videoModalClose" class="video-modal-close-btn" type="button">
-		  ✖ Close
-		</button>
-	  </div>
-	</div>
-
 </body>
 </html>
