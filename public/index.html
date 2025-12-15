@@ -3,18 +3,190 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script>
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-    </script>    
     <title>R.D. Burman - Pancham Da Tribute</title>
-
     <!-- Favicon for the site -->
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
 
   <style>
+     /* --- Audio auth modal safety / hidden state --- */
+	#audioAuthModal {
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  width: 100vw;
+	  height: 100vh;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  z-index: 999999;
+	  opacity: 0;
+	  visibility: hidden;
+	  pointer-events: none;
+	  transition: opacity 0.4s ease, visibility 0.4s ease;
+	  background: rgba(0, 0, 0, 0.7);
+	}
+	#audioAuthModal:not(.hidden) {
+	  opacity: 1;
+	  visibility: visible;
+	  pointer-events: auto;
+	}
+	#audioAuthModal.hidden {
+	  opacity: 0;
+	  pointer-events: none !important;
+	  visibility: hidden !important;
+	  display: none !important;
+	}
+	#audioAuthModal .auth-backdrop {
+	  display: none; /* Not needed since modal itself has the backdrop */
+	}
+	#audioAuthModal .auth-dialog {
+	  position: relative;
+	  z-index: 1000000;
+	  max-width: 420px;
+	  width: 90%;
+	  background: linear-gradient(135deg, rgba(93, 64, 55, 0.9) 0%, rgba(62, 39, 35, 0.9) 100%),
+	              url('images/rdburman.gif') center center / cover no-repeat;
+	  border-radius: 16px;
+	  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+	  padding: 28px;
+	  color: #fff;
+	  animation: modalSlideIn 0.4s ease;
+	  overflow: hidden;
+	}
+	@keyframes modalSlideIn {
+	  from {
+	    opacity: 0;
+	    transform: translateY(-30px) scale(0.95);
+	  }
+	  to {
+	    opacity: 1;
+	    transform: translateY(0) scale(1);
+	  }
+	}
+	@keyframes modalFadeOut {
+	  from {
+	    opacity: 1;
+	    transform: scale(1);
+	  }
+	  to {
+	    opacity: 0;
+	    transform: scale(0.9);
+	  }
+	}
+	#audioAuthModal.fading-out {
+	  animation: modalFadeOut 0.5s ease forwards;
+	}
+	#audioAuthModal.fading-out .auth-dialog {
+	  animation: modalFadeOut 0.5s ease forwards;
+	}
+	#audioAuthModal .auth-dialog h3 {
+	  margin: 0 0 20px 0;
+	  font-size: 1.4rem;
+	  color: #fff;
+	  text-align: center;
+	}
+	#audioAuthModal .auth-dialog label {
+	  display: block;
+	  margin-bottom: 6px;
+	  font-size: 0.95rem;
+	  color: #fff;
+	  font-weight: 500;
+	}
+	#audioAuthModal .auth-dialog input {
+	  width: 100%;
+	  padding: 12px 14px;
+	  border: 2px solid rgba(255,255,255,0.3);
+	  border-radius: 8px;
+	  background: rgba(255,255,255,0.1);
+	  color: #fff;
+	  font-size: 1rem;
+	  margin-bottom: 16px;
+	  box-sizing: border-box;
+	  transition: border-color 0.3s, background 0.3s;
+	}
+	#audioAuthModal .auth-dialog input::placeholder {
+	  color: rgba(255,255,255,0.6);
+	}
+	#audioAuthModal .auth-dialog input:focus {
+	  outline: none;
+	  border-color: #FFAB91;
+	  background: rgba(255,255,255,0.15);
+	}
+	#audioAuthModal .auth-dialog .auth-buttons {
+	  display: flex;
+	  gap: 12px;
+	  margin-top: 20px;
+	}
+	#audioAuthModal .auth-dialog button {
+	  flex: 1;
+	  padding: 12px 20px;
+	  border: none;
+	  border-radius: 8px;
+	  font-size: 1rem;
+	  font-weight: 600;
+	  cursor: pointer;
+	  transition: transform 0.2s, box-shadow 0.2s;
+	}
+	#audioAuthModal .auth-dialog button[type="submit"] {
+	  background: linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+	  color: #fff;
+	}
+	#audioAuthModal .auth-dialog button[type="submit"]:hover {
+	  transform: translateY(-2px);
+	  box-shadow: 0 6px 20px rgba(255,87,34,0.4);
+	}
+	#audioAuthModal .auth-dialog button[type="button"] {
+	  background: rgba(255,255,255,0.2);
+	  color: #fff;
+	}
+	#audioAuthModal .auth-dialog button[type="button"]:hover {
+	  background: rgba(255,255,255,0.3);
+	}
+	#audioAuthModal .auth-close {
+	  position: absolute;
+	  right: 12px;
+	  top: 12px;
+	  background: rgba(255,255,255,0.2);
+	  border: none;
+	  color: #fff;
+	  font-size: 1.2rem;
+	  width: 32px;
+	  height: 32px;
+	  border-radius: 50%;
+	  cursor: pointer;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  transition: background 0.2s;
+	}
+	#audioAuthModal .auth-close:hover {
+	  background: rgba(255,255,255,0.3);
+	}
+	#audioAuthModal .auth-status {
+	  margin-top: 16px;
+	  padding: 12px;
+	  background: rgba(255,255,255,0.1);
+	  border-radius: 8px;
+	  text-align: center;
+	  color: #fff;
+	}
+	/* Disabled Audio Tab styling */
+	.tab-btn.audio-disabled {
+	  opacity: 0.5;
+	  cursor: not-allowed;
+	  position: relative;
+	}
+	.tab-btn.audio-disabled::after {
+	  content: '🔒';
+	  position: absolute;
+	  top: -8px;
+	  right: -8px;
+	  font-size: 0.8rem;
+	}
+
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -26,6 +198,11 @@
       margin: 0 auto;
       padding: 16px 16px 40px;
     }
+	.container {
+    position: relative !important;
+    z-index: 0 !important;
+	}
+
     header {
       text-align: center;
       padding: 24px 8px 16px;
@@ -67,6 +244,12 @@
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
+	
+	/* stacking safety for modal */
+	html, body { position: relative; z-index: 0; }
+	#audioAuthModal { position: fixed !important; inset: 0 !important; z-index: 2147483646 !important; }
+	#audioAuthModal .auth-dialog { z-index: 2147483647 !important; position: relative; }
+
 
     /* Music overlay */
     #musicOverlay {
@@ -111,65 +294,7 @@
       font-size: 0.8rem;
       cursor: pointer;
     }
-	.main-video-container {
-			width: 300px;
-			height: 300px;
-			border-radius: 50%;
-			border: 8px solid #ff6b6b;
-			margin: 20px auto;
-			overflow: hidden;
-			box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-			position: relative; /* NEW */
-			z-index: 1;         /* NEW: profile video above instruments */
-		}
-
-        @keyframes instrumentFloat {
-            0% { transform: translateX(0) translateY(0); }
-            100% { transform: translateX(-50%) translateY(-20px); }
-        }
-        .main-video { width: 100%; height: 100%; object-fit: cover; }
-        h1 {
-            font-size: 3.5rem;
-            color: #ff6b6b;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-            margin: 20px 0;
-            font-weight: bold;
-            position: relative;
-            z-index: 10;
-        }
-        .dates {
-            font-size: 1.3rem;
-            color: #2c3e50;
-            font-weight: bold;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-            display: inline-block;
-            border-radius: 20px;
-            margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 10;
-        }
-        .subtitle { 
-            font-size: 1.5rem; 
-            color: #ffeaa7; 
-            font-style: italic; 
-            margin-top: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            position: relative;
-            z-index: 10;
-        }
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
+	
     /* Tabs */
     .tab-bar {
       display: flex;
@@ -363,6 +488,19 @@
     }
     .boss-sub-content.active {
       display: block;
+      width: 100%;
+      min-height: 100px;
+      visibility: visible;
+      opacity: 1;
+    }
+    #boss-favourites.active {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      min-height: 200px !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      position: relative !important;
     }
     .boss-saga {
       background: #fff7e6;
@@ -425,7 +563,40 @@
       font-size: 0.8rem;
       opacity: 0.8;
     }
+	/* FIX: Remove pointer-events blocking on overlay */
+	#musicOverlay {
+	  position: fixed;
+	  inset: 0;
+	  background: radial-gradient(circle at top, rgba(0,0,0,0.9), rgba(0,0,0,0.98));
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  flex-direction: column;
+	  gap: 18px;
+	  z-index: 50;
+	  color: #fefefe;
+	  text-align: center;
+	  padding: 20px;
+	  pointer-events: auto; /* CRITICAL: Allow clicks */
+	}
 
+	#musicOverlay.hidden { 
+	  display: none !important; /* Stronger hide */
+	  pointer-events: none !important;
+	}
+
+	#musicOverlay.hidden {
+	  display: none !important;
+	  visibility: hidden !important;
+	  pointer-events: none !important;
+	  opacity: 0 !important;
+	  z-index: -1 !important;
+	}
+
+	#musicOverlayBtn:hover {
+	  transform: scale(1.05);
+	  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+	}
     footer {
       margin-top: 40px;
       text-align: center;
@@ -1551,7 +1722,200 @@
 		padding: 12px 12px 16px;
 		}
 	}
+	
+	/* Modal fully disabled in hidden state */
+		.auth-modal.hidden {
+			display: none !important;
+			pointer-events: none !important;
+		}
+		.auth-modal.hidden .auth-backdrop {
+			display: none !important;
+			pointer-events: none !important;
+		}
 
+		.auth-dialog {
+		  position: fixed; z-index:12001; left: 50%; top: 50%;
+		  transform: translate(-50%,-50%);
+		  width: 360px; max-width: 92%; background: #111827; color: #fff;
+		  border-radius: 10px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.6);
+		  font-family: inherit;
+		}
+		.auth-dialog h3 { margin:0 0 12px 0; font-size:1.05rem; }
+		.auth-dialog label { display:block; margin-bottom:8px; font-size:0.9rem; }
+		.auth-dialog input {
+		  width:100%; padding:8px 10px; margin-top:6px; border-radius:6px;
+		  border: 1px solid rgba(255,255,255,.08); background: #0b1220; color:#fff;
+		}
+		.auth-dialog button {
+		  border: none; padding:8px 12px; border-radius:8px; cursor:pointer;
+		  background:#2b9bf3; color:#fff; font-weight:600;
+		}
+		.auth-dialog .auth-close { position:absolute; right:8px; top:8px; background:transparent; color:#fff; border:none; font-size:1rem; }
+		.auth-status { font-size:0.9rem; opacity:.95; color:#f1f5f9; }
+
+	/* Audio Auth Modal — styling + topmost z-index */
+		.auth-modal { 
+		  position: fixed;
+		  inset: 0;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  z-index: 2147483646; /* extremely high so it sits above everything */
+		  pointer-events: none; /* until shown */
+		}
+
+		.auth-modal .auth-backdrop {
+		  position: absolute;
+		  inset: 0;
+		  background: rgba(0,0,0,0.6);
+		  backdrop-filter: blur(4px);
+		  pointer-events: auto;
+		}
+
+		.auth-modal .auth-dialog {
+		  position: relative;
+		  max-width: 520px;
+		  width: calc(100% - 32px);
+		  margin: 16px;
+		  background: linear-gradient(180deg,#ffffff 0%, #f7f7fb 100%);
+		  border-radius: 12px;
+		  box-shadow: 0 18px 40px rgba(10,10,30,0.5);
+		  padding: 18px;
+		  z-index: 2;
+		  pointer-events: auto;
+		  transform: translateY(8px);
+		  transition: transform .18s ease, opacity .18s ease;
+		  outline: none;
+		}
+
+		/* hidden state */
+		.auth-modal.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+		.auth-modal:not(.hidden) { opacity: 1; visibility: visible; pointer-events: auto; }
+
+		/* simple responsive form */
+		.auth-dialog h3 { margin: 0 0 12px; font-size: 1.15rem; }
+		.auth-dialog form { display:flex; flex-direction:column; gap:10px; }
+		.auth-dialog label { display:flex; flex-direction:column; font-size:0.95rem; gap:6px; }
+		.auth-dialog input[type="text"],
+		.auth-dialog input[type="email"],
+		.auth-dialog input[type="tel"] {
+		  padding: 10px 12px;
+		  border-radius: 8px;
+		  border: 1px solid #ddd;
+		  font-size: 1rem;
+		  width: 100%;
+		  box-sizing: border-box;
+		}
+
+		/* buttons */
+		.auth-dialog button { 
+		  padding: 10px 14px; 
+		  border-radius: 8px; 
+		  border: none; 
+		  cursor: pointer;
+		  background: #2d89ff;
+		  color: white;
+		  font-weight: 600;
+		}
+		.auth-dialog button[type="button"] { background: #777; color: #fff; }
+
+		/* close X */
+		.auth-close { 
+		  position: absolute; 
+		  right: 10px; 
+		  top: 10px; 
+		  background: transparent; 
+		  border: none; 
+		  font-size: 1.05rem; 
+		  cursor: pointer;
+		}
+
+		/* small adjustments for small screens */
+		@media (max-width: 420px) {
+		  .auth-dialog { width: calc(100% - 24px); padding: 14px; border-radius: 8px; }
+		  .auth-dialog h3 { font-size: 1.05rem; text-align: center; }
+		}
+		/* safety overrides */
+		.auth-modal { position: fixed !important; inset: 0 !important; z-index: 2147483646 !important; }
+		.auth-modal .auth-dialog { z-index: 2147483647 !important; max-height: 90vh !important; overflow: auto !important; }
+	/* ===== Audio auth modal - robust top-level overlay styling ===== */
+	.auth-modal {
+	  position: fixed !important;
+	  inset: 0 !important;              /* fill viewport */
+	  display: flex !important;
+	  align-items: center;
+	  justify-content: center;
+	  z-index: 2147483646 !important;   /* very high so it's above everything */
+	  -webkit-overflow-scrolling: touch;
+	}
+
+	/* backdrop (dim) */
+	.auth-modal .auth-backdrop {
+	  position: absolute;
+	  inset: 0;
+	  background: rgba(2,6,12,0.70);
+	  backdrop-filter: blur(4px);       /* subtle blur behind dialog */
+	  z-index: 2147483646;
+	}
+
+	/* dialog card */
+	.auth-modal .auth-dialog {
+	  position: relative;               /* centered by flex container */
+	  z-index: 2147483647 !important;
+	  max-width: 520px;
+	  width: calc(100% - 32px);
+	  margin: 12px;
+	  border-radius: 12px;
+	  background: #fff;
+	  box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+	  overflow: auto;
+	  max-height: 90vh;
+	  padding: 18px;
+	  -webkit-tap-highlight-color: transparent; /* mobile tap nicety */
+	}
+
+	/* small screens: make dialog full width */
+	@media (max-width: 520px) {
+	  .auth-modal .auth-dialog {
+		width: calc(100% - 20px);
+		margin: 10px;
+		border-radius: 10px;
+		padding: 14px;
+	  }
+	}
+
+	/* utility hidden class (if you use .hidden already, keep it) */
+	.auth-modal.hidden { display: none !important; }
+
+	/* minimal style for close button to not overlap */
+	.auth-close {
+	  position: absolute;
+	  right: 12px;
+	  top: 12px;
+	  background: transparent;
+	  border: none;
+	  font-size: 18px;
+	  cursor: pointer;
+	  z-index: 2147483648;
+	}
+
+	/* Make inputs visible on dark overlay in your screenshot */
+	.auth-dialog input[type="text"],
+	.auth-dialog input[type="email"],
+	.auth-dialog input[type="tel"] {
+	  display: block;
+	  width: 100%;
+	  box-sizing: border-box;
+	  padding: 12px 14px;
+	  margin-top: 8px;
+	  margin-bottom: 12px;
+	  border-radius: 8px;
+	  border: 1px solid #dfe6ea;
+	  background: #fff;
+	  color: #0c1320;
+	}
+
+			
   </style>
 </head>
 <body>
@@ -1569,7 +1933,8 @@
   <div id="musicOverlay">
     <h2>🎵 Pancham Da’s Theme</h2>
     <p>Tap below once to let the tribute page play background music while you browse.</p>
-    <button id="musicOverlayBtn">▶ Play Panchamda’s Theme</button>
+    <!-- <button id="musicOverlayBtn">▶ Play Panchamda’s Theme</button> -->
+	<button id="musicOverlayBtn">▶ Play Panchamda's Theme</button>
   </div>
 
   <!-- Tiny pause / stop buttons -->
@@ -1605,6 +1970,73 @@
       <button class="tab-btn" onclick="showTab(event, 'boss')">👔 My Boss</button>
     </nav>
 
+		<!-- === AUDIO AUTH MODAL (insert AFTER the <nav class="tab-bar">) === -->
+	<div id="audioAuthModal" class="auth-modal hidden" aria-hidden="true">
+	  <div class="auth-backdrop"></div>
+	  <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="audioAuthTitle">
+		<h3 id="audioAuthTitle">Audio Access — Authorization required</h3>
+
+		<form id="audioAuthForm" autocomplete="off">
+		  <label>
+			Name
+			<input id="authName" name="name" type="text" required placeholder="Your name">
+		  </label>
+		  <label>
+			Email
+			<input id="authEmail" name="email" type="email" required placeholder="you@example.com">
+		  </label>
+		  <label>
+			Mobile
+			<input id="authMobile" name="mobile" type="tel" required placeholder="+91 9XXXXXXXXX">
+		  </label>
+
+		  <div style="display:flex;gap:10px;margin-top:12px;">
+			<button id="authSubmitBtn" type="submit">Request Access</button>
+			<button id="authCancelBtn" type="button">Cancel</button>
+		  </div>
+
+		  <div id="authStatus" class="auth-status" style="margin-top:12px;display:none;">
+			<div id="authWaiting" style="display:none;">
+			  Waiting for approval... (you will be granted access automatically when approved)
+			</div>
+			<div id="authResult" style="display:none;"></div>
+		  </div>
+		</form>
+
+		<button id="authCloseX" class="auth-close">✖</button>
+	  </div>
+	</div>
+	<!-- === end audio auth modal === -->
+	
+	<!-- Global video modal for My Favourite Boss's Compositions -->
+	<div id="videoModal" class="video-modal hidden" aria-hidden="true">
+	  <div class="video-modal-backdrop"></div>
+
+	  <div class="video-modal-dialog" role="dialog" aria-modal="true">
+		<div class="video-modal-header">
+		  <span id="videoModalTitle">🎵 Now Playing</span>
+		</div>
+
+		<div class="video-modal-body">
+		  <div class="video-modal-frame-wrapper">
+			<iframe
+			  id="videoModalIframe"
+			  class="video-embed"
+			  loading="lazy"
+			  src="about:blank"
+			  frameborder="0"
+			  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+			  allowfullscreen>
+			</iframe>
+		  </div>
+		</div>
+
+		<button id="videoModalClose" class="video-modal-close-btn" type="button">
+		  ✖ Close
+		</button>
+	  </div>
+	</div>
+
     <!-- HOME -->
     <section id="home" class="tab-content active">
       <div class="biography-content">
@@ -1613,7 +2045,7 @@
           This is a personal, lovingly hand–curated tribute to Rahul Dev Burman – Panchamda – the
           composer who could turn a train rhythm into a love song, a bottle tap into background
           score, and a whistle into pure cinematic magic.
-		  <p>Pancham Da</strong>, was born on 27th June 1939 in Calcutta. His nickname came from a legend, the great Ashok Kumar – his baby cries resonated with the fifth note (Pa) of the Indian musical scale!</p>
+		  <p><strong>Pancham Da</strong>, was born on 27th June 1939 in Calcutta. His nickname came from a legend, the great Ashok Kumar – his baby cries resonated with the fifth note (Pa) of the Indian musical scale!</p>
                 <div class="highlight">
                     <strong>Born into Musical Royalty:</strong> Son of Sachin Dev Burman, he composed his first song "Aye Mere Topi palat ke aa", at age nine for <em>Funtoosh</em> (1956).
                 </div>
@@ -1621,7 +2053,7 @@
                 <div class="highlight">
                     <strong>The Numbers:</strong> <strong>331 films</strong> - 292 in Hindi, 31 in Bengali, 3 in Telugu, 2 in Oriya, 2 in Tamil, 1 in Marathi. From "Mehbooba Mehbooba" to "Tere Bina Zindagi Se."
                 </div>
-        </p>
+		<!-- </p> -->
         <p>
           Explore his <strong>videos</strong>, a growing <strong>audio</strong> archive of rare tracks,
           memory–soaked <strong>biography chapters</strong>, and finally, my own corner:
@@ -1669,7 +2101,7 @@
     </section>
 
     <!-- HIS LIFE -->
-    <section id="life" class="tab-content">
+<section id="life" class="tab-content">
       <h2 style="color: blue; text-align:center;">📖📖    His Life – Chapters, Memories &amp; Tributes    📖📖</h2>
       <div class="biography-content">
         <div id="chaptersAccordion" class="accordion">
@@ -1917,7 +2349,7 @@
                           <h4>Ranjit Gazmer (“Kancha”) — The Madol Magician</h4>
                           <p>His Nepali madol rhythms became the backbone of RD’s earthy, tribal pulses.</p>
 
-                          <h4>String Masters — Uttam Singh & Basu Chakraborty</h4>
+                          <h4>String Masters — Uttam Singh and Basu Chakraborty</h4>
                           <p>They sculpted lush orchestral textures that deepened RD’s emotional canvases.</p>
             </div>
           </div>
@@ -2556,7 +2988,7 @@
           <h4>TEESRI MANZIL — WHEN A STAR WAS BORN</h4>
           <p>“The success of <em>Teesri Manzil</em> did more than make a film a hit — it announced Pancham to the world. That film’s music became a blockbuster, and it marked the true beginning of his incredible journey as a composer. I felt proud to have stood behind him at that crucial moment.”</p>
 
-          <h4>A JOURNEY OF SONGS & MEMORIES</h4>
+          <h4>A JOURNEY OF SONGS AND MEMORIES</h4>
           <p>“Our journey after that was truly special. With every film, our bond grew deeper, both as professionals and as friends.”</p>
           <ul>
             <li><strong><em>Baharon Ke Sapne</em></strong> — “He gave me such a soulful score. Songs like ‘Aaja Piya Tohe Pyar Doon’ and ‘Kya Janoon Sajan’ still stir emotions whenever I hear them.”</li>
@@ -2744,7 +3176,7 @@
 
 			<p>Our collaborations stretched across languages, cities, and decades. Sometimes, when I think of it all, the memories rise like old film reels—flickering, fragrant, painfully beautiful.</p>
 
-			<h4>THE FILMS WE MADE TOGETHER — HINDI, BENGALI & BEYOND</h4>
+			<h4>THE FILMS WE MADE TOGETHER — HINDI, BENGALI AND BEYOND</h4>
 			<p>I still remember each film, not as projects but as living moments:</p>
 
 			<h4>THE MAGIC OF OUR CREATIVE PARTNERSHIP</h4>
@@ -2856,7 +3288,7 @@
 		  id="bossFavIframe"
 		  class="video-embed"
 		  loading="lazy"
-		  src=""
+		  src="about:blank"
 		  frameborder="0"
 		  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 		  allowfullscreen>
@@ -2864,15 +3296,15 @@
 	  </div>
 
 	  <!-- Sub-tabs row -->
-	  <<div class="life-tabs" id="life-sub-tabs-boss" aria-label="My Boss Sections">
+	  <div class="life-tabs" id="life-sub-tabs-boss" aria-label="My Boss Sections">
 		<button class="life-tab-btn boss-tab-btn active"
 				onclick="showBossTab(event, 'boss-main');">
 		  Why he is my BOSS
 		</button>
-		<button class="life-tab-btn boss-tab-btn"
+		<!-- <button class="life-tab-btn boss-tab-btn"
 				onclick="showBossTab(event, 'boss-genius');">
 		  🎼 Genius Song Notes
-		</button>
+		</button> -->
 		<button class="life-tab-btn boss-tab-btn"
 				onclick="showBossTab(event, 'boss-favourites');">
 		  🎵 My Favourite Boss's Compositions
@@ -2896,7 +3328,8 @@
         <!-- I’m keeping only headings + short paras here; you can paste back your full write-ups if you want -->
         <!-- <details class="boss-saga-section" open>
           <!-- 1. Atmospheric Wizard -->
-			<details class="boss-saga-section" open="">
+			<!-- <details class="boss-saga-section" open=""> -->
+			<details class="boss-saga-section">
 			<summary>1. 🎬 The Atmospheric Wizard: Boss of Background Scores</summary>
 			<div class="boss-saga-body">
 			<p>Boss never treated background score as filler; for him, it was another powerful character in the story, shaping every emotion from fear to longing. He gave fear its own sound, love its own echo, and tension its own heartbeat, making even silences feel scored.</p>
@@ -3014,7 +3447,7 @@
 			<p>People who call Boss "too Western" haven't listened closely enough. When he touched a raga, he reshaped it for cinema without diluting its soul—fusing Khamaj with Todi, Behag with kathak bols, pure Shivranjani pathos, Pahadi romance and Pilu-thumri flavours.</p>
 			<p><strong>"Ghar Aaja Ghir Aayi Badra" – Chhote Nawab:</strong> Raga Malgunji in his debut film; monsoon longing with Lata–Manna Dey, evoking raw classical emotion from day one.</p>
 			<p><strong>"Aaja Re Piya" – Chandan Ka Palna:</strong> Morning raga Jogiya; Lata’s Sur Singar–nominated rendition shows how Boss could make pure raag feel cinematic yet uncompromised.</p>
-			<p><strong>"Piya Bawri" – Khoobsurat:</strong> Authentic Behag with Asha Bhosle & Ashok Kumar; tabla bols, kathak-theka and sargam-style taans turning a family comedy into a raag showcase.</p>
+			<p><strong>"Piya Bawri" – Khoobsurat:</strong> Authentic Behag with Asha Bhosle and Ashok Kumar; tabla bols, kathak-theka and sargam-style taans turning a family comedy into a raag showcase.</p>
 			<p><strong>"Kyon Naye Lag Rahe Hain" – Doli Armaano Ki:</strong> Evening Khamaj mood; Lata’s phrases glide over teases of shuddh and komal Ni, classic semi-classical romance.</p>
 			<p><strong>"Raina Beeti Jaaye" – Amar Prem:</strong> A luminous blend of Khamaj with Todi/Lalit; santoor and sitar weave dawn-light textures while Kishore stretches meends like a khayal singer.</p>
 			<p><strong>"Mere Naina Sawan Bhadon" – Mehbooba:</strong> Pure Shivranjani pathos; twin Lata/Kishore versions explore the same raag as two emotional universes—yearning and haunted memory.</p>
@@ -3039,7 +3472,7 @@
 			<p><strong>"Din Ja Rahe Hain Raaton Ke Saaye" – Doosri Sita:</strong> Raaga: Khamaj / light Pilu (depending on rendition); mostly Khamaj-based, occasionally treated with Pilu-like twists, as if the day itself is sliding into thumri–coloured dusk.</p>
 			<p><strong>"Aap Ki Ankhon Mein Kuch" – Ghar (1978):</strong> Raaga: Yaman / Yaman Kalyan (mishra); classic Lata–Kishore duet anchored by teevra Ma emphasis and smooth romantic meends—pure Yaman-family romance.</p>
 			<p><strong>"Aaj Kal Paon Zameen Par Nahin Padte" – Ghar (1978):</strong> Raaga: Pahadi (light); flows directly from Pahadi's folk base with Pancham's soft harmony and rhythmic lilt, making walking on air feel classically rooted.</p>
-			<p><strong>"Tere Bin Jiya Jaye Na" – Ghar (1978):</strong> Raaga: Bageshree; one of RDB's finest Bageshree gems—komal Ga & Ni plus Ma–Dha glide create that unforgettable Madal Tarang heartbeat.</p>
+			<p><strong>"Tere Bin Jiya Jaye Na" – Ghar (1978):</strong> Raaga: Bageshree; one of RDB's finest Bageshree gems—komal Ga and Ni plus Ma–Dha glide create that unforgettable Madal Tarang heartbeat.</p>
 			<p><strong>"Aapki Aankhon Mein Kuch" (Reprise, Ghar):</strong> Raaga: Yaman; slower solo version keeps the teevra Ma and Yaman movement, but more minimal—intimate classical conversation with oneself.</p>
 			</div>
 			</details>
@@ -3060,1246 +3493,1332 @@
 				<p>Wild, mischievous and endlessly hummable: <em>Satte Pe Satta, Sanam Teri Kasam, Kasme Vaade, Yeh Vaada Raha, Pukar, Agar Tum Na Hote</em> – from “Pyar Humein Kis Mod Pe” to “Tu Tu Hai Wahi”.</p>
 				<p class="boss-saga-outro"></p>
 			</div>
-    </div>
+			</details>
+          
+    </div>   
   </div>
-</div>
-  <!-- Boss genius -->
-  <!-- <div id="boss-genius" class="boss-sub-content">
-    <div class="biography-content" style="background:#fff7e6; color:#4a2c00;">
-      <h3>🎼 Why I call him “Genius” – Song Notes</h3>
-      <p style="white-space:pre-wrap; line-height:1.9; font-size:1rem;">
-		Here you can paste back your detailed <strong>genius-song-block</strong> notes like:
+</div> <!-- closes boss-main -->
 
-		• "Tere Bina Jiya Jaye Na (Ghar, 1978)" – Madal Tarang and Ranjit Gazmer  
-		• "Kya Janu Sajan (Baharon Ke Sapne, 1967)" – double-tracked Lata, muted trumpet  
-		• "Jab Andhera Hota Hai", "Samne Ye Kaun Aaya", "Dhanno Ki Ankhon Mein",
-		  "O Majhi Re", "Pyar Humein Kis Mod Pe", "Katra Katra", "Ek Ladki Ko Dekha",
-		  "Musafir Hoon Yaaron", "Pyar Karne Wale", "Chura Liya Hai", "Dum Maro Dum"
-		…with all the instrumentation credits and geeky details you had earlier.
-      </p>
-    </div>
-  </div> -->
+		  <!-- Boss favourites with embedded player -->
+      <div id="boss-favourites" class="boss-sub-content">
+		<h3>🎵 My Favourite Boss's Compositions</h3>
+		<p class="section-intro"></p>
+		  <!-- </div> -->
 
-  <!-- Boss favourites with embedded player -->
-  <div id="boss-favourites" class="boss-sub-content">
-    <h3>🎵 My Favourite Boss's Compositions</h3>
-    <p class="section-intro"></p>
-  <!-- </div> -->
-
-    <!-- 1. Title Music -->
-    <div class="boss-category">
-      <div class="boss-category-title">🎬 Title Music – Boss’s Opening Themes 🎵</div>
-      <!-- <div class="myboss-song-list"> -->
-	   <div class="myboss-song-list boss-title-music-list">
-        <a href="#"
-           onclick="return openBossVideo(event, 'https://youtube.com/playlist?list=PLt1_3oWrtFTOFpilXV5DEwZoxKjdXR6Ra&si=bFkh3u6LiG3dssjF', 'Title Music Playlist – Boss\'s Themes');">
-          🎵 Title Music Playlist – Boss's Themes
-        </a>
-      </div>
-      <div class="boss-small-note">
-        (Playlist link – you can dive into multiple title tracks from here.)
-      </div>
-    </div>
-
-    <!-- 2. Background Music -->
-    <div class="boss-category no-right-click">
-      <div class="boss-category-title">🎬 Background, Theme and Title Music – Score Moments 🎵</div>
-      <!-- <div class="myboss-song-list"> -->
-	  <div class="myboss-song-list boss-bg-score-list">
-        <a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=V607EAqCTjY&list=RDV607EAqCTjY&start_radio=1', 'Background Score 1');">
-									🎵 Betaab
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/sxvB0cCQBSg?si=nKHilaVWLS7HPpxw', 'Background Score 2');">
-									🎵 Teri Kasam
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/uQvOHHGrMjg?si=tdRtS57yk-lMb4SH', 'Background Score 3');">
-									🎵 Sagar
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/pHJiYu69C4c?si=xskoVED0slaCnzR5', 'Background Score 4');">
-									🎵 Satte pe Satta Gargling by Annette
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PBLmRYnFs7E?si=vSkvSgeTqBKEt3sO', 'Background Score 5');">
-									🎵 Arjun
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/shorts/4SBibAhMXr8', 'Background Score 6');">
-									🎵 Deewar
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=wUb2NMmO2Po&t=10s', 'Background Score 7');">
-									🎵 Sholay - Tabla by PT. Shamta Prasad
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=Sz-herPtZPY', 'Background Score 8');">
-									🎵 Sholay
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=MJsCgUZAANE', 'Background Score 9');">
-									🎵 Sholay
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=Z6Jz91g16Z4&list=RDZ6Jz91g16Z4&start_radio=1', 'Background Score 10');">
-									🎵 Dacait
-								</a>	
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=r1bo3XcQeVI&list=RDr1bo3XcQeVI&start_radio=1', 'Background Score 11');">
-									🎵 Teesri Manzil
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=XsGuaAFK4zI&list=RDXsGuaAFK4zI&start_radio=1', 'Background Score 12');">
-									🎵 Gardish
-								</a>
-        <a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=BBO1lMrrxg0&list=RDBBO1lMrrxg0&start_radio=1', 'Background Score 13');">
-									🎵 The Burning Train Clock Ticking effect by Maruti Rao
-								</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=CVifJI5Ykzs&list=RDCVifJI5Ykzs&start_radio=1', 'Background Score 14');">
-									🎵 Drohi
-        </a>
-      </div>
-    </div>
-    <!-- 3. My Favourite Songs -->
-    <div class="boss-category">
-      <div class="boss-category-title">💖 My Favourite Songs – Pancham Forever 🎵</div>
-      <!-- <div class="myboss-song-list" style="max-height:380px; overflow:auto;"> -->
-	  <div class="myboss-song-list boss-fav-songs-list" style="max-height:380px; overflow:auto;">
-        <a href="#" onclick="return openFavModal(event, 'https://youtu.be/CpYuH4Cc8Mk?si=qK5iGgqa3qsPRKH0', 'Rah Pe Rehte Hai | Namkeen ( 1982 )');"> 
-						 🎵 Rah Pe Rehte Hai | Namkeen ( 1982 )</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/C1w6p3TEVxI?si=CkHwXCKJOBhZwWkK', 'Aye Zindagi Hui Kahan Bhool Jiski  | (Namumkin 1988)');"> 
-								 🎵 Aye Zindagi Hui Kahan Bhool Jiski  | (Namumkin 1988)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/WaCRlPUPLhk?si=Nq_DXLhf7aS2DjGu', 'Na Jaane Din Kaise (Both Parts) | (Chala Murari Hero Banne 1977)');"> 
-								 🎵 Na Jaane Din Kaise (Both Parts) | (Chala Murari Hero Banne 1977)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PleWU2pdK-I?si=PK_rAjjC72uEVZrZ', 'Main Shayar Badnam | (Namak Haraam 1973)');"> 
-								 🎵 Main Shayar Badnam | (Namak Haraam 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/xkQpfIMj1UE?si=RerH28vnO62xX_s6', 'Mujhko Yuhi Udaas |  (Khushboo (1975)');"> 
-								 🎵 Mujhko Yuhi Udaas |  (Khushboo (1975)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/flFE-ps5yYo?si=C90tKlW2S2fhkswP', 'Tumne Mujhe Dekha | (Teesri Manzil 1966)');"> 
-								 🎵 Tumne Mujhe Dekha | (Teesri Manzil 1966)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/tC11eSDHobE?si=LpParr0eIVJHpLeT', 'A Ri Pawan Dhunde Kise Tera Mann | ( Bemisaal 1982)');"> 
-								 🎵 Aye Ri Pawan Dhunde Kise Tera Mann | ( Bemisaal 1982)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/2fUVcrMA8Dg?si=bXt_fKwl3TEJiqiY', 'Kisi Baat Pe Main Kisise Khafa Hoon | ( Bemisaal 1982)');"> 
-								 🎵 Kisi Baat Pe Main Kisise Khafa Hoon | ( Bemisaal 1982)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/0VbyQ5tdavI?si=IP277RozQo8C-FBe', 'Sawan Ke Jhoole| (Jurmana 1979)');"> 
-								 🎵 Sawan Ke Jhoole | (Jurmana 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/iaLmf7L-B24?si=YV8cIZJ5yHJUapXE', 'Oh Hansini | (Zehreela Insaan 1974)');"> 
-								 🎵 Oh Hansini | (Zehreela Insaan 1974)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/RscsV4uuetw?si=HUEUjhme8qBCWgTd', 'Jidhar Dekhoon Teri Tasveer | (Mahaan 1983)');"> 
-								 🎵 Jidhar Dekhoon Teri Tasveer | (Mahaan 1983)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/ADYDEx1pvEg?si=WKjpAxfpZMgEWOOy', 'Kya Jaanu Sajan Hoti Hai | (Baharon Ke Sapne 1967)');"> 
-								 🎵 Kya Jaanu Sajan Hoti Hai | (Baharon Ke Sapne 1967)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PZzK3CVzLKo?si=y9ntwMjpZFCPp6dU', 'Katra Katra Milti Hai Katra Katra Jeene Do | (Ijaazat 1987)');"> 
-								 🎵 Katra Katra Milti Hai Katra Katra Jeene Do | (Ijaazat 1987)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wVlsl3QXwKU?si=u-ReqZGUQX_0Gi36', 'Dhanno Ki Aankhon Me | (Kitaab 1977) ');"> 
-								 🎵 Dhanno Ki Aankhon Me | (Kitaab 1977) </a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/M_mA1M44Bwc?si=wwIEDgVbo6a2_DoT', 'Subha Serial Title Song | (Subah 1987)');"> 
-								 🎵 Subha Serial Title Song | (Subah 1987)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/t6iLjbkxBZo?si=IZYjFNUaK22H1qlN', 'Masterji ki aa gayi chitthi | (Kitaab 1977)');"> 
-								 🎵 Masterji ki aa gayi chitthi | (Kitaab 1977)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/8t5Rt_LWmpE?si=cVRNkFxngFAPwxtq', 'Samundar Mein Nahake | (Pukar 1983)');"> 
-								 🎵 Samundar Mein Nahake | (Pukar 1983)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/h34dmUw_yCQ?si=kBKlVoNxUkzEiJy3', 'Phir Wahi Raat | (Ghar 1978)');"> 
-								 🎵 Phir Wahi Raat | (Ghar 1978)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PN0rH8dLn28?si=e7Cl0RcPnAV0NiH1', 'Tum Meri Zindegi Se | (Bombay to Goa 1971)');"> 
-								 🎵 Tum Meri Zindegi Mein | (Bombay to Goa 1971)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/kkTv_aUjd5Y?si=TCkKvKpl_76ovFE8', 'Phulon Ki Duniya Se | (Rickshawala 1973)');"> 
-								 🎵 Phulon Ki Duniya Se | (Rickshawala 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wKnWL8-6qWA?si=SqpxOfrM2GfL3Zbr', 'Maine Kaha Zid Chhod | (Rickshawala 1973)');"> 
-								 🎵 Maine Kaha Zid Chhod | (Rickshawala 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/lu5MjHcy6Lg?si=U_kUjhTdIKlHEPoE', 'Ek Baat Dil Mein Aayi Hai | (Rahi Badal Gaye 1984)');"> 
-								 🎵 Ek Baat Dil Mein Aayi Hai | (Rahi Badal Gaye 1984)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/XI2P7HgHK9M?si=dSGqPnPDrSF8l4r7', 'Silli Hawa Chhoo Gai | Libaas');"> 
-								 🎵 Silli Hawa Chhoo Gai | Libaas</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/aWJc-cT12Mc?si=A7qUwE_j4Nn_6PNN', 'Jahan Pe Savera Ho Basera | (Baseraa 1981) ');"> 
-								 🎵 Jahan Pe Savera Ho Basera | (Baseraa 1981) </a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/UUHuIsaNTpM?si=c6vz-9Yk28HIyiL_', 'Kitne Sapne Kitne Armaan | (Mere Jeevan Saathi 1972)');"> 
-								 🎵 Kitne Sapne Kitne Armaan | (Mere Jeevan Saathi 1972)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/uj5OLjty0l4?si=CBcss2RilACiME4U', 'Jab Chaha Yaara Tumne |(Zabardast 1985)');"> 
-								 🎵 Jab Chaha Yaara Tumne | (Zabardast 1985)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/30rLo4X4aI0?si=5z-mBemInLHG5BSY', 'Pyar Jab Na Diya Zindagi Ne Kabhi| (Sitamgar 1985)');"> 
-								 🎵 Pyar Jab Na Diya Zindagi Ne Kabhi| (Sitamgar 1985)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/kT3rzroZSlw?si=oLL7SB-Ta9bbokKH', 'Phirte Hai Kabse Darbadar | (Duniya 1984) ');"> 
-								 🎵 Phirte Hai Kabse Darbadar | (Duniya 1984) </a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/6GSUGstpEwY?si=fv2IS9y7Ik5mZIUG', 'Thokar Mein Hai Meri Sara Zamana 4K | (Shehzada 1972)');"> 
-								 🎵 Thokar Mein Hai Meri Sara Zamana 4K | (Shehzada 1972)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/W29sLG5YEEU?si=jeD1MNKqRDtYo9AB', 'Gumsum Kyun Hai Sanam | (Bhala Manas 1979)');"> 
-								 🎵 Gumsum Kyun Hai Sanam | (Bhala Manas 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/CuX6iBnHCog?si=EiQBJU1f7jSJnO5V', 'Jaan Pehchan to Pehle se thi | (Bhala Manus 1979)');"> 
-								 🎵 Jaan Pehchan to Pehle se thi | (Bhala Manus 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/4yUauK-So28?si=SWzVaVGZ8Zv5mH_O', 'Yeh Zindagi Kuch Bhi Sahi |(Romance 1983)');"> 
-								 🎵 Yeh Zindagi Kuch Bhi Sahi | (Romance 1983)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/YQNb89xnKvQ?si=pyGPH6aMgEP0P8Kk', 'Tum Bin Jaoon Kahan |(Pyar Ka Mausam 1969)');"> 
-								 🎵 Tum Bin Jaoon Kahan | (Pyar Ka Mausam 1969)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/LblLAQQV6ko?si=-u1Xhzl87LyAqL1j', 'Na Koi Dil Mein Samaya|( Aa Gale Lag Jaa 1973)');"> 
-								 🎵 Na Koi Dil Mein Samaya | ( Aa Gale Lag Jaa 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/STOM6NZfcrs?si=gXLx-s67rWOO7HYm', 'Is Mod Se Jaate Hain| (Aandhi 1975 Songs)');"> 
-								 🎵 Is Mod Se Jaate Hain| (Aandhi 1975 Songs)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/XxbBN4AtFio?si=fc8UNPVlvOFWQnl7', 'Aaja Aaja Meri Jaan | (Aja Meri Jaan)');"> 
-								 🎵 Aaja Aaja Meri Jaan | (Aja Meri Jaan)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/WJyM13QI64E?si=0s3hgT9czCLz6uNY', 'Shikwa Koi Tumse Na Hai | (Joota Kahin Ka 1979)');"> 
-								 🎵 Shikwa Koi Tumse Na Hai | (Joota Kahin Ka 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/lplaAZBWiqY?si=ZiIrD2b5F5RkKUMF', 'Bade Achhe Lagte Hain  | (Balika Badhu 1976)');"> 
-								 🎵 Bade Achhe Lagte Hain  | (Balika Badhu 1976)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/g7QUMWO4fNA?si=ICdygdScrCB_E7ji', 'Kaho Kahan Chale Jahan Tum Le Chalo| (Bulundi 1981)');"> 
-								 🎵 Kaho Kahan Chale Jahan Tum Le Chalo | (Bulundi 1981)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/SNKJ1kWP7nU?si=25sXKWWQSOD_NWvN', 'Jeena To Hai Par Ae Dil Kahan | Daulat Ke Dushman-Panch Dushman-1981(73)');"> 
-								 🎵 Jeena To Hai Par Ae Dil Kahan | Daulat Ke Dushman-Panch Dushman-1981(73)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/5XjqrXpmLOI?si=SqgTK_bD6ZbFCQYk', 'Tum Jo Mile To Laga Hai Jaise Mili Zindagi | (Drohi 1992)');"> 
-								 🎵 Tum Jo Mile To Laga Hai Jaise Mili Zindagi | (Drohi 1992)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/nhQuJuAyVlo?si=T0yl_Kydq9FeZR3X', 'Badal Jo Barse To Bheege Hum| (Gardish 1993)');"> 
-								 🎵 Badal Jo Barse To Bheege Hum | (Gardish 1993)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/qU3fSobl6Tg?si=-qD4ayWPRQ66kyvX', 'Kya Nazare Kya Sitare | (Jheel Ke Us Paar 1973)');"> 
-								 🎵 Kya Nazare Kya Sitare | (Jheel Ke Us Paar 1973)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/850bZDi_MD0?si=sQiLbdaGzzX1GcXh', 'Tum Ho Mere Dil Ki Dhadkan | (Manzil 1979)');"> 
-								 🎵 Tum Ho Mere Dil Ki Dhadkan | (Manzil 1979)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/T1NtFQHEZhQ?si=nYibiAj47Tvf7N07', 'Do Naina Aur Ek Kahani | (Masoom 1983)');"> 
-								 🎵 Do Naina Aur Ek Kahani | (Masoom 1983)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wJ1mqmbngO0?si=Da6UhpFc_5WlyXh-', 'Kaanta Lagaa| (Samadhi 1972) ');"> 
-								 🎵 Kaanta Lagaa | (Samadhi 1972)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/K-GPX2PzDKM?si=CujGtpU8GCbhp6KW', 'Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)');"> 
-								 🎵 Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=uyjiK9QCU5U&list=RDuyjiK9QCU5U&start_radio=1', 'Chand Mera Dil | (Hum Kisi Se Kum Nahin 1977)');"> 
-								 🎵 Chand Mera Dil | (Hum Kisi Se Kum Nahin 1977)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=ToO-PkucJac&list=RDToO-PkucJac&start_radio=1', 'Pyar Hua Hai Jabse| (Abhiasha 1968)');"> 
-								 🎵 Pyar Hua Hai Jabse | (Abhiasha 1968)</a>						 
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=GbNVK92l5vI&list=RDGbNVK92l5vI&start_radio=1', 'Ek Bechara Pyar Ka Mara| (Waris 1969)');"> 
-								 🎵 Ek Bechara Pyar Ka Mara | (Waris 1969)</a>						 
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=luaTQG0pvQY&list=RDluaTQG0pvQY&start_radio=1', 'Jago Sone walo| (Bhoot Bangla 1965)');"> 
-								 🎵 Jago Sone walo | (Bhoot Bangla 1965)</a> 
-		<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=EA4qpsJS9uY&list=RDEA4qpsJS9uY&start_radio=1', 'Ek Hi Khwab| (Kinara 1977)');"> 
-								 🎵 Ek Hi Khwab | (Kinara 1977)</a> 
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/EEe4tVkaDWY?si=oxHls-A0lyQ4F5jy', 'Kotha Hoyechhilo | (Troyee 1982)');"> 
-								 🎵 Kotha Hoyechhilo | (Troyee 1982) Bengali</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/cesHYOjDcvg?si=LXAw8IC9GHrw_bkF', 'Mon Theke Mone Ki Kore Je Jabo | (Shwet Pathorer Thala 1992)');">
-								 🎵 Mon Theke Mone Ki Kore Je Jabo | Bengali (Shwet Pathorer Thala 1992)</a>
-		<a href="#" onclick="return openFavModal(event, 'https://youtu.be/G0oOtkYjdFo?si=SF4z5UxjIwhh_U7d', 'Ki Kore Janle Tumi | (Debota 1990)');">
-								 🎵 Ki Kore Janle Tumi | (Debota 1990) Bengali</a>
-      </div>
-    </div>
-
-    <!-- 4. His Cabaret Tracks 🎷🎵 -->
-		<div class="boss-category">
-			<div class="boss-category-title">🎷 His Cabaret Tracks – Nightclub Magic 🎵</div>
-			<p class="boss-small-note" style="margin-bottom:10px;">
-									Iconic cabaret-styled songs composed by Pancham Da – most of them filmed with unforgettable nightclub visuals.
-								</p>
-			<!-- <div class="myboss-song-list"> -->
-			<div class="myboss-song-list boss-cabaret-list">
-			<!-- Caravan (1971) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/46GGxF_Bwhg?si=hq_C9hVDlY1BWzP8', 'Piya Tu Ab To Aaja – Caravan (1971)');">
-										🎵 Piya Tu Ab To Aaja – Caravan (1971)
-									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/gT7dABHA92E?si=cH_-QrWURMCiyWcQ', 'Daiya Yeh Main Kahaan Aa Phansi – Caravan (1971)');">
-										🎵 Daiya Yeh Main Kahaan Aa Phansi – Caravan (1971)
-									</a>
-			<!-- The Train (1970) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/eXd7N0QsCH0?si=YJOsltdt56_T-bWv', 'Meri Jaan Maine Kaha – The Train (1970)');">
-										🎵 Meri Jaan Maine Kaha – The Train (1970)
-									</a>
-			<!-- Teesri Manzil (1966) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/VR-ak1-RURU?si=0lL1P-pEMJJwdNKs', '🎵 O Haseena Zulfonwali – Teesri Manzil (1966)');">
-										🎵 O Haseena Zulfonwali – Teesri Manzil (1966)
-									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/EOgirs8vE_A?si=Q2RFfg0kT2ZxNYrb', 'Aaja Aaja Main Hoon Pyar Tera – Teesri Manzil (1966)');">
-										🎵 Aaja Aaja Main Hoon Pyar Tera – Teesri Manzil (1966)
-									</a>
-			<!-- Apna Desh (1972) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/cKFabjoRdJo?si=5cSF_PiIYlr3YrOL', 'Duniya Mein Logon Ko – Apna Desh (1972)');">
-										🎵 Duniya Mein Logon Ko – Apna Desh (1972)
-									</a>
-			<!-- Sanam Teri Kasam (1982) -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/tfZrC59unRA?si=-oZYxIsqO_5emiNn', 'Jane Jaan O Meri Jane Jaan – Sanam Teri Kasam (1982)');">
-										🎵 Jane Jaan O Meri Jane Jaan – Sanam Teri Kasam (1982)
-									</a>
-			<!-- Other notable cabaret-style numbers -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/vywZigBV19s?si=AxhbdHHjOQzAuf-W', 'Sapna Mera Toot Gaya – Khel Khel Mein (1975)');">
-										🎵 Sapna Mera Toot Gaya – Khel Khel Mein (1975)
-									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/6J5nHIAUVpE?si=EOjZGpZTko_IcwXX', 'Aaj Ki Raat Koi Aane Ko Hai – Anamika (1973)');">
-										🎵 Aaj Ki Raat Koi Aane Ko Hai – Anamika (1973)
-									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/JQC85Nq7V0s?si=G3COoVGv8eeosDkB', 'Mera Naam Hai Shabnam – Kati Patang (1971)');">
-										🎵 Mera Naam Hai Shabnam – Kati Patang (1971)
-									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/in1W2D24ohM?si=6mv1TBObzMBcWp4P', 'Aaja Sunle Sada – Gurudev (1992)');">
-										🎵 Aaja Sunle Sada – Gurudev (1992)
-									</a>
-			<!-- Compilations -->
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/mAvJ4SUb2DU?si=nHhuJ3A_o-_3MdmG', 'Cabaret Compilation 1 – Pancham Specials');">
-										🎵 Cabaret Compilation 1 – Pancham Specials
-									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://youtu.be/7roLau2vAV8?si=FEGj5Mb_RlZzx6gT', 'Cabaret Compilation 2 – Pancham Specials');">
-										🎵 Cabaret Compilation 2 – Pancham Specials
-									</a>
+			<!-- 1. Title Music -->
+			<div class="boss-category">
+			  <div class="boss-category-title">🎬 Title Music – Boss’s Opening Themes 🎵</div>
+			  <!-- <div class="myboss-song-list"> -->
+			   <div class="myboss-song-list boss-title-music-list">
+				<a href="#"
+				   onclick="return openBossVideo(event, 'https://youtube.com/playlist?list=PLt1_3oWrtFTOFpilXV5DEwZoxKjdXR6Ra&si=bFkh3u6LiG3dssjF', 'Title Music Playlist – Boss\'s Themes');">
+				  🎵 Title Music Playlist – Boss's Themes
+				</a>
+			  </div>
+			  <div class="boss-small-note">
+				(Playlist link – you can dive into multiple title tracks from here.)
+			  </div>
 			</div>
+
+			<!-- 2. Background Music -->
+			<div class="boss-category no-right-click">
+			  <div class="boss-category-title">🎬 Background, Theme and Title Music – Score Moments 🎵</div>
+			  <!-- <div class="myboss-song-list"> -->
+			  <div class="myboss-song-list boss-bg-score-list">
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=V607EAqCTjY&list=RDV607EAqCTjY&start_radio=1', 'Background Score 1');">
+											🎵 Betaab
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/sxvB0cCQBSg?si=nKHilaVWLS7HPpxw', 'Background Score 2');">
+											🎵 Teri Kasam
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/uQvOHHGrMjg?si=tdRtS57yk-lMb4SH', 'Background Score 3');">
+											🎵 Sagar
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/pHJiYu69C4c?si=xskoVED0slaCnzR5', 'Background Score 4');">
+											🎵 Satte pe Satta Gargling by Annette
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PBLmRYnFs7E?si=vSkvSgeTqBKEt3sO', 'Background Score 5');">
+											🎵 Arjun
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/shorts/4SBibAhMXr8', 'Background Score 6');">
+											🎵 Deewar
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=wUb2NMmO2Po&t=10s', 'Background Score 7');">
+											🎵 Sholay - Tabla by PT. Shamta Prasad
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=Sz-herPtZPY', 'Background Score 8');">
+											🎵 Sholay
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=MJsCgUZAANE', 'Background Score 9');">
+											🎵 Sholay
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=Z6Jz91g16Z4&list=RDZ6Jz91g16Z4&start_radio=1', 'Background Score 10');">
+											🎵 Dacait
+										</a>	
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=r1bo3XcQeVI&list=RDr1bo3XcQeVI&start_radio=1', 'Background Score 11');">
+											🎵 Teesri Manzil
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=XsGuaAFK4zI&list=RDXsGuaAFK4zI&start_radio=1', 'Background Score 12');">
+											🎵 Gardish
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=BBO1lMrrxg0&list=RDBBO1lMrrxg0&start_radio=1', 'Background Score 13');">
+											🎵 The Burning Train Clock Ticking effect by Maruti Rao
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=CVifJI5Ykzs&list=RDCVifJI5Ykzs&start_radio=1', 'Background Score 14');">
+											🎵 Drohi
+				</a>
+			  </div>
+			</div>
+			<!-- 3. My Favourite Songs -->
+			<div class="boss-category">
+			  <div class="boss-category-title">💖 My Favourite Songs – Pancham Forever 🎵</div>
+			  <!-- <div class="myboss-song-list" style="max-height:380px; overflow:auto;"> -->
+			  <div class="myboss-song-list boss-fav-songs-list" style="max-height:380px; overflow:auto;">
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/CpYuH4Cc8Mk?si=qK5iGgqa3qsPRKH0', 'Rah Pe Rehte Hai | Namkeen ( 1982 )');"> 
+								 🎵 Rah Pe Rehte Hai | Namkeen ( 1982 )</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/C1w6p3TEVxI?si=CkHwXCKJOBhZwWkK', 'Aye Zindagi Hui Kahan Bhool Jiski  | (Namumkin 1988)');"> 
+										 🎵 Aye Zindagi Hui Kahan Bhool Jiski  | (Namumkin 1988)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/WaCRlPUPLhk?si=Nq_DXLhf7aS2DjGu', 'Na Jaane Din Kaise (Both Parts) | (Chala Murari Hero Banne 1977)');"> 
+										 🎵 Na Jaane Din Kaise (Both Parts) | (Chala Murari Hero Banne 1977)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PleWU2pdK-I?si=PK_rAjjC72uEVZrZ', 'Main Shayar Badnam | (Namak Haraam 1973)');"> 
+										 🎵 Main Shayar Badnam | (Namak Haraam 1973)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/xkQpfIMj1UE?si=RerH28vnO62xX_s6', 'Mujhko Yuhi Udaas |  (Khushboo (1975)');"> 
+										 🎵 Mujhko Yuhi Udaas |  (Khushboo (1975)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/flFE-ps5yYo?si=C90tKlW2S2fhkswP', 'Tumne Mujhe Dekha | (Teesri Manzil 1966)');"> 
+										 🎵 Tumne Mujhe Dekha | (Teesri Manzil 1966)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/tC11eSDHobE?si=LpParr0eIVJHpLeT', 'A Ri Pawan Dhunde Kise Tera Mann | ( Bemisaal 1982)');"> 
+										 🎵 Aye Ri Pawan Dhunde Kise Tera Mann | ( Bemisaal 1982)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/2fUVcrMA8Dg?si=bXt_fKwl3TEJiqiY', 'Kisi Baat Pe Main Kisise Khafa Hoon | ( Bemisaal 1982)');"> 
+										 🎵 Kisi Baat Pe Main Kisise Khafa Hoon | ( Bemisaal 1982)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/0VbyQ5tdavI?si=IP277RozQo8C-FBe', 'Sawan Ke Jhoole| (Jurmana 1979)');"> 
+										 🎵 Sawan Ke Jhoole | (Jurmana 1979)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/iaLmf7L-B24?si=YV8cIZJ5yHJUapXE', 'Oh Hansini | (Zehreela Insaan 1974)');"> 
+										 🎵 Oh Hansini | (Zehreela Insaan 1974)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/RscsV4uuetw?si=HUEUjhme8qBCWgTd', 'Jidhar Dekhoon Teri Tasveer | (Mahaan 1983)');"> 
+										 🎵 Jidhar Dekhoon Teri Tasveer | (Mahaan 1983)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/ADYDEx1pvEg?si=WKjpAxfpZMgEWOOy', 'Kya Jaanu Sajan Hoti Hai | (Baharon Ke Sapne 1967)');"> 
+										 🎵 Kya Jaanu Sajan Hoti Hai | (Baharon Ke Sapne 1967)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PZzK3CVzLKo?si=y9ntwMjpZFCPp6dU', 'Katra Katra Milti Hai Katra Katra Jeene Do | (Ijaazat 1987)');"> 
+										 🎵 Katra Katra Milti Hai Katra Katra Jeene Do | (Ijaazat 1987)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wVlsl3QXwKU?si=u-ReqZGUQX_0Gi36', 'Dhanno Ki Aankhon Me | (Kitaab 1977) ');"> 
+										 🎵 Dhanno Ki Aankhon Me | (Kitaab 1977) </a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/M_mA1M44Bwc?si=wwIEDgVbo6a2_DoT', 'Subha Serial Title Song | (Subah 1987)');"> 
+										 🎵 Subha Serial Title Song | (Subah 1987)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/t6iLjbkxBZo?si=IZYjFNUaK22H1qlN', 'Masterji ki aa gayi chitthi | (Kitaab 1977)');"> 
+										 🎵 Masterji ki aa gayi chitthi | (Kitaab 1977)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/8t5Rt_LWmpE?si=cVRNkFxngFAPwxtq', 'Samundar Mein Nahake | (Pukar 1983)');"> 
+										 🎵 Samundar Mein Nahake | (Pukar 1983)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/h34dmUw_yCQ?si=kBKlVoNxUkzEiJy3', 'Phir Wahi Raat | (Ghar 1978)');"> 
+										 🎵 Phir Wahi Raat | (Ghar 1978)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/PN0rH8dLn28?si=e7Cl0RcPnAV0NiH1', 'Tum Meri Zindegi Se | (Bombay to Goa 1971)');"> 
+										 🎵 Tum Meri Zindegi Mein | (Bombay to Goa 1971)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/kkTv_aUjd5Y?si=TCkKvKpl_76ovFE8', 'Phulon Ki Duniya Se | (Rickshawala 1973)');"> 
+										 🎵 Phulon Ki Duniya Se | (Rickshawala 1973)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wKnWL8-6qWA?si=SqpxOfrM2GfL3Zbr', 'Maine Kaha Zid Chhod | (Rickshawala 1973)');"> 
+										 🎵 Maine Kaha Zid Chhod | (Rickshawala 1973)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/lu5MjHcy6Lg?si=U_kUjhTdIKlHEPoE', 'Ek Baat Dil Mein Aayi Hai | (Rahi Badal Gaye 1984)');"> 
+										 🎵 Ek Baat Dil Mein Aayi Hai | (Rahi Badal Gaye 1984)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/XI2P7HgHK9M?si=dSGqPnPDrSF8l4r7', 'Silli Hawa Chhoo Gai | Libaas');"> 
+										 🎵 Silli Hawa Chhoo Gai | Libaas</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/aWJc-cT12Mc?si=A7qUwE_j4Nn_6PNN', 'Jahan Pe Savera Ho Basera | (Baseraa 1981) ');"> 
+										 🎵 Jahan Pe Savera Ho Basera | (Baseraa 1981) </a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/UUHuIsaNTpM?si=c6vz-9Yk28HIyiL_', 'Kitne Sapne Kitne Armaan | (Mere Jeevan Saathi 1972)');"> 
+										 🎵 Kitne Sapne Kitne Armaan | (Mere Jeevan Saathi 1972)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/uj5OLjty0l4?si=CBcss2RilACiME4U', 'Jab Chaha Yaara Tumne |(Zabardast 1985)');"> 
+										 🎵 Jab Chaha Yaara Tumne | (Zabardast 1985)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/30rLo4X4aI0?si=5z-mBemInLHG5BSY', 'Pyar Jab Na Diya Zindagi Ne Kabhi| (Sitamgar 1985)');"> 
+										 🎵 Pyar Jab Na Diya Zindagi Ne Kabhi| (Sitamgar 1985)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/kT3rzroZSlw?si=oLL7SB-Ta9bbokKH', 'Phirte Hai Kabse Darbadar | (Duniya 1984) ');"> 
+										 🎵 Phirte Hai Kabse Darbadar | (Duniya 1984) </a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/6GSUGstpEwY?si=fv2IS9y7Ik5mZIUG', 'Thokar Mein Hai Meri Sara Zamana 4K | (Shehzada 1972)');"> 
+										 🎵 Thokar Mein Hai Meri Sara Zamana 4K | (Shehzada 1972)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/W29sLG5YEEU?si=jeD1MNKqRDtYo9AB', 'Gumsum Kyun Hai Sanam | (Bhala Manas 1979)');"> 
+										 🎵 Gumsum Kyun Hai Sanam | (Bhala Manas 1979)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/CuX6iBnHCog?si=EiQBJU1f7jSJnO5V', 'Jaan Pehchan to Pehle se thi | (Bhala Manus 1979)');"> 
+										 🎵 Jaan Pehchan to Pehle se thi | (Bhala Manus 1979)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/4yUauK-So28?si=SWzVaVGZ8Zv5mH_O', 'Yeh Zindagi Kuch Bhi Sahi |(Romance 1983)');"> 
+										 🎵 Yeh Zindagi Kuch Bhi Sahi | (Romance 1983)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/YQNb89xnKvQ?si=pyGPH6aMgEP0P8Kk', 'Tum Bin Jaoon Kahan |(Pyar Ka Mausam 1969)');"> 
+										 🎵 Tum Bin Jaoon Kahan | (Pyar Ka Mausam 1969)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/LblLAQQV6ko?si=-u1Xhzl87LyAqL1j', 'Na Koi Dil Mein Samaya|( Aa Gale Lag Jaa 1973)');"> 
+										 🎵 Na Koi Dil Mein Samaya | ( Aa Gale Lag Jaa 1973)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/STOM6NZfcrs?si=gXLx-s67rWOO7HYm', 'Is Mod Se Jaate Hain| (Aandhi 1975 Songs)');"> 
+										 🎵 Is Mod Se Jaate Hain| (Aandhi 1975 Songs)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/XxbBN4AtFio?si=fc8UNPVlvOFWQnl7', 'Aaja Aaja Meri Jaan | (Aja Meri Jaan)');"> 
+										 🎵 Aaja Aaja Meri Jaan | (Aja Meri Jaan)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/WJyM13QI64E?si=0s3hgT9czCLz6uNY', 'Shikwa Koi Tumse Na Hai | (Joota Kahin Ka 1979)');"> 
+										 🎵 Shikwa Koi Tumse Na Hai | (Joota Kahin Ka 1979)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/lplaAZBWiqY?si=ZiIrD2b5F5RkKUMF', 'Bade Achhe Lagte Hain  | (Balika Badhu 1976)');"> 
+										 🎵 Bade Achhe Lagte Hain  | (Balika Badhu 1976)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/g7QUMWO4fNA?si=ICdygdScrCB_E7ji', 'Kaho Kahan Chale Jahan Tum Le Chalo| (Bulundi 1981)');"> 
+										 🎵 Kaho Kahan Chale Jahan Tum Le Chalo | (Bulundi 1981)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/SNKJ1kWP7nU?si=25sXKWWQSOD_NWvN', 'Jeena To Hai Par Ae Dil Kahan | Daulat Ke Dushman-Panch Dushman-1981(73)');"> 
+										 🎵 Jeena To Hai Par Ae Dil Kahan | Daulat Ke Dushman-Panch Dushman-1981(73)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/5XjqrXpmLOI?si=SqgTK_bD6ZbFCQYk', 'Tum Jo Mile To Laga Hai Jaise Mili Zindagi | (Drohi 1992)');"> 
+										 🎵 Tum Jo Mile To Laga Hai Jaise Mili Zindagi | (Drohi 1992)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/nhQuJuAyVlo?si=T0yl_Kydq9FeZR3X', 'Badal Jo Barse To Bheege Hum| (Gardish 1993)');"> 
+										 🎵 Badal Jo Barse To Bheege Hum | (Gardish 1993)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/qU3fSobl6Tg?si=-qD4ayWPRQ66kyvX', 'Kya Nazare Kya Sitare | (Jheel Ke Us Paar 1973)');"> 
+										 🎵 Kya Nazare Kya Sitare | (Jheel Ke Us Paar 1973)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/850bZDi_MD0?si=sQiLbdaGzzX1GcXh', 'Tum Ho Mere Dil Ki Dhadkan | (Manzil 1979)');"> 
+										 🎵 Tum Ho Mere Dil Ki Dhadkan | (Manzil 1979)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/T1NtFQHEZhQ?si=nYibiAj47Tvf7N07', 'Do Naina Aur Ek Kahani | (Masoom 1983)');"> 
+										 🎵 Do Naina Aur Ek Kahani | (Masoom 1983)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/wJ1mqmbngO0?si=Da6UhpFc_5WlyXh-', 'Kaanta Lagaa| (Samadhi 1972) ');"> 
+										 🎵 Kaanta Lagaa | (Samadhi 1972)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/K-GPX2PzDKM?si=CujGtpU8GCbhp6KW', 'Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)');"> 
+										 🎵 Jaane Jaan Dhoondta Phir Raha | (Jawani Diwani 1972)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=uyjiK9QCU5U&list=RDuyjiK9QCU5U&start_radio=1', 'Chand Mera Dil | (Hum Kisi Se Kum Nahin 1977)');"> 
+										 🎵 Chand Mera Dil | (Hum Kisi Se Kum Nahin 1977)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=ToO-PkucJac&list=RDToO-PkucJac&start_radio=1', 'Pyar Hua Hai Jabse| (Abhiasha 1968)');"> 
+										 🎵 Pyar Hua Hai Jabse | (Abhiasha 1968)</a>						 
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=GbNVK92l5vI&list=RDGbNVK92l5vI&start_radio=1', 'Ek Bechara Pyar Ka Mara| (Waris 1969)');"> 
+										 🎵 Ek Bechara Pyar Ka Mara | (Waris 1969)</a>						 
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=luaTQG0pvQY&list=RDluaTQG0pvQY&start_radio=1', 'Jago Sone walo| (Bhoot Bangla 1965)');"> 
+										 🎵 Jago Sone walo | (Bhoot Bangla 1965)</a> 
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=EA4qpsJS9uY&list=RDEA4qpsJS9uY&start_radio=1', 'Ek Hi Khwab| (Kinara 1977)');"> 
+										 🎵 Ek Hi Khwab | (Kinara 1977)</a> 
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/EEe4tVkaDWY?si=oxHls-A0lyQ4F5jy', 'Kotha Hoyechhilo | (Troyee 1982)');"> 
+										 🎵 Kotha Hoyechhilo | (Troyee 1982) Bengali</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/cesHYOjDcvg?si=LXAw8IC9GHrw_bkF', 'Mon Theke Mone Ki Kore Je Jabo | (Shwet Pathorer Thala 1992)');">
+										 🎵 Mon Theke Mone Ki Kore Je Jabo | Bengali (Shwet Pathorer Thala 1992)</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/G0oOtkYjdFo?si=SF4z5UxjIwhh_U7d', 'Ki Kore Janle Tumi | (Debota 1990)');">
+										 🎵 Ki Kore Janle Tumi | (Debota 1990) Bengali</a>
+			  </div>
+			</div>
+		<!-- 4. His Cabaret Tracks 🎷🎵 -->
+			<div class="boss-category">
+				<div class="boss-category-title">🎷 His Cabaret Tracks – Nightclub Magic 🎵</div>
+				<p class="boss-small-note" style="margin-bottom:10px;">
+										Iconic cabaret-styled songs composed by Pancham Da – most of them filmed with unforgettable nightclub visuals.
+									</p>
+				<!-- <div class="myboss-song-list"> -->
+				<div class="myboss-song-list boss-cabaret-list">
+				<!-- Caravan (1971) -->
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/46GGxF_Bwhg?si=hq_C9hVDlY1BWzP8', 'Piya Tu Ab To Aaja – Caravan (1971)');">
+											🎵 Piya Tu Ab To Aaja – Caravan (1971)
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/gT7dABHA92E?si=cH_-QrWURMCiyWcQ', 'Daiya Yeh Main Kahaan Aa Phansi – Caravan (1971)');">
+											🎵 Daiya Yeh Main Kahaan Aa Phansi – Caravan (1971)
+										</a>
+				<!-- The Train (1970) -->
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/eXd7N0QsCH0?si=YJOsltdt56_T-bWv', 'Meri Jaan Maine Kaha – The Train (1970)');">
+											🎵 Meri Jaan Maine Kaha – The Train (1970)
+										</a>
+				<!-- Teesri Manzil (1966) -->
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/VR-ak1-RURU?si=0lL1P-pEMJJwdNKs', '🎵 O Haseena Zulfonwali – Teesri Manzil (1966)');">
+											🎵 O Haseena Zulfonwali – Teesri Manzil (1966)
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/EOgirs8vE_A?si=Q2RFfg0kT2ZxNYrb', 'Aaja Aaja Main Hoon Pyar Tera – Teesri Manzil (1966)');">
+											🎵 Aaja Aaja Main Hoon Pyar Tera – Teesri Manzil (1966)
+										</a>
+				<!-- Apna Desh (1972) -->
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/cKFabjoRdJo?si=5cSF_PiIYlr3YrOL', 'Duniya Mein Logon Ko – Apna Desh (1972)');">
+											🎵 Duniya Mein Logon Ko – Apna Desh (1972)
+										</a>
+				<!-- Sanam Teri Kasam (1982) -->
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/tfZrC59unRA?si=-oZYxIsqO_5emiNn', 'Jane Jaan O Meri Jane Jaan – Sanam Teri Kasam (1982)');">
+											🎵 Jane Jaan O Meri Jane Jaan – Sanam Teri Kasam (1982)
+										</a>
+				<!-- Other notable cabaret-style numbers -->
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/vywZigBV19s?si=AxhbdHHjOQzAuf-W', 'Sapna Mera Toot Gaya – Khel Khel Mein (1975)');">
+											🎵 Sapna Mera Toot Gaya – Khel Khel Mein (1975)
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/6J5nHIAUVpE?si=EOjZGpZTko_IcwXX', 'Aaj Ki Raat Koi Aane Ko Hai – Anamika (1973)');">
+											🎵 Aaj Ki Raat Koi Aane Ko Hai – Anamika (1973)
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/JQC85Nq7V0s?si=G3COoVGv8eeosDkB', 'Mera Naam Hai Shabnam – Kati Patang (1971)');">
+											🎵 Mera Naam Hai Shabnam – Kati Patang (1971)
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/in1W2D24ohM?si=6mv1TBObzMBcWp4P', 'Aaja Sunle Sada – Gurudev (1992)');">
+											🎵 Aaja Sunle Sada – Gurudev (1992)
+										</a>
+				<!-- Compilations -->
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/mAvJ4SUb2DU?si=nHhuJ3A_o-_3MdmG', 'Cabaret Compilation 1 – Pancham Specials');">
+											🎵 Cabaret Compilation 1 – Pancham Specials
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/7roLau2vAV8?si=FEGj5Mb_RlZzx6gT', 'Cabaret Compilation 2 – Pancham Specials');">
+											🎵 Cabaret Compilation 2 – Pancham Specials
+										</a>
+				</div>
+			</div>  <!-- closes boss-category for Cabaret -->
 			<!-- 5. Acting 🎷🎵 -->
 			<div class="boss-category">
-			<div class="boss-category-title">🎷 Great Actor 🎵</div>
-			<p class="boss-small-note" style="margin-bottom:10px;">
-									Who can forget the cameos he did as an actor.
-								</p>
-			<!-- <div class="myboss-song-list"> -->
-			<div class="myboss-song-list boss-actor-list">
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=morLqJId824&t=160s', 'Bhoot Bangla');">
-										🎵 Bhoot Bangla
-									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=CU0L7UA7bes', 'Pyar Ka Mausam 1');">
-										🎵 Pyar Ka Mausam Scene 1
-									</a>
-			<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=V2vMTctl9GI', 'Pyar Ka Mausam 2');">
+				<div class="boss-category-title">🎷 Great Actor 🎵</div>
+				<p class="boss-small-note" style="margin-bottom:10px;">
+										Who can forget the cameos he did as an actor.
+									</p>
+				<!-- <div class="myboss-song-list"> -->
+				<div class="myboss-song-list boss-actor-list">
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=morLqJId824&t=160s', 'Bhoot Bangla');">
+											🎵 Bhoot Bangla
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=CU0L7UA7bes', 'Pyar Ka Mausam 1');">
+											🎵 Pyar Ka Mausam Scene 1
+										</a>
+				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=V2vMTctl9GI', 'Pyar Ka Mausam 2');">
 										🎵 Pyar Ka Mausam Scene 2
 									</a>
-				</div>						
-			</div>
+				</div>  <!-- closes myboss-song-list -->
+			</div>  <!-- closes boss-category for Great Actor -->
+		</div>  <!-- closes boss-favourites -->
+
+		<p style="margin-top:18px; font-style:italic;">
+			WHY HE IS and WILL REMAIN MY BOSS.
+		</p>
+	</section>
+
+</div>
+	<!-- Global audio player (for Drive audio) -->
+	<div class="audio-player-container" id="audioPlayerContainer">
+	  <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white; flex-wrap: wrap;">
+		<div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">
+		  🎵 No song playing
 		</div>
-  <!-- </div> -->
+		<audio id="audioPlayer"
+			   controls
+			   controlslist="nodownload"
+			   style="flex: 2; max-width: 600px;"></audio>
+		<button type="button"
+				id="stopAudioBtn"
+				onclick="stopAudio()"
+				style="padding: 8px 16px; border-radius: 20px; border: none; background:#e74c3c; color:#fff; cursor:pointer; white-space: nowrap;">
+		  ⏹ Stop
+		</button>
+	  </div>
+	</div>
 
-  <p style="margin-top:18px; font-style:italic;">
-    WHY HE IS and WILL REMAIN MY BOSS.
-  </p>
-</section>
-</div>
-<!-- Global audio player (for Drive audio) -->
-<div class="audio-player-container" id="audioPlayerContainer">
-  <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white; flex-wrap: wrap;">
-    <div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">
-      🎵 No song playing
-    </div>
-    <audio id="audioPlayer"
-           controls
-           controlsList="nodownload"
-           style="flex: 2; max-width: 600px;"></audio>
-    <button type="button"
-            id="stopAudioBtn"
-            onclick="stopAudio()"
-            style="padding: 8px 16px; border-radius: 20px; border: none; background:#e74c3c; color:#fff; cursor:pointer; white-space: nowrap;">
-      ⏹ Stop
-    </button>
-  </div>
-</div>
+	<!-- </div> -->
 
-<!-- </div> -->
+	  <!-- YouTube Iframe API -->
+	  <script src="https://www.youtube.com/iframe_api"></script>
 
-  <!-- YouTube Iframe API -->
-  <script src="https://www.youtube.com/iframe_api"></script>
+<script>
+/* =========================================================
+   R.D. BURMAN TRIBUTE - CONSOLIDATED JAVASCRIPT
+   All functionality in a single, clean script
+   ========================================================= */
 
-  <script>
-    /* =========
-       Data
-       ========= */
-    const API_BASE_URL = window.location.hostname.includes('localhost')
-      ? 'http://localhost:3001/api'
-      : window.location.origin + '/api';
+(function() {
+  'use strict';
 
-    const driveFolders = [
-      { id: '1', name: '2 Songs on Same Tune', folderId: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1' },
-      { id: '2', name: 'A to M', folderId: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3' },
-      { id: '3', name: 'Asha && R.D_Bangla', folderId: '15W7_4PUUYRSxntCn7EUg95wETL0Alzsa' },
-      { id: '4', name: 'Gulzar_Asha_RD', folderId: '1vbTX12RNbNJSHNXenJ-es805NslwEClv' },
-      { id: '5', name: 'N to Z', folderId: '1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy' },
-      { id: '6', name: 'Pancham - Gulzar Remembers', folderId: '1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g' }
-    ];
+  // =========================================================
+  // GLOBAL STATE
+  // =========================================================
+  let bgThemeAudio = null;
+  let ytPlayers = [];
 
-    const youtubeVideos = {
-            about: [
-                'ROYNffYphro','Acx881M41wQ','TxRxKXPfzw4','h_bYlWFho9I','1qGaUw9E_uA',
-                '1KS6m6-Wkhc','zpL0eXRdKBg','X1RMCW0MVuk',
-                'It_AdKqB-_I','8HW02AUZOug','ccoCW5TPscU','Lp7-iVdz764','x-cylptahIg',
-                'JGcU8a8tMp4','0sOPGESz1c8','0FM69eKX1JU','cT0eB9tF32s','DUs5SW_FLzY','PphOSrnMfG4','rGjN9ZIFdq0'
-            ],
-            composing: ['-S-vrvv1NnE','_oJmKeBPj84','K0mUTccDgNE','3F4NT2Y-SPM','ftbqxSdyiDs','Ggh36-xzktU','43Zg7_4TQnE','BkuDrXDJMUo','HbUjtluZsws','pwUyw_hYEVA'],
-            unreleased: ['DyS1s3vVSMU','sdxb7Ntmgtw','cXgoIGjnMok','KDwwO9sRM1U','Iz1fky4vJOo','sqBsvPYUles','ElfWOyqeRyA','6qRG7Ifdnjo','GKn-UjnrINY','MRzyX1sHdIo','p45iHsSDYQM','OB_cAZvwpK8','lMVdeLYSXcQ','aP-yIFPsU7g','JDHbojwRZ0M','UwgLdlanTYc','D_jXLMwVes8','V46zxzcEBag','hWBtpwMnSUo','HAPLc3AeaXk','iBYzUB0UY2Q','Qild_H1Eg4M','2sk3agwRibI']
-        };
+  const API_BASE_URL = window.location.hostname.includes('localhost')
+    ? 'http://localhost:3001/api'
+    : window.location.origin + '/api';
 
-    /* =========
-       Background theme helpers
-       ========= */
-    let bgThemeAudio = null;
+  const GAS_WEBAPP_BASE_URL = 'https://script.google.com/macros/s/AKfycbwe6obrEfgytM2bCvDIJnsrgteXQma_ozaHuldcrf-00Cl8MjzoICLXytzEOm2Eb9M/exec';
 
-    function pauseBackgroundTheme() {
-      if (!bgThemeAudio) return;
-      try { bgThemeAudio.pause(); } catch (e) {}
+  const driveFolders = [
+    { id: '1', name: '2 Songs on Same Tune', folderId: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1' },
+    { id: '2', name: 'A to M', folderId: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3' },
+    { id: '3', name: 'Asha && R.D_Bangla', folderId: '15W7_4PUUYRSxntCn7EUg95wETL0Alzsa' },
+    { id: '4', name: 'Gulzar_Asha_RD', folderId: '1vbTX12RNbNJSHNXenJ-es805NslwEClv' },
+    { id: '5', name: 'N to Z', folderId: '1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy' },
+    { id: '6', name: 'Pancham - Gulzar Remembers', folderId: '1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g' }
+  ];
+
+  const youtubeVideos = {
+    about: ['ROYNffYphro','Acx881M41wQ','TxRxKXPfzw4','h_bYlWFho9I','1qGaUw9E_uA',
+            '1KS6m6-Wkhc','zpL0eXRdKBg','X1RMCW0MVuk','It_AdKqB-_I','8HW02AUZOug'],
+    composing: ['-S-vrvv1NnE','_oJmKeBPj84','K0mUTccDgNE','3F4NT2Y-SPM','ftbqxSdyiDs',
+                'Ggh36-xzktU','43Zg7_4TQnE','BkuDrXDJMUo','HbUjtluZsws','pwUyw_hYEVA'],
+    unreleased: ['DyS1s3vVSMU','sdxb7Ntmgtw','cXgoIGjnMok','KDwwO9sRM1U','Iz1fky4vJOo',
+                 'sqBsvPYUles','ElfWOyqeRyA','6qRG7Ifdnjo','GKn-UjnrINY','MRzyX1sHdIo']
+  };
+
+  // =========================================================
+  // UTILITY FUNCTIONS
+  // =========================================================
+  function $(selector) {
+    return document.querySelector(selector);
+  }
+  
+  function $$(selector) {
+    return document.querySelectorAll(selector);
+  }
+
+  // =========================================================
+  // THEME MUSIC SYSTEM
+  // =========================================================
+  function startBgTheme() {
+    console.log('🎵 startBgTheme() called');
+    
+    const overlay = $('#musicOverlay');
+    const audio = $('#bgTheme');
+    
+    if (!overlay || !audio) {
+      console.error('Missing elements:', { overlay: !!overlay, audio: !!audio });
+      return false;
     }
 
-    function stopBackgroundTheme() {
-      if (!bgThemeAudio) return;
+    // Play audio
+    audio.volume = 0.4;
+    audio.loop = true;
+    audio.play()
+      .then(() => console.log('✅ Audio playing'))
+      .catch(err => console.warn('⚠️ Autoplay blocked:', err));
+
+    // Hide overlay
+    overlay.style.cssText = 'display:none!important;visibility:hidden!important;pointer-events:none!important;opacity:0!important;z-index:-9999!important;';
+    overlay.classList.add('hidden');
+
+    // Store reference
+    bgThemeAudio = audio;
+
+    // Activate Home tab
+    showTab('home');
+    
+    console.log('✅ Theme started, overlay hidden');
+    return false;
+  }
+
+  function pauseBackgroundTheme() {
+    if (bgThemeAudio) {
+      try { bgThemeAudio.pause(); } catch (e) {}
+    }
+  }
+
+  function stopBackgroundTheme() {
+    if (bgThemeAudio) {
       try {
         bgThemeAudio.pause();
         bgThemeAudio.currentTime = 0;
       } catch (e) {}
     }
+  }
 
-    /* =========
-       Tabs
-       ========= */
-    function showTab(e, tabId) {
-      if (e) e.preventDefault();
-
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-	  
-	  const target = document.getElementById(tabId);
-      if (target) target.classList.add('active');
-      if (e && e.currentTarget) e.currentTarget.classList.add('active');
-
-      if (tabId === 'video') {
-        const aboutPanel = document.getElementById('about-videos');
-        if (aboutPanel && aboutPanel.dataset.loaded === 'false') {
-          loadVideos();
-        }
+  // =========================================================
+  // TAB MANAGEMENT
+  // =========================================================
+  async function showTab(eventOrTabId, tabId) {
+    // Handle both showTab(event, 'tabId') and showTab('tabId')
+    let actualTabId;
+    if (typeof eventOrTabId === 'string') {
+      actualTabId = eventOrTabId;
+    } else {
+      // eventOrTabId is an event object
+      if (eventOrTabId && eventOrTabId.preventDefault) {
+        eventOrTabId.preventDefault();
       }
-      if (tabId === 'audio') {
-        const audioTree = document.getElementById('audioTreeContent');
-        if (audioTree && audioTree.dataset.loaded === 'false') {
-          loadAudio();
-        }
-      }
+      actualTabId = tabId;
+    }
+    
+    console.log('showTab:', actualTabId);
+    
+    if (!actualTabId) {
+      console.error('showTab: No tab ID provided');
+      return;
+    }
+    
+    // Guard Audio tab with authorization
+    if (actualTabId === 'audio') {
+      const allowed = await ensureAudioAuthorized();
+      if (!allowed) return;
     }
 
-    function showVideoTab(e, tabId) {
-      if (e) e.preventDefault();
-      document.querySelectorAll('.video-sub-content').forEach(t => t.style.display = 'none');
-      document.querySelectorAll('.video-tab-btn').forEach(b => b.classList.remove('active'));
-      const el = document.getElementById(tabId);
-      if (el) el.style.display = 'block';
-      if (e && e.currentTarget) e.currentTarget.classList.add('active');
+    // Hide all tab contents
+    $$('.tab-content').forEach(t => t.classList.remove('active'));
+    
+    // Remove active from all tab buttons  
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    // Show target tab
+    const target = $('#' + actualTabId);
+    if (target) target.classList.add('active');
+    
+    // Activate correct button
+    $$('.tab-btn').forEach(btn => {
+      const onclick = btn.getAttribute('onclick') || '';
+      if (onclick.includes("'" + actualTabId + "'") || onclick.includes('"' + actualTabId + '"')) {
+        btn.classList.add('active');
+      }
+    });
+
+    // Lazy-load content
+    if (actualTabId === 'video') {
+      const aboutPanel = $('#about-videos');
+      if (aboutPanel && aboutPanel.dataset.loaded === 'false') {
+        loadVideos();
+      }
     }
+    if (actualTabId === 'audio') {
+      const audioTree = $('#audioTreeContent');
+      if (audioTree && audioTree.dataset.loaded === 'false') {
+        loadAudio();
+      }
+    }
+  }
 
-	//function showBossTab(e, id) {
-	//  if (e) e.preventDefault();
+  function showVideoTab(eventOrTabId, tabId) {
+    // Handle both showVideoTab(event, 'tabId') and showVideoTab('tabId')
+    let e, actualTabId;
+    if (typeof eventOrTabId === 'string') {
+      actualTabId = eventOrTabId;
+      e = null;
+    } else {
+      e = eventOrTabId;
+      actualTabId = tabId;
+    }
+    
+    if (e && e.preventDefault) e.preventDefault();
+    
+    $$('.video-sub-content').forEach(t => t.style.display = 'none');
+    $$('.video-tab-btn').forEach(b => b.classList.remove('active'));
+    const el = $('#' + actualTabId);
+    if (el) el.style.display = 'block';
+    if (e && e.currentTarget) e.currentTarget.classList.add('active');
+  }
 
-	  // Hide all boss sub-sections
-	 // document.querySelectorAll('.boss-sub-content').forEach(x => {
-	//	x.classList.remove('active');
-	//	x.style.display = 'none';
-	 // });
+  function showBossTab(eventOrTabId, tabId) {
+    // Handle both showBossTab(event, 'tabId') and showBossTab('tabId')
+    let e, actualTabId;
+    if (typeof eventOrTabId === 'string') {
+      actualTabId = eventOrTabId;
+      e = null;
+    } else {
+      e = eventOrTabId;
+      actualTabId = tabId;
+    }
+    
+    if (e && e.preventDefault) e.preventDefault();
+    
+    // Hide all boss sub-content
+    $$('#boss .boss-sub-content').forEach(x => {
+      x.classList.remove('active');
+      x.style.cssText = 'display: none !important;';
+    });
+    
+    // Remove active from all boss tab buttons
+    $$('.boss-tab-btn').forEach(b => b.classList.remove('active'));
+    
+    // Show the target sub-content
+    const el = document.getElementById(actualTabId);
+    if (el) {
+      el.classList.add('active');
+      el.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+    }
+    
+    // Activate the clicked button
+    if (e && e.currentTarget) {
+      e.currentTarget.classList.add('active');
+    }
+  }
 
-	  // Deactivate all tab buttons
-	  //document.querySelectorAll('.boss-tab-btn').forEach(b => b.classList.remove('active'));
+  // =========================================================
+  // AUDIO AUTHORIZATION
+  // =========================================================
+  function getStoredAudioAuth() {
+    try {
+      return localStorage.getItem('audioAuthorized') === 'true';
+    } catch (e) { return false; }
+  }
 
-	  // Show the requested section
-	  //const el = document.getElementById(id);
-	  //if (el) {
-		//el.classList.add('active');
-		//el.style.display = 'block';
-	  //}
+  async function ensureAudioAuthorized() {
+    if (getStoredAudioAuth()) return true;
 
-	  // Highlight the clicked button
-	  //if (e && e.currentTarget) {
-	//	e.currentTarget.classList.add('active');
-	 // }
-	//}
-	
-	function showBossTab(e, id) {
-	  if (e) e.preventDefault();
+    const modal = $('#audioAuthModal');
+    const form = $('#audioAuthForm');
+    if (!modal || !form) return false;
 
-	  // Hide all boss sub-sections inside My Boss section
-	  document.querySelectorAll('#boss .boss-sub-content').forEach(x => {
-		x.classList.remove('active');
-		x.style.display = 'none';
-	  });
+    // Show modal
+    modal.classList.remove('hidden');
+    modal.classList.remove('fading-out');
+    modal.setAttribute('aria-hidden', 'false');
+    modal.style.pointerEvents = 'auto';
+    modal.style.display = 'flex';
+    modal.style.opacity = '1';
 
-	  // Deactivate all My Boss buttons
-	  document.querySelectorAll('#life-sub-tabs-boss .boss-tab-btn')
-		.forEach(b => b.classList.remove('active'));
-
-	  // Show the requested section
-	  const el = document.getElementById(id);
-	  if (el) {
-		el.classList.add('active');
-		el.style.display = 'block';
-	  }
-
-	  // Highlight the clicked button
-	  if (e && e.currentTarget) {
-		e.currentTarget.classList.add('active');
-	  }
-	}
-
-
-    /* =========
-       YouTube handling
-       ========= */
-    let ytPlayers = [];
-
-    function attachYouTubePlayers() {
-      if (!window.YT || !YT.Player) return;
-
-      const iframes = document.querySelectorAll('iframe.video-embed');
-      iframes.forEach(iframe => {
-        if (iframe.dataset.playerAttached === 'true') return;
-
-        const player = new YT.Player(iframe, {
-          events: {
-            onStateChange: event => {
-              if (event.data === YT.PlayerState.PLAYING) {
-                ytPlayers.forEach(p => {
-                  if (p !== player) {
-                    try { p.pauseVideo(); } catch (e) {}
-                  }
-                });
-                pauseBackgroundTheme();
-              }
-            }
+    return new Promise((resolve) => {
+      let pollInterval = null;
+      
+      const closeModal = (result, showWelcome = false) => {
+        // Clear any running poll
+        if (pollInterval) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+        }
+        
+        // Add fade-out animation
+        modal.classList.add('fading-out');
+        
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          modal.classList.remove('fading-out');
+          modal.setAttribute('aria-hidden', 'true');
+          modal.style.pointerEvents = 'none';
+          form.reset();
+          
+          // Reset status display
+          const statusEl = $('#authStatus');
+          const waitingEl = $('#authWaiting');
+          const resultEl = $('#authResult');
+          if (statusEl) statusEl.style.display = 'none';
+          if (waitingEl) waitingEl.style.display = 'none';
+          if (resultEl) {
+            resultEl.style.display = 'none';
+            resultEl.textContent = '';
           }
+          
+          // Show welcome message if approved
+          if (showWelcome) {
+            showWelcomeToast('🎵 Welcome to the Audio Section! 🎵');
+          }
+          
+          resolve(result);
+        }, 500);
+      };
+      
+      // Welcome toast function
+      function showWelcomeToast(message) {
+        const toast = document.createElement('div');
+        toast.innerHTML = message;
+        toast.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) scale(0.8);
+          background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+          color: white;
+          padding: 24px 48px;
+          border-radius: 16px;
+          font-size: 1.5rem;
+          font-weight: bold;
+          z-index: 2147483648;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+          opacity: 0;
+          transition: all 0.4s ease;
+          text-align: center;
+        `;
+        document.body.appendChild(toast);
+        
+        requestAnimationFrame(() => {
+          toast.style.opacity = '1';
+          toast.style.transform = 'translate(-50%, -50%) scale(1)';
         });
-
-        iframe.dataset.playerAttached = 'true';
-        ytPlayers.push(player);
-      });
-    }
-
-    function onYouTubeIframeAPIReady() {
-      attachYouTubePlayers();
-    }
-
-    function extractYouTubeEmbedUrl(rawUrl) {
-      try {
-        const u = new URL(rawUrl);
-        const host = u.hostname;
-        const params = u.searchParams;
-        const listId = params.get('list');
-        if (listId) {
-          return `https://www.youtube.com/embed/videoseries?list=${listId}&enablejsapi=1&autoplay=1`;
-        }
-        let videoId = null;
-        if (host.includes('youtu.be')) {
-          videoId = u.pathname.replace('/', '');
-        } else if (params.get('v')) {
-          videoId = params.get('v');
-        } else if (u.pathname.startsWith('/embed/')) {
-          videoId = u.pathname.split('/').pop();
-        }
-        if (videoId) {
-          return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1`;
-        }
-        return rawUrl;
-      } catch (e) {
-        console.warn('Could not parse YouTube URL:', rawUrl, e);
-        return rawUrl;
+        
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translate(-50%, -50%) scale(0.8)';
+          setTimeout(() => toast.remove(), 400);
+        }, 2500);
       }
-    }
+      
+      // Expose manual approve for testing
+      window.manualApprove = function() {
+        console.log('Manual approval triggered');
+        if (pollInterval) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+        }
+        localStorage.setItem('audioAuthorized', 'true');
+        updateAudioTabState();
+        
+        const waitingEl = $('#authWaiting');
+        const resultEl = $('#authResult');
+        if (waitingEl) waitingEl.style.display = 'none';
+        if (resultEl) {
+          resultEl.textContent = '✅ Access Approved!';
+          resultEl.style.display = 'block';
+          resultEl.style.color = '#4CAF50';
+        }
+        setTimeout(() => closeModal(true, true), 1000);
+      };
 
-    function openBossVideo(e, rawUrl, niceTitle) {
-      if (e) e.preventDefault();
-      const container = document.getElementById('bossFavPlayer');
-      const iframe = document.getElementById('bossFavIframe');
-      const titleEl = document.getElementById('bossFavNowPlaying');
-      if (!container || !iframe || !titleEl) return false;
+      $('#authCloseX').onclick = () => closeModal(false);
+      $('#authCancelBtn').onclick = () => closeModal(false);
 
-      const embedUrl = extractYouTubeEmbedUrl(rawUrl);
-      pauseBackgroundTheme();
+      form.onsubmit = async (ev) => {
+        ev.preventDefault();
+        const name = $('#authName').value.trim();
+        const email = $('#authEmail').value.trim();
+        const mobile = $('#authMobile').value.trim();
 
-      iframe.src = embedUrl;
-      container.style.display = 'block';
-      titleEl.textContent = `🎵 Now Playing: ${niceTitle}`;
-
-      attachYouTubePlayers();
-      return false;
-    }
-	
-	/* ===== Modal for My Favourite Boss's Compositions ===== */
-
-	function openFavModal(e, rawUrl, niceTitle) {
-		  if (e) e.preventDefault();
-
-		  const modal    = document.getElementById('videoModal');
-		  const iframe   = document.getElementById('videoModalIframe');
-		  const titleEl  = document.getElementById('videoModalTitle');
-
-		  if (!modal || !iframe || !titleEl) return false;
-
-		  const embedUrl = extractYouTubeEmbedUrl(rawUrl); // already adds autoplay=1
-		  pauseBackgroundTheme(); // reuse your existing helper
-
-		  iframe.src = embedUrl;
-		  titleEl.textContent = `🎵 Now Playing: ${niceTitle}`;
-
-		  modal.classList.remove('hidden');
-		  document.body.classList.add('modal-open');
-
-		  return false;
-	}
-
-		function closeFavModal() {
-		  const modal   = document.getElementById('videoModal');
-		  const iframe  = document.getElementById('videoModalIframe');
-
-		  if (iframe) {
-			// Stop the video
-			iframe.src = '';
-		  }
-
-		  if (modal) {
-			modal.classList.add('hidden');
-		  }
-
-		  document.body.classList.remove('modal-open');
-		}
-
-		/* Hook up close interactions once DOM is ready */
-		document.addEventListener('DOMContentLoaded', () => {
-		  const modal      = document.getElementById('videoModal');
-		  const backdrop   = modal ? modal.querySelector('.video-modal-backdrop') : null;
-		  const closeBtn   = document.getElementById('videoModalClose');
-
-		  if (backdrop) {
-			backdrop.addEventListener('click', closeFavModal);
-		  }
-		  if (closeBtn) {
-			closeBtn.addEventListener('click', closeFavModal);
-		  }
-
-		  // ESC key closes modal
-		  document.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') {
-			  const isOpen = modal && !modal.classList.contains('hidden');
-			  if (isOpen) {
-				e.preventDefault();
-				closeFavModal();
-			  }
-			}
-		  });
-		});
-
-
-    function loadVideos() {
-      const aboutGrid = document.getElementById('aboutVideosGrid');
-      const compGrid = document.getElementById('composingVideosGrid');
-      const unrelGrid = document.getElementById('unreleasedVideosGrid');
-      if (!aboutGrid || !compGrid || !unrelGrid) return;
-
-      function card(id) {
-        const w = document.createElement('div');
-        w.className = 'content-card';
-        w.innerHTML = `
-          <iframe class="video-embed"
-			loading="lazy"
-            src="https://www.youtube.com/embed/${id}?enablejsapi=1"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>`;
-        return w;
-      }
-
-      youtubeVideos.about.forEach(id => aboutGrid.appendChild(card(id)));
-      youtubeVideos.composing.forEach(id => compGrid.appendChild(card(id)));
-      youtubeVideos.unreleased.forEach(id => unrelGrid.appendChild(card(id)));
-
-      document.getElementById('about-videos').dataset.loaded = 'true';
-      document.getElementById('composing-videos').dataset.loaded = 'true';
-      document.getElementById('unreleased-videos').dataset.loaded = 'true';
-
-      attachYouTubePlayers();
-    }
-
-    /* =========
-       Audio tree
-       ========= */
-    function loadAudio() {
-      const c = document.getElementById('audioTreeContent');
-      if (!c) return;
-      c.dataset.loaded = 'true';
-      c.innerHTML = '<div id="audioContainer" style="padding:20px"></div>';
-      showMainFolders();
-    }
-
-    function showMainFolders() {
-	  const t = document.getElementById('audioContainer');
-	  if (!t) return;
-	  t.innerHTML = '';
-	  driveFolders.forEach(f => {
-		const d = document.createElement('div');
-		d.className = 'folder-item';
-		d.innerHTML = `
-		  <div>
-			<span>📁</span>
-			<span class="folder-root-name">${f.name}</span>
-		  </div>
-		  <span>▶</span>
-		`;
-		d.onclick = () => loadFolderContents(f.folderId, f.name);
-		t.appendChild(d);
-	  });
-	}
-
-    async function loadFolderContents(folderId, folderName) {
-      const container = document.getElementById('audioContainer');
-      if (!container) return;
-
-      container.innerHTML = `
-        <div class="folder-item" onclick="showMainFolders()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-          <div><span>◀</span> Back to Folders</div>
-        </div>
-        <div style="padding: 20px; text-align: center; font-size: 1.3rem; color: #f1c40f; font-weight: bold;">
-          📂 ${folderName}
-        </div>
-        <div class="loading" style="text-align:center; padding: 14px;">
-          <p>Loading contents…</p>
-        </div>
-      `;
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`);
-        const data = await response.json();
-        const loadingDiv = container.querySelector('.loading');
-        if (loadingDiv) loadingDiv.remove();
-
-        if (!data.success) {
-          container.innerHTML += `<div style="padding:20px; text-align:center; color:#e74c3c;">❌ Error: ${data.error || 'unknown error'}</div>`;
+        if (!name || !email || !mobile) {
+          alert('Please fill all fields.');
           return;
         }
 
-        if (data.folders && data.folders.length > 0) {
-          data.folders.forEach(sub => {
-            const subDiv = document.createElement('div');
-            subDiv.className = 'folder-item';
-            subDiv.style.background = 'linear-gradient(135deg,#74ebd5,#ACB6E5)';
-            subDiv.innerHTML = `
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:54px;height:54px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px">🎵</div>
-                <div>
-                  <div style="font-weight:bold">📂 ${sub.name}</div>
-                  <div style="font-size:0.9rem;opacity:0.8">Click to view songs</div>
-                </div>
-              </div>
-              <span style="font-size:1.3rem">▶</span>
-            `;
-            subDiv.onclick = e => { e.stopPropagation(); loadFolderContents(sub.id, sub.name); };
-            container.appendChild(subDiv);
-          });
-        }
+        $('#authStatus').style.display = 'block';
+        $('#authWaiting').style.display = 'block';
+        $('#authWaiting').innerHTML = '<p>⏳ Waiting for approval...</p><p style="font-size:0.85rem;opacity:0.8;">Check your email or ask the admin to approve.</p>';
+        $('#authResult').style.display = 'none';
+        $('#authResult').textContent = '';
 
-        if (data.audioFiles && data.audioFiles.length > 0) {
-          data.audioFiles.forEach(audio => {
-            const audioDiv = document.createElement('div');
-            audioDiv.className = 'folder-item';
-            audioDiv.style.background = '#111';
-            const sizeText = audio.size ? ` • ${(audio.size / (1024*1024)).toFixed(1)} MB` : '';
-            audioDiv.innerHTML = `
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:54px;height:54px;border-radius:8px;background:linear-gradient(135deg,#f7f7f7,#fff);display:flex;align-items:center;justify-content:center">🎶</div>
-                <div>
-                  <div style="font-weight:bold">${audio.name}</div>
-                  <div style="font-size:0.9rem;opacity:.75">${audio.folder || ''}${sizeText}</div>
-                </div>
-              </div>
-              <button style="padding:10px 16px;background:#e74c3c;color:#fff;border-radius:20px;border:none;cursor:pointer">▶ Play</button>
-            `;
-            audioDiv.querySelector('button').onclick = ev => playAudio(audio.id, audio.name, ev);
-            container.appendChild(audioDiv);
-          });
-        } else if ((!data.folders || !data.folders.length) && (!data.audioFiles || !data.audioFiles.length)) {
-          const emptyDiv = document.createElement('div');
-          emptyDiv.style.cssText = 'padding:40px;text-align:center;color:#999;font-size:1.1rem';
-          emptyDiv.innerHTML = '📭 No audio files found in this folder';
-          container.appendChild(emptyDiv);
-        }
-      } catch (err) {
-        const loadingDiv = container.querySelector('.loading');
-        if (loadingDiv) loadingDiv.remove();
-        container.innerHTML += `
-          <div style="padding:20px;color:#e74c3c;text-align:center">
-            ❌ Error loading folder contents: ${err.message}
-          </div>`;
-      }
-    }
-
-    function playAudio(fileId, fileName, event) {
-      if (event) event.stopPropagation();
-      const player = document.getElementById('audioPlayer');
-      const container = document.getElementById('audioPlayerContainer');
-      const nowPlaying = document.getElementById('nowPlaying');
-
-      pauseBackgroundTheme();
-
-      nowPlaying.textContent = '⏳ Loading: ' + fileName;
-      container.classList.add('active');
-      container.style.display = 'block';
-
-      const streamUrl = `${API_BASE_URL}/drive/stream/${fileId}`;
-      player.src = streamUrl;
-      player.load();
-
-      player.onloadeddata = () => {
-        nowPlaying.textContent = '🎵 Now Playing: ' + fileName;
-        player.play().catch(err => {
-          console.error('Play error:', err);
-          nowPlaying.textContent = '❌ Error: ' + fileName;
-        });
-      };
-      player.onerror = e => {
-        console.error('Audio error:', e);
-        nowPlaying.textContent = '❌ Failed to load: ' + fileName;
-      };
-      player.onended = () => nowPlaying.textContent = '✅ Finished: ' + fileName;
-      player.onpause = () => {
-        if (player.currentTime > 0 && player.currentTime < player.duration) {
-          nowPlaying.textContent = '⏸️ Paused: ' + fileName;
-        }
-      };
-      player.onplay = () => nowPlaying.textContent = '🎵 Playing: ' + fileName;
-    }
-
-    function stopAudio() {
-      const audioPlayer = document.getElementById('audioPlayer');
-      const audioPlayerContainer = document.getElementById('audioPlayerContainer');
-      const nowPlaying = document.getElementById('nowPlaying');
-
-      if (audioPlayer) {
-        audioPlayer.pause();
-        audioPlayer.currentTime = 0;
-      }
-      if (nowPlaying) {
-        nowPlaying.textContent = '⏹ Stopped';
-      }
-      if (audioPlayerContainer) {
-        audioPlayerContainer.classList.remove('active');
-        audioPlayerContainer.style.display = 'none';
-      }
-    }
-
-    /* =========
-       Testimonials accordion
-       ========= */
-    function toggleAccordion(e, id) {
-      e.preventDefault();
-      const header = e.currentTarget;
-      const body = document.getElementById(id);
-      if (!body || !header) return;
-
-      const isOpen = body.classList.contains('visible');
-
-      document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('visible'));
-      document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('expanded'));
-
-      if (!isOpen) {
-        body.classList.add('visible');
-        header.classList.add('expanded');
-        setTimeout(() => {
-          header.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 180);
-      }
-    }
-
-    /* =========
-       Scrolling track images
-       ========= */
-    function initScrollingTrack() {
-      const track = document.getElementById('scrollingTrack');
-      if (!track) return;
-
-      const imgs = [
-        'Pancham10.png','Pancham12.png','Pancham16.png','Pancham17.png',
-        'Pancham18.png','Pancham19.png','Pancham20.png','Pancham21.png',
-        'Pancham22.png','Pancham23.png','Pancham25.png','Pancham26.png',
-        'Pancham27.png','Pancham28.png','Pancham29.png','Pancham3.png',
-        'Pancham30.png','Pancham4.png','Pancham5.png','Pancham6.png',
-        'Pancham7.png','Pancham8.png','Pancham9.png','rd-burman-2.png',
-        'rd-burman-3.png','rd-burman-4.png','rd-burman-single-color1.png',
-        'RD.png','rd1.png','RD1_imresizer.jpg'
-      ];
-
-      track.innerHTML = '';
-      const all = imgs.concat(imgs);
-      all.forEach(name => {
-        const img = document.createElement('img');
-        img.src = 'images/' + name;
-        img.className = 'scrolling-image';
-        img.alt = name.replace(/\.[^.]+$/, '');
-        img.onerror = () => img.style.display = 'none';
-        track.appendChild(img);
-      });
-    }
-	
-	/* ========================================================================*/
-	   /* Soft browser restrictions (best-effort, not bullet-proof)
-      ========================================================= */
-	   (function hardenViewer () {
-	     // 1. Disable right-click context menu on entire document
-	     document.addEventListener('contextmenu', function (event) {
-	       event.preventDefault();
-	     }, false);
-	
-	     // 2. Specifically disable right-click on all media elements
-	     function disableMediaContextMenu() {
-	       // Disable on audio elements
-	       const audioElements = document.querySelectorAll('audio');
-	       audioElements.forEach(function(audio) {
-	         audio.addEventListener('contextmenu', function(e) {
-	           e.preventDefault();
-	         }, false);
-	         audio.controlsList = 'nodownload noplaybackrate';
-	       });
-	
-	       // Disable on video elements
-	       const videoElements = document.querySelectorAll('video');
-	       videoElements.forEach(function(video) {
-	         video.addEventListener('contextmenu', function(e) {
-	           e.preventDefault();
-	         }, false);
-	         video.controlsList = 'nodownload noplaybackrate';
-	       });
-	
-	       // Disable on iframes (YouTube embeds)
-	       const iframes = document.querySelectorAll('iframe');
-	       iframes.forEach(function(iframe) {
-	         iframe.addEventListener('contextmenu', function(e) {
-	       e.preventDefault();
-		     }, false);
-		
-	     // Add overlay to prevent right-click on iframe content
-		     if (iframe.parentElement && !iframe.parentElement.querySelector('.iframe-protection')) {
-		       const overlay = document.createElement('div');
-		       overlay.className = 'iframe-protection';
-		       overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;';
-		       iframe.parentElement.style.position = 'relative';
-		       iframe.parentElement.appendChild(overlay);
-		     }
-		   });
-		}
-			  
-			  // Run on page load
-			  disableMediaContextMenu();
-			  
-			  // Watch for dynamically added media elements
-			  const observer = new MutationObserver(function(mutations) {
-				disableMediaContextMenu();
-			  });
-			  
-			  observer.observe(document.body, {
-				childList: true,
-				subtree: true
-			  });
-			  
-			  // Re-apply periodically as backup
-			  setInterval(disableMediaContextMenu, 2000);
-			  
-			  // Disable right-click specifically on Background Scores section
-			  function disableBackgroundScoresRightClick() {
-				const bgScoresSections = document.querySelectorAll('.boss-category.no-right-click');
-				bgScoresSections.forEach(function(section) {
-				  section.addEventListener('contextmenu', function(e) {
-					e.preventDefault();
-					e.stopPropagation();
-					return false;
-				  }, true);
-				  
-				  // Also disable on all child elements
-				  const children = section.querySelectorAll('*');
-				  children.forEach(function(child) {
-					child.addEventListener('contextmenu', function(e) {
-					  e.preventDefault();
-					  e.stopPropagation();
-					  return false;
-					}, true);
-				  });
-				});
-			  };
-			  
-		  // Run on page load
-		  disableBackgroundScoresRightClick();
-		  
-		  // Watch for dynamically added sections
-		  const bgScoresObserver = new MutationObserver(function(mutations) {
-			disableBackgroundScoresRightClick();
-		  });
-		  
-		  bgScoresObserver.observe(document.body, {
-			childList: true,
-			subtree: true
-		  });
-
-		  // 2. Disable text selection and copying
-		  document.addEventListener('selectstart', function(e) {
-			e.preventDefault();
-			return false;
-		  });
-		  
-		  document.addEventListener('copy', function(e) {
-			e.preventDefault();
-			e.clipboardData.setData('text/plain', 'Content copying is disabled on this tribute site.');
-			return false;
-		  });
-		  
-		  document.addEventListener('cut', function(e) {
-			e.preventDefault();
-			return false;
-		  });
-		  
-		  // 3. Disable drag and drop
-		  document.addEventListener('dragstart', function(e) {
-			e.preventDefault();
-			return false;
-		  });
-		  
-		  // 4. Disable image dragging
-		  document.addEventListener('DOMContentLoaded', function() {
-			const images = document.querySelectorAll('img');
-			images.forEach(function(img) {
-			  img.setAttribute('draggable', 'false');
-			  img.style.userSelect = 'none';
-			  img.style.webkitUserSelect = 'none';
-			  img.style.mozUserSelect = 'none';
-			  img.style.msUserSelect = 'none';
-			});
-		  });
-		  
-		  // 5. Prevent console manipulation
-		  (function() {
-			const noop = function() {};
-			const methods = ['log', 'debug', 'info', 'warn', 'error', 'table', 'trace', 'dir', 'group', 'groupCollapsed', 'groupEnd', 'clear'];
-			const originalConsole = {};
-			
-			methods.forEach(function(method) {
-			  originalConsole[method] = console[method];
-			});
-			
-			// Detect if console is open
-			let devtoolsOpen = false;
-			const element = new Image();
-			Object.defineProperty(element, 'id', {
-			  get: function() {
-				devtoolsOpen = true;
-				throw new Error('DevTools detected');
-			  }
-			});
-			
-			setInterval(function() {
-			  devtoolsOpen = false;
-			  console.clear();
-			  console.log(element);
-			  if (devtoolsOpen) {
-				document.body.classList.add('devtools-open');
-			  }
-			}, 1000);
-		  })();
-		  
-		  // 6. Disable common debugging shortcuts
-		  document.addEventListener('keydown', function (e) {
-			const key = (e.key || '').toLowerCase();
-			const ctrlOrCmd = e.ctrlKey || e.metaKey;
-
-			// Disable Ctrl+A (Select All)
-			if (ctrlOrCmd && key === 'a') {
-			  e.preventDefault();
-			  e.stopPropagation();
-			  return false;
-			}
-			
-			// Disable Ctrl+C (Copy)
-			if (ctrlOrCmd && key === 'c') {
-			  e.preventDefault();
-			  e.stopPropagation();
-			  return false;
-			}
-			
-			// Disable Ctrl+X (Cut)
-			if (ctrlOrCmd && key === 'x') {
-			  e.preventDefault();
-			  e.stopPropagation();
-			  return false;
-			}
-
-			// New tab / new window / reopen closed tab
-			if (
-			  (ctrlOrCmd && (key === 't' || key === 'n')) ||           // Ctrl/Cmd + T or N
-			  (ctrlOrCmd && e.shiftKey && key === 't')                 // Ctrl/Cmd + Shift + T
-			) {
-			  e.preventDefault();
-			  e.stopPropagation();
-			  return false;
-			}
-
-			// View source: Ctrl+U / Cmd+U (best-effort)
-			if (ctrlOrCmd && key === 'u') {
-			  e.preventDefault();
-			  e.stopPropagation();
-			  return false;
-			}
-
-			// DevTools: F12, Ctrl+Shift+I/J/C (best-effort)
-			if (
-			  key === 'f12' ||
-			  (ctrlOrCmd && e.shiftKey && (key === 'i' || key === 'j' || key === 'c'))
-			) {
-			  e.preventDefault();
-			  e.stopPropagation();
-			  return false;
-			}
-
-			// Print & Save: Ctrl+P / Ctrl+S
-			if (ctrlOrCmd && (key === 'p' || key === 's')) {
-			  e.preventDefault();
-			  e.stopPropagation();
-			  return false;
-			}
-
-			// Attempt to react to PrintScreen key
-			if (key === 'printscreen') {
-			  if (navigator.clipboard && navigator.clipboard.writeText) {
-				navigator.clipboard
-				  .writeText('Screenshots are restricted on this tribute page.')
-				  .catch(function () { /* ignore */ });
-			  }
-			  e.preventDefault();
-			  e.stopPropagation();
-			  return false;
-			}
-		  });
-
-		  // 3. Override window.open so this page can't spawn new tabs/windows
-		  const originalOpen = window.open;
-		  window.open = function () {
-			console.warn('Opening new tabs/windows from this tribute site is disabled.');
-			return null;
-		  };
-
-		  // 4. Light DevTools detection: when DevTools is likely open, add body.devtools-open
-		  let devtoolsOpen = false;
-		  const threshold = 160; // px difference often seen when DevTools is docked
-
-		  function checkDevTools () {
-			const widthDiff  = window.outerWidth  - window.innerWidth;
-			const heightDiff = window.outerHeight - window.innerHeight;
-			const isOpen = (widthDiff > threshold) || (heightDiff > threshold);
-
-			if (isOpen && !devtoolsOpen) {
-			  devtoolsOpen = true;
-			  document.body.classList.add('devtools-open');
-			} else if (!isOpen && devtoolsOpen) {
-			  devtoolsOpen = false;
-			  document.body.classList.remove('devtools-open');
-			}
-		  }
-
-		  // Check periodically; works in Chrome, Edge, Firefox, and most Chromium forks
-		  setInterval(checkDevTools, 1000);
-		})();
-
-		/* =========================================================
-		   Disable right-click on YouTube video iframes
-		   ========================================================= */
-		(function disableIframeRightClick() {
-		  // Function to disable right-click on a specific iframe
-		  function disableContextMenu(iframe) {
-		    if (!iframe || iframe.dataset.contextDisabled) return;
-		    
-		    // Mark as processed
-		    iframe.dataset.contextDisabled = 'true';
-		    
-		    // Prevent right-click on the iframe element itself
-		    iframe.addEventListener('contextmenu', function(e) {
-		      e.preventDefault();
-		      e.stopPropagation();
-		      return false;
-		    });
-		    
-		    // Add a transparent overlay div to block interactions
-		    const wrapper = iframe.parentElement;
-		    if (wrapper && !wrapper.querySelector('.iframe-overlay')) {
-		      const overlay = document.createElement('div');
-		      overlay.className = 'iframe-overlay';
-		      overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;';
-		      wrapper.style.position = 'relative';
-		      wrapper.appendChild(overlay);
-		    }
-		  }
-		  
-		  // Process all existing iframes
-		  function processExistingIframes() {
-		    const iframes = document.querySelectorAll('iframe');
-		    iframes.forEach(disableContextMenu);
-		  }
-		  
-		  // Watch for new iframes being added
-		  const observer = new MutationObserver(function(mutations) {
-		    mutations.forEach(function(mutation) {
-		      mutation.addedNodes.forEach(function(node) {
-		        if (node.nodeType === 1) { // Element node
-		          if (node.tagName === 'IFRAME') {
-		            disableContextMenu(node);
-		          }
-		          // Check children too
-		          const childIframes = node.querySelectorAll ? node.querySelectorAll('iframe') : [];
-		          childIframes.forEach(disableContextMenu);
-		        }
-		      });
-		    });
-		  });
-		})();  
-		  
-	/* <script> */
-    /* ========= */
-      /* DOM ready */
-      /* ========= */
-    document.addEventListener('DOMContentLoaded', () => {
-      bgThemeAudio = document.getElementById('bgTheme');
-
-      const overlay = document.getElementById('musicOverlay');
-      const overlayBtn = document.getElementById('musicOverlayBtn');
-      const pauseBgBtn = document.getElementById('pauseBgMusic');
-      const stopBgBtn = document.getElementById('stopBgMusic');
-
-      if (bgThemeAudio) bgThemeAudio.loop = true;
-
-      function startBgTheme() {
-        if (!bgThemeAudio) return;
         try {
-          bgThemeAudio.volume = 0.4;
-          bgThemeAudio.play().catch(() => {});
-        } catch (e) {}
-        if (overlay) overlay.classList.add('hidden');
-      }
+          const payload = {
+            name, email, mobile,
+            requestedAt: new Date().toISOString(),
+            clientToken: email // Use email as token
+          };
 
-      if (overlayBtn) {
-        overlayBtn.addEventListener('click', startBgTheme);
-      }
-      if (pauseBgBtn) {
-        pauseBgBtn.addEventListener('click', e => {
-          e.preventDefault();
-          pauseBackgroundTheme();
-        });
-      }
-      if (stopBgBtn) {
-        stopBgBtn.addEventListener('click', e => {
-          e.preventDefault();
-          stopBackgroundTheme();
-          if (overlay) overlay.classList.add('hidden');
-        });
-      }
+          console.log('Submitting auth request:', payload);
 
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) pauseBackgroundTheme();
-      });
-      window.addEventListener('blur', pauseBackgroundTheme);
+          // Submit the request (no-cors means we can't read response)
+          await fetch(GAS_WEBAPP_BASE_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {'Content-Type': 'text/plain'},
+            body: JSON.stringify({ action: 'request', payload })
+          });
 
-      initScrollingTrack();
+          console.log('Request submitted, starting polling...');
 
-      // Load videos & audio once so everything is ready
-      // loadVideos();
-      //loadAudio();
+          // Start polling immediately (don't wait for response since no-cors gives opaque response)
+          let pollCount = 0;
+          const maxPolls = 100;
+          
+          pollInterval = setInterval(async () => {
+            pollCount++;
+            try {
+              // Try polling with both email and token parameters for compatibility
+              const statusUrl = GAS_WEBAPP_BASE_URL + '?action=status&email=' + encodeURIComponent(email) + '&token=' + encodeURIComponent(email);
+              console.log('Poll #' + pollCount + ':', statusUrl);
+              
+              const statusRes = await fetch(statusUrl);
+              const statusText = await statusRes.text();
+              console.log('Poll #' + pollCount + ' raw response:', statusText);
+              
+              let status;
+              try {
+                status = JSON.parse(statusText);
+              } catch(parseErr) {
+                console.warn('Poll #' + pollCount + ' JSON parse error');
+                return;
+              }
+              
+              console.log('Poll #' + pollCount + ' parsed:', status);
+              
+              // Check various possible approval indicators
+              const isApproved = status.approved === true || 
+                                 status.approved === 'true' || 
+                                 status.status === 'approved';
+              const isDenied = status.status === 'denied' || 
+                               (status.approved === false && status.final === true);
+              
+              if (isApproved) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+                localStorage.setItem('audioAuthorized', 'true');
+                updateAudioTabState();
+                
+                $('#authWaiting').style.display = 'none';
+                $('#authResult').textContent = '✅ Access Approved!';
+                $('#authResult').style.display = 'block';
+                $('#authResult').style.color = '#4CAF50';
+                
+                setTimeout(() => closeModal(true, true), 1000);
+              } else if (isDenied) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+                $('#authWaiting').style.display = 'none';
+                $('#authResult').textContent = '❌ Access Denied.';
+                $('#authResult').style.display = 'block';
+                $('#authResult').style.color = '#f44336';
+              }
+              // If status.approved === false but not final, keep polling (pending)
+            } catch (err) {
+              console.warn('Poll #' + pollCount + ' error:', err.message);
+            }
+            
+            if (pollCount >= maxPolls) {
+              clearInterval(pollInterval);
+              pollInterval = null;
+              $('#authWaiting').style.display = 'none';
+              $('#authResult').textContent = '⏱️ Timed out. Try typing manualApprove() in console after admin approves.';
+              $('#authResult').style.display = 'block';
+            }
+          }, 3000);
+          
+          console.log('💡 Tip: After admin approves, if modal doesn\'t close, type manualApprove() in console');
+          
+        } catch (err) {
+          console.error('Submit error:', err);
+          $('#authWaiting').style.display = 'none';
+          $('#authResult').textContent = '❌ Submission failed. Please try again.';
+          $('#authResult').style.display = 'block';
+          $('#authResult').style.color = '#f44336';
+        }
+      };
     });
-  </script>
-  <!-- Global video modal for My Favourite Boss's Compositions -->
-	<div id="videoModal" class="video-modal hidden" aria-hidden="true">
-	  <div class="video-modal-backdrop"></div>
+  }
 
-	  <div class="video-modal-dialog" role="dialog" aria-modal="true">
-		<div class="video-modal-header">
-		  <span id="videoModalTitle">🎵 Now Playing</span>
-		</div>
+  // =========================================================
+  // YOUTUBE HANDLING
+  // =========================================================
+  function extractYouTubeEmbedUrl(rawUrl) {
+    try {
+      const u = new URL(rawUrl);
+      const params = u.searchParams;
+      const listId = params.get('list');
+      if (listId) {
+        return 'https://www.youtube.com/embed/videoseries?list=' + listId + '&enablejsapi=1&autoplay=1';
+      }
+      let videoId = null;
+      if (u.hostname.includes('youtu.be')) {
+        videoId = u.pathname.replace('/', '');
+      } else if (params.get('v')) {
+        videoId = params.get('v');
+      } else if (u.pathname.startsWith('/embed/')) {
+        videoId = u.pathname.split('/').pop();
+      }
+      if (videoId) {
+        return 'https://www.youtube.com/embed/' + videoId + '?enablejsapi=1&autoplay=1';
+      }
+      return rawUrl;
+    } catch (e) {
+      return rawUrl;
+    }
+  }
 
-		<div class="video-modal-body">
-		  <div class="video-modal-frame-wrapper">
-			<iframe
-			  id="videoModalIframe"
-			  class="video-embed"
-			  loading="lazy"
-			  src=""
-			  frameborder="0"
-			  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-			  allowfullscreen>
-			</iframe>
-		  </div>
-		</div>
+  function attachYouTubePlayers() {
+    if (!window.YT || !YT.Player) return;
+    $$('iframe.video-embed').forEach(iframe => {
+      if (iframe.dataset.playerAttached === 'true') return;
+      const player = new YT.Player(iframe, {
+        events: {
+          onStateChange: event => {
+            if (event.data === YT.PlayerState.PLAYING) {
+              ytPlayers.forEach(p => {
+                if (p !== player) try { p.pauseVideo(); } catch (e) {}
+              });
+              pauseBackgroundTheme();
+            }
+          }
+        }
+      });
+      iframe.dataset.playerAttached = 'true';
+      ytPlayers.push(player);
+    });
+  }
 
-		<button id="videoModalClose" class="video-modal-close-btn" type="button">
-		  ✖ Close
-		</button>
-	  </div>
-	</div>
+  window.onYouTubeIframeAPIReady = function() {
+    attachYouTubePlayers();
+  };
 
+  // =========================================================
+  // VIDEO MODAL
+  // =========================================================
+  function openFavModal(e, rawUrl, niceTitle) {
+    if (e) e.preventDefault();
+    const modal = $('#videoModal');
+    const iframe = $('#videoModalIframe');
+    const titleEl = $('#videoModalTitle');
+    if (!modal || !iframe || !titleEl) return false;
+
+    const embedUrl = extractYouTubeEmbedUrl(rawUrl);
+    pauseBackgroundTheme();
+
+    iframe.src = embedUrl;
+    titleEl.textContent = '🎵 Now Playing: ' + niceTitle;
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    return false;
+  }
+
+  function closeFavModal() {
+    const modal = $('#videoModal');
+    const iframe = $('#videoModalIframe');
+    if (iframe) iframe.src = '';
+    if (modal) modal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+  }
+
+  function openBossVideo(e, rawUrl, niceTitle) {
+    if (e) e.preventDefault();
+    const container = $('#bossFavPlayer');
+    const iframe = $('#bossFavIframe');
+    const titleEl = $('#bossFavNowPlaying');
+    if (!container || !iframe || !titleEl) return false;
+
+    const embedUrl = extractYouTubeEmbedUrl(rawUrl);
+    pauseBackgroundTheme();
+
+    iframe.src = embedUrl;
+    container.style.display = 'block';
+    titleEl.textContent = '🎵 Now Playing: ' + niceTitle;
+    attachYouTubePlayers();
+    return false;
+  }
+
+  // =========================================================
+  // VIDEO LOADING
+  // =========================================================
+  function loadVideos() {
+    const aboutGrid = $('#aboutVideosGrid');
+    const compGrid = $('#composingVideosGrid');
+    const unrelGrid = $('#unreleasedVideosGrid');
+    if (!aboutGrid || !compGrid || !unrelGrid) return;
+
+    function card(id) {
+      const w = document.createElement('div');
+      w.className = 'content-card';
+      w.innerHTML = '<iframe class="video-embed" loading="lazy" src="https://www.youtube.com/embed/' + id + '?enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+      return w;
+    }
+
+    youtubeVideos.about.forEach(id => aboutGrid.appendChild(card(id)));
+    youtubeVideos.composing.forEach(id => compGrid.appendChild(card(id)));
+    youtubeVideos.unreleased.forEach(id => unrelGrid.appendChild(card(id)));
+
+    $('#about-videos').dataset.loaded = 'true';
+    attachYouTubePlayers();
+  }
+
+  // =========================================================
+  // AUDIO LOADING
+  // =========================================================
+  function loadAudio() {
+    const container = $('#audioTreeContent');
+    if (!container) return;
+    container.dataset.loaded = 'true';
+    container.innerHTML = '<div id="audioContainer" style="padding:20px"></div>';
+    showMainFolders();
+  }
+
+  function showMainFolders() {
+    const container = $('#audioContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    driveFolders.forEach(folder => {
+      const div = document.createElement('div');
+      div.className = 'folder-item';
+      div.innerHTML = '<div><span>📁</span> <span class="folder-root-name">' + folder.name + '</span></div><span>▶</span>';
+      div.onclick = () => loadFolderContents(folder.folderId, folder.name);
+      container.appendChild(div);
+    });
+  }
+
+  async function loadFolderContents(folderId, folderName) {
+    const container = $('#audioContainer');
+    if (!container) return;
+    container.innerHTML = '<div class="folder-item" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;"><div><span>◀</span> Back</div></div><div style="padding:20px;text-align:center;color:#f1c40f;">📂 ' + folderName + '</div><div class="loading" style="text-align:center;padding:14px;"><p>Loading…</p></div>';
+    container.querySelector('.folder-item').onclick = showMainFolders;
+
+    try {
+      const response = await fetch(API_BASE_URL + '/drive/folder-contents/' + folderId);
+      const data = await response.json();
+      const loadingDiv = container.querySelector('.loading');
+      if (loadingDiv) loadingDiv.remove();
+
+      if (!data.success) {
+        container.innerHTML += '<div style="padding:20px;color:#e74c3c;text-align:center;">Error: ' + (data.error || 'unknown') + '</div>';
+        return;
+      }
+
+      if (data.folders && data.folders.length > 0) {
+        data.folders.forEach(sub => {
+          const subDiv = document.createElement('div');
+          subDiv.className = 'folder-item';
+          subDiv.style.background = 'linear-gradient(135deg,#74ebd5,#ACB6E5)';
+          subDiv.innerHTML = '<div><div style="font-weight:bold">📂 ' + sub.name + '</div></div><span>▶</span>';
+          subDiv.onclick = (e) => { e.stopPropagation(); loadFolderContents(sub.id, sub.name); };
+          container.appendChild(subDiv);
+        });
+      }
+
+      if (data.audioFiles && data.audioFiles.length > 0) {
+        data.audioFiles.forEach(audio => {
+          const audioDiv = document.createElement('div');
+          audioDiv.className = 'folder-item';
+          audioDiv.style.background = '#111';
+          audioDiv.style.color = '#fff';
+          audioDiv.innerHTML = '<div><div style="font-weight:bold">🎶 ' + audio.name + '</div></div><button style="padding:10px 16px;background:#e74c3c;color:#fff;border-radius:20px;border:none;cursor:pointer">▶ Play</button>';
+          audioDiv.querySelector('button').onclick = (ev) => { ev.stopPropagation(); playAudio(audio.id, audio.name); };
+          container.appendChild(audioDiv);
+        });
+      }
+    } catch (err) {
+      console.error('Folder load error:', err);
+    }
+  }
+
+  function playAudio(fileId, fileName) {
+    const player = $('#audioPlayer');
+    const container = $('#audioPlayerContainer');
+    const nowPlaying = $('#nowPlaying');
+
+    pauseBackgroundTheme();
+    nowPlaying.textContent = '⏳ Loading: ' + fileName;
+    container.classList.add('active');
+    container.style.display = 'block';
+
+    player.src = API_BASE_URL + '/drive/stream/' + fileId;
+    player.load();
+    player.onloadeddata = () => {
+      nowPlaying.textContent = '🎵 Now Playing: ' + fileName;
+      player.play().catch(err => {
+        nowPlaying.textContent = '❌ Error: ' + fileName;
+      });
+    };
+    player.onerror = () => {
+      nowPlaying.textContent = '❌ Failed: ' + fileName;
+    };
+  }
+
+  function stopAudio() {
+    const player = $('#audioPlayer');
+    const container = $('#audioPlayerContainer');
+    const nowPlaying = $('#nowPlaying');
+    if (player) { player.pause(); player.currentTime = 0; }
+    if (nowPlaying) nowPlaying.textContent = '⏹ Stopped';
+    if (container) { container.classList.remove('active'); container.style.display = 'none'; }
+  }
+
+  // =========================================================
+  // ACCORDION
+  // =========================================================
+  function toggleAccordion(e, targetId) {
+    if (e) e.preventDefault();
+    const header = e ? e.currentTarget : null;
+    const body = $('#' + targetId);
+    if (!body) return;
+
+    const isOpen = body.classList.contains('visible');
+    $$('.accordion-body').forEach(b => b.classList.remove('visible'));
+    $$('.accordion-header').forEach(h => h.classList.remove('expanded'));
+
+    if (!isOpen) {
+      body.classList.add('visible');
+      if (header) header.classList.add('expanded');
+    }
+  }
+
+  // =========================================================
+  // SCROLLING TRACK
+  // =========================================================
+  function initScrollingTrack() {
+    const track = $('#scrollingTrack');
+    if (!track) return;
+    const imgs = ['Pancham10.png','Pancham12.png','Pancham16.png','Pancham17.png','Pancham18.png','Pancham19.png','Pancham20.png','Pancham21.png','Pancham22.png','Pancham23.png','Pancham25.png','Pancham26.png','Pancham27.png','Pancham28.png','Pancham29.png','Pancham3.png','Pancham30.png','Pancham4.png','Pancham5.png','Pancham6.png','Pancham7.png','Pancham8.png','Pancham9.png','rd-burman-2.png','rd-burman-3.png','rd-burman-4.png','rd-burman-single-color1.png','RD.png','rd1.png','RD1_imresizer.jpg'];
+    track.innerHTML = '';
+    imgs.concat(imgs).forEach(name => {
+      const img = document.createElement('img');
+      img.src = 'images/' + name;
+      img.className = 'scrolling-image';
+      img.alt = name.replace(/\.[^.]+$/, '');
+      img.onerror = () => img.style.display = 'none';
+      track.appendChild(img);
+    });
+  }
+
+  // =========================================================
+  // =========================================================
+  // AUDIO TAB DISABLE/ENABLE
+  // =========================================================
+  function updateAudioTabState() {
+    const audioBtn = Array.from($$('.tab-btn')).find(btn => {
+      const onclick = btn.getAttribute('onclick') || '';
+      return onclick.includes("'audio'") || onclick.includes('"audio"');
+    });
+    
+    if (audioBtn) {
+      if (getStoredAudioAuth()) {
+        audioBtn.classList.remove('audio-disabled');
+        audioBtn.removeAttribute('title');
+      } else {
+        audioBtn.classList.add('audio-disabled');
+        audioBtn.setAttribute('title', 'Authentication required to access Audio Archive');
+      }
+    }
+  }
+
+  // =========================================================
+  // INITIALIZATION
+  // =========================================================
+  function init() {
+    console.log('🚀 Initializing R.D. Burman Tribute...');
+
+    bgThemeAudio = $('#bgTheme');
+
+    // Update audio tab state based on authorization
+    updateAudioTabState();
+
+    // Theme button
+    const overlayBtn = $('#musicOverlayBtn');
+    if (overlayBtn) {
+      overlayBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        startBgTheme();
+      });
+    }
+
+    // Control buttons
+    const pauseBtn = $('#pauseBgMusic');
+    const stopBtn = $('#stopBgMusic');
+    if (pauseBtn) pauseBtn.onclick = pauseBackgroundTheme;
+    if (stopBtn) stopBtn.onclick = stopBackgroundTheme;
+
+    // Stop audio button
+    const stopAudioBtn = $('#stopAudioBtn');
+    if (stopAudioBtn) stopAudioBtn.onclick = stopAudio;
+
+    // Video modal
+    const videoModal = $('#videoModal');
+    if (videoModal) {
+      const backdrop = videoModal.querySelector('.video-modal-backdrop');
+      const closeBtn = $('#videoModalClose');
+      if (backdrop) backdrop.addEventListener('click', closeFavModal);
+      if (closeBtn) closeBtn.addEventListener('click', closeFavModal);
+    }
+
+    // ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const vm = $('#videoModal');
+        if (vm && !vm.classList.contains('hidden')) {
+          closeFavModal();
+        }
+        const am = $('#audioAuthModal');
+        if (am && !am.classList.contains('hidden')) {
+          am.classList.add('hidden');
+        }
+      }
+    });
+
+    // Visibility change
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) pauseBackgroundTheme();
+    });
+
+    // Init scrolling track
+    initScrollingTrack();
+
+    console.log('✅ Initialization complete');
+  }
+
+  // Run on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // Expose globals
+  window.startBgTheme = startBgTheme;
+  window.pauseBackgroundTheme = pauseBackgroundTheme;
+  window.stopBackgroundTheme = stopBackgroundTheme;
+  window.showTab = showTab;
+  window.showVideoTab = showVideoTab;
+  window.showBossTab = showBossTab;
+  window.openFavModal = openFavModal;
+  window.closeFavModal = closeFavModal;
+  window.openBossVideo = openBossVideo;
+  window.toggleAccordion = toggleAccordion;
+  window.stopAudio = stopAudio;
+  window.ensureAudioAuthorized = ensureAudioAuthorized;
+  window.updateAudioTabState = updateAudioTabState;
+
+  /* =========================================================
+     Soft browser restrictions (best-effort, not bullet-proof)
+     Added: 15/12/2025
+     ========================================================= */
+  (function hardenViewer() {
+    
+    // 1. Disable right-click context menu on entire document
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    }, false);
+
+    // 2. Disable right-click and add protections to media elements
+    function disableMediaContextMenu() {
+      // Audio elements
+      document.querySelectorAll('audio').forEach(function(audio) {
+        audio.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          return false;
+        }, false);
+        audio.controlsList = 'nodownload noplaybackrate';
+      });
+
+      // Video elements
+      document.querySelectorAll('video').forEach(function(video) {
+        video.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          return false;
+        }, false);
+        video.controlsList = 'nodownload noplaybackrate';
+      });
+
+      // Iframes (YouTube embeds)
+      document.querySelectorAll('iframe').forEach(function(iframe) {
+        if (iframe.dataset.contextDisabled) return;
+        iframe.dataset.contextDisabled = 'true';
+        
+        iframe.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          return false;
+        }, false);
+
+        // Add overlay to prevent right-click on iframe content
+        const wrapper = iframe.parentElement;
+        if (wrapper && !wrapper.querySelector('.iframe-protection')) {
+          const overlay = document.createElement('div');
+          overlay.className = 'iframe-protection';
+          overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+          wrapper.style.position = 'relative';
+          wrapper.appendChild(overlay);
+        }
+      });
+    }
+
+    // Run on page load
+    disableMediaContextMenu();
+
+    // Watch for dynamically added media elements
+    const mediaObserver = new MutationObserver(function(mutations) {
+      disableMediaContextMenu();
+    });
+    mediaObserver.observe(document.body, { childList: true, subtree: true });
+
+    // Re-apply periodically as backup
+    setInterval(disableMediaContextMenu, 2000);
+
+    // 3. Disable right-click on Background Scores section
+    function disableBackgroundScoresRightClick() {
+      document.querySelectorAll('.boss-category.no-right-click').forEach(function(section) {
+        section.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }, true);
+
+        section.querySelectorAll('*').forEach(function(child) {
+          child.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }, true);
+        });
+      });
+    }
+    disableBackgroundScoresRightClick();
+
+    // 4. Disable text selection and copying
+    document.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+      return false;
+    });
+
+    document.addEventListener('copy', function(e) {
+      e.preventDefault();
+      if (e.clipboardData) {
+        e.clipboardData.setData('text/plain', 'Content copying is disabled on this tribute site.');
+      }
+      return false;
+    });
+
+    document.addEventListener('cut', function(e) {
+      e.preventDefault();
+      return false;
+    });
+
+    // 5. Disable drag and drop
+    document.addEventListener('dragstart', function(e) {
+      e.preventDefault();
+      return false;
+    });
+
+    // 6. Disable image dragging
+    document.querySelectorAll('img').forEach(function(img) {
+      img.setAttribute('draggable', 'false');
+      img.style.userSelect = 'none';
+      img.style.webkitUserSelect = 'none';
+    });
+
+    // 7. Disable common keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      const key = (e.key || '').toLowerCase();
+      const ctrlOrCmd = e.ctrlKey || e.metaKey;
+
+      // Disable Ctrl+A (Select All)
+      if (ctrlOrCmd && key === 'a') {
+        e.preventDefault();
+        return false;
+      }
+
+      // Disable Ctrl+C (Copy)
+      if (ctrlOrCmd && key === 'c') {
+        e.preventDefault();
+        return false;
+      }
+
+      // Disable Ctrl+X (Cut)
+      if (ctrlOrCmd && key === 'x') {
+        e.preventDefault();
+        return false;
+      }
+
+      // Disable Ctrl+U (View Source)
+      if (ctrlOrCmd && key === 'u') {
+        e.preventDefault();
+        return false;
+      }
+
+      // Disable Ctrl+S (Save)
+      if (ctrlOrCmd && key === 's') {
+        e.preventDefault();
+        return false;
+      }
+
+      // Disable Ctrl+P (Print)
+      if (ctrlOrCmd && key === 'p') {
+        e.preventDefault();
+        return false;
+      }
+
+      // Disable F12 and DevTools shortcuts
+      if (key === 'f12' || (ctrlOrCmd && e.shiftKey && (key === 'i' || key === 'j' || key === 'c'))) {
+        e.preventDefault();
+        return false;
+      }
+
+      // Handle PrintScreen
+      if (key === 'printscreen') {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText('Screenshots are restricted on this tribute page.').catch(function() {});
+        }
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // 8. Override window.open to prevent new tabs/windows
+    window.open = function() {
+      console.warn('Opening new tabs/windows from this tribute site is disabled.');
+      return null;
+    };
+
+    // 9. DevTools detection
+    let devtoolsOpen = false;
+    const threshold = 160;
+
+    function checkDevTools() {
+      const widthDiff = window.outerWidth - window.innerWidth;
+      const heightDiff = window.outerHeight - window.innerHeight;
+      const isOpen = (widthDiff > threshold) || (heightDiff > threshold);
+
+      if (isOpen && !devtoolsOpen) {
+        devtoolsOpen = true;
+        document.body.classList.add('devtools-open');
+      } else if (!isOpen && devtoolsOpen) {
+        devtoolsOpen = false;
+        document.body.classList.remove('devtools-open');
+      }
+    }
+    setInterval(checkDevTools, 1000);
+
+  })();
+  /* ========================================================= */
+
+})();
+</script>
 </body>
 </html>
