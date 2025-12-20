@@ -1,27 +1,27 @@
 // Optimized video loading with lazy thumbnails
-(function() {
-    // Override the fixVideoSectionOnce function with optimized version
-    window.fixVideoSectionOnce = function() {
-        const aboutGrid = document.getElementById('aboutVideosGrid');
-        const compGrid  = document.getElementById('composingVideosGrid');
-        const unrelGrid = document.getElementById('unreleasedVideosGrid');
+(function () {
+  // Override the fixVideoSectionOnce function with optimized version
+  window.fixVideoSectionOnce = function () {
+    const aboutGrid = document.getElementById('aboutVideosGrid');
+    const compGrid = document.getElementById('composingVideosGrid');
+    const unrelGrid = document.getElementById('unreleasedVideosGrid');
 
-        if (!aboutGrid || !compGrid || !unrelGrid) return;
-        if (aboutGrid.dataset.fixApplied === 'true') return;
-        if (!window.youtubeVideos) return;
+    if (!aboutGrid || !compGrid || !unrelGrid) return;
+    if (aboutGrid.dataset.fixApplied === 'true') return;
+    if (!window.youtubeVideos) return;
 
-        let iframeCounter = 0;
+    let iframeCounter = 0;
 
-        function createCard(videoId) {
-            const iframeId = 'yt-player-' + (iframeCounter++);
-            const wrapper = document.createElement('div');
-            wrapper.className = 'content-card';
-            wrapper.style.position = 'relative';
-            wrapper.style.cursor = 'pointer';
-            
-            // Use medium quality thumbnail for faster loading
-            const thumbnail = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
-            wrapper.innerHTML = `
+    function createCard(videoId) {
+      const iframeId = 'yt-player-' + iframeCounter++;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'content-card';
+      wrapper.style.position = 'relative';
+      wrapper.style.cursor = 'pointer';
+
+      // Use medium quality thumbnail for faster loading
+      const thumbnail = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+      wrapper.innerHTML = `
                 <div class="video-thumbnail" data-video-id="${videoId}" data-iframe-id="${iframeId}" 
                      style="position: relative; width: 100%; aspect-ratio: 16/9; 
                             background: #000 url('${thumbnail}') center/cover no-repeat; 
@@ -36,66 +36,70 @@
                     </div>
                 </div>
             `;
-            
-            // Load iframe only when clicked
-            wrapper.addEventListener('click', function() {
-                const thumbDiv = wrapper.querySelector('.video-thumbnail');
-                if (thumbDiv) {
-                    const vid = thumbDiv.dataset.videoId;
-                    const iid = thumbDiv.dataset.iframeId;
-                    wrapper.innerHTML = `<iframe id="${iid}" class="video-embed" 
+
+      // Load iframe only when clicked
+      wrapper.addEventListener('click', function () {
+        const thumbDiv = wrapper.querySelector('.video-thumbnail');
+        if (thumbDiv) {
+          const vid = thumbDiv.dataset.videoId;
+          const iid = thumbDiv.dataset.iframeId;
+          wrapper.innerHTML = `<iframe id="${iid}" class="video-embed" 
                         src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&modestbranding=1" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen></iframe>`;
-                    wrapper.style.cursor = 'default';
-                }
-            });
-            
-            return wrapper;
+          wrapper.style.cursor = 'default';
         }
+      });
 
-        // Use DocumentFragment for batch DOM insertion (faster)
-        const fragment1 = document.createDocumentFragment();
-        youtubeVideos.about.forEach(id => fragment1.appendChild(createCard(id)));
-        aboutGrid.appendChild(fragment1);
+      return wrapper;
+    }
 
-        const fragment2 = document.createDocumentFragment();
-        youtubeVideos.composing.forEach(id => fragment2.appendChild(createCard(id)));
-        compGrid.appendChild(fragment2);
+    // Use DocumentFragment for batch DOM insertion (faster)
+    const fragment1 = document.createDocumentFragment();
+    youtubeVideos.about.forEach((id) => fragment1.appendChild(createCard(id)));
+    aboutGrid.appendChild(fragment1);
 
-        const fragment3 = document.createDocumentFragment();
-        youtubeVideos.unreleased.forEach(id => fragment3.appendChild(createCard(id)));
-        unrelGrid.appendChild(fragment3);
+    const fragment2 = document.createDocumentFragment();
+    youtubeVideos.composing.forEach((id) =>
+      fragment2.appendChild(createCard(id))
+    );
+    compGrid.appendChild(fragment2);
 
-        const aboutPanel = document.getElementById('about-videos');
-        const compPanel  = document.getElementById('composing-videos');
-        const unrelPanel = document.getElementById('unreleased-videos');
-        if (aboutPanel) aboutPanel.dataset.loaded = 'true';
-        if (compPanel)  compPanel.dataset.loaded  = 'true';
-        if (unrelPanel) unrelPanel.dataset.loaded = 'true';
+    const fragment3 = document.createDocumentFragment();
+    youtubeVideos.unreleased.forEach((id) =>
+      fragment3.appendChild(createCard(id))
+    );
+    unrelGrid.appendChild(fragment3);
 
-        aboutGrid.dataset.fixApplied = 'true';
-    };
+    const aboutPanel = document.getElementById('about-videos');
+    const compPanel = document.getElementById('composing-videos');
+    const unrelPanel = document.getElementById('unreleased-videos');
+    if (aboutPanel) aboutPanel.dataset.loaded = 'true';
+    if (compPanel) compPanel.dataset.loaded = 'true';
+    if (unrelPanel) unrelPanel.dataset.loaded = 'true';
 
-    // Also override the loadVideos function
-    window.loadVideos = function() {
-        const aboutGrid = document.getElementById('aboutVideosGrid');
-        const compGrid = document.getElementById('composingVideosGrid');
-        const unrelGrid = document.getElementById('unreleasedVideosGrid');
-        if (!aboutGrid || !compGrid || !unrelGrid) return;
+    aboutGrid.dataset.fixApplied = 'true';
+  };
 
-        let iframeCounter = 0;
+  // Also override the loadVideos function
+  window.loadVideos = function () {
+    const aboutGrid = document.getElementById('aboutVideosGrid');
+    const compGrid = document.getElementById('composingVideosGrid');
+    const unrelGrid = document.getElementById('unreleasedVideosGrid');
+    if (!aboutGrid || !compGrid || !unrelGrid) return;
 
-        function createCard(videoId) {
-            const iframeId = 'yt-player-' + (iframeCounter++);
-            const wrapper = document.createElement('div');
-            wrapper.className = 'content-card';
-            wrapper.style.position = 'relative';
-            wrapper.style.cursor = 'pointer';
-            
-            const thumbnail = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
-            wrapper.innerHTML = `
+    let iframeCounter = 0;
+
+    function createCard(videoId) {
+      const iframeId = 'yt-player-' + iframeCounter++;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'content-card';
+      wrapper.style.position = 'relative';
+      wrapper.style.cursor = 'pointer';
+
+      const thumbnail = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+      wrapper.innerHTML = `
                 <div class="video-thumbnail" data-video-id="${videoId}" data-iframe-id="${iframeId}" 
                      style="position: relative; width: 100%; aspect-ratio: 16/9; 
                             background: #000 url('${thumbnail}') center/cover no-repeat; 
@@ -110,38 +114,42 @@
                     </div>
                 </div>
             `;
-            
-            wrapper.addEventListener('click', function() {
-                const thumbDiv = wrapper.querySelector('.video-thumbnail');
-                if (thumbDiv) {
-                    const vid = thumbDiv.dataset.videoId;
-                    const iid = thumbDiv.dataset.iframeId;
-                    wrapper.innerHTML = `<iframe id="${iid}" class="video-embed" 
+
+      wrapper.addEventListener('click', function () {
+        const thumbDiv = wrapper.querySelector('.video-thumbnail');
+        if (thumbDiv) {
+          const vid = thumbDiv.dataset.videoId;
+          const iid = thumbDiv.dataset.iframeId;
+          wrapper.innerHTML = `<iframe id="${iid}" class="video-embed" 
                         src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&modestbranding=1" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen></iframe>`;
-                    wrapper.style.cursor = 'default';
-                }
-            });
-            
-            return wrapper;
+          wrapper.style.cursor = 'default';
         }
+      });
 
-        const fragment1 = document.createDocumentFragment();
-        youtubeVideos.about.forEach(id => fragment1.appendChild(createCard(id)));
-        aboutGrid.appendChild(fragment1);
+      return wrapper;
+    }
 
-        const fragment2 = document.createDocumentFragment();
-        youtubeVideos.composing.forEach(id => fragment2.appendChild(createCard(id)));
-        compGrid.appendChild(fragment2);
+    const fragment1 = document.createDocumentFragment();
+    youtubeVideos.about.forEach((id) => fragment1.appendChild(createCard(id)));
+    aboutGrid.appendChild(fragment1);
 
-        const fragment3 = document.createDocumentFragment();
-        youtubeVideos.unreleased.forEach(id => fragment3.appendChild(createCard(id)));
-        unrelGrid.appendChild(fragment3);
+    const fragment2 = document.createDocumentFragment();
+    youtubeVideos.composing.forEach((id) =>
+      fragment2.appendChild(createCard(id))
+    );
+    compGrid.appendChild(fragment2);
 
-        document.getElementById('about-videos').dataset.loaded = 'true';
-        document.getElementById('composing-videos').dataset.loaded = 'true';
-        document.getElementById('unreleased-videos').dataset.loaded = 'true';
-    };
+    const fragment3 = document.createDocumentFragment();
+    youtubeVideos.unreleased.forEach((id) =>
+      fragment3.appendChild(createCard(id))
+    );
+    unrelGrid.appendChild(fragment3);
+
+    document.getElementById('about-videos').dataset.loaded = 'true';
+    document.getElementById('composing-videos').dataset.loaded = 'true';
+    document.getElementById('unreleased-videos').dataset.loaded = 'true';
+  };
 })();

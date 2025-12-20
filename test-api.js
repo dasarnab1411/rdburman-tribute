@@ -12,8 +12,7 @@ const chalk = require("chalk");
  * Maps older variable names to the correct ones used in .env
  **************************************************************/
 
-process.env.YT_API_URL =
-  process.env.YT_API_URL || process.env.YOUTUBE_API_URL;
+process.env.YT_API_URL = process.env.YT_API_URL || process.env.YOUTUBE_API_URL;
 
 process.env.GDRIVE_API_URL =
   process.env.GDRIVE_API_URL || process.env.GOOGLE_DRIVE_API_URL;
@@ -29,7 +28,7 @@ process.env.GOOGLE_API_KEY =
  **************************************************************/
 const axiosClient = axios.create({
   timeout: 10000,
-  proxy: false
+  proxy: false,
 });
 
 console.log(chalk.cyan("\n🎵 RD Burman Tribute - API Testing Script\n"));
@@ -47,8 +46,8 @@ async function testYouTube() {
         key: process.env.YOUTUBE_API_KEY,
         q: "rd burman",
         part: "snippet",
-        maxResults: 1
-      }
+        maxResults: 1,
+      },
     });
 
     console.log(chalk.green("   ✓ PASS - YouTube API Working\n"));
@@ -71,8 +70,8 @@ async function testGoogleDrive() {
       params: {
         key: process.env.GOOGLE_API_KEY,
         q: "'root' in parents",
-        fields: "files(id,name)"
-      }
+        fields: "files(id,name)",
+      },
     });
 
     console.log(chalk.green("   ✓ PASS - Google Drive API Working\n"));
@@ -92,7 +91,7 @@ async function testSpotify() {
 
   try {
     const credentials = Buffer.from(
-      process.env.SPOTIFY_CLIENT_ID + ":" + process.env.SPOTIFY_CLIENT_SECRET
+      process.env.SPOTIFY_CLIENT_ID + ":" + process.env.SPOTIFY_CLIENT_SECRET,
     ).toString("base64");
 
     const res = await axiosClient.post(
@@ -101,9 +100,9 @@ async function testSpotify() {
       {
         headers: {
           Authorization: "Basic " + credentials,
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      },
     );
 
     if (res.data.access_token) {
@@ -127,9 +126,9 @@ async function testDriveFolders() {
     "2 Songs on Same Tune": process.env.GDRIVE_FOLDER_1,
     "A to M": process.env.GDRIVE_FOLDER_2,
     "Asha && R.D_Bangla": process.env.GDRIVE_FOLDER_3,
-    "Gulzar_Asha_RD": process.env.GDRIVE_FOLDER_4,
+    Gulzar_Asha_RD: process.env.GDRIVE_FOLDER_4,
     "N to Z": process.env.GDRIVE_FOLDER_5,
-    "Pancham - Gulzar Remembers": process.env.GDRIVE_FOLDER_6
+    "Pancham - Gulzar Remembers": process.env.GDRIVE_FOLDER_6,
   };
 
   let allGood = true;
@@ -140,12 +139,12 @@ async function testDriveFolders() {
         params: {
           key: process.env.GOOGLE_API_KEY,
           q: `'${id}' in parents`,
-          fields: "files(id,name,mimeType)"
-        }
+          fields: "files(id,name,mimeType)",
+        },
       });
 
       console.log(
-        chalk.green(`   ✓ ${name}: OK (Files: ${res.data.files?.length || 0})`)
+        chalk.green(`   ✓ ${name}: OK (Files: ${res.data.files?.length || 0})`),
       );
     } catch (err) {
       allGood = false;
@@ -184,6 +183,5 @@ async function testDriveFolders() {
 
   if (failed === 0)
     console.log(chalk.green("🎉 ALL TESTS PASSED SUCCESSFULLY!"));
-  else
-    console.log(chalk.red("❌ Some tests failed. Check configuration."));
+  else console.log(chalk.red("❌ Some tests failed. Check configuration."));
 })();

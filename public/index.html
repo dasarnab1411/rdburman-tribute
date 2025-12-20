@@ -173,6 +173,64 @@
 	  text-align: center;
 	  color: #fff;
 	}
+	/* Email Verification Status Styles */
+	.email-verification-status {
+	  margin-top: 6px;
+	  padding: 8px 12px;
+	  border-radius: 6px;
+	  font-size: 0.85rem;
+	  display: flex;
+	  align-items: center;
+	  gap: 8px;
+	}
+	.email-verification-status.verifying {
+	  background: rgba(255, 193, 7, 0.2);
+	  color: #FFC107;
+	  border: 1px solid rgba(255, 193, 7, 0.3);
+	}
+	.email-verification-status.valid {
+	  background: rgba(76, 175, 80, 0.2);
+	  color: #4CAF50;
+	  border: 1px solid rgba(76, 175, 80, 0.3);
+	}
+	.email-verification-status.warning {
+	  background: rgba(255, 152, 0, 0.2);
+	  color: #FF9800;
+	  border: 1px solid rgba(255, 152, 0, 0.3);
+	}
+	.email-verification-status.invalid {
+	  background: rgba(244, 67, 54, 0.2);
+	  color: #F44336;
+	  border: 1px solid rgba(244, 67, 54, 0.3);
+	}
+	.email-verification-status .spinner {
+	  width: 14px;
+	  height: 14px;
+	  border: 2px solid transparent;
+	  border-top-color: currentColor;
+	  border-radius: 50%;
+	  animation: spin 0.8s linear infinite;
+	}
+	@keyframes spin {
+	  to { transform: rotate(360deg); }
+	}
+	.email-verification-details {
+	  margin-top: 4px;
+	  font-size: 0.75rem;
+	  opacity: 0.8;
+	}
+	.risk-badge {
+	  display: inline-block;
+	  padding: 2px 8px;
+	  border-radius: 4px;
+	  font-size: 0.7rem;
+	  font-weight: bold;
+	  text-transform: uppercase;
+	  margin-left: 6px;
+	}
+	.risk-badge.low { background: #4CAF50; color: white; }
+	.risk-badge.medium { background: #FF9800; color: white; }
+	.risk-badge.high { background: #F44336; color: white; }
 	/* Disabled Audio Tab styling */
 	.tab-btn.audio-disabled {
 	  opacity: 0.5;
@@ -247,8 +305,21 @@
 	
 	/* stacking safety for modal */
 	html, body { position: relative; z-index: 0; }
-	#audioAuthModal { position: fixed !important; inset: 0 !important; z-index: 2147483646 !important; }
-	#audioAuthModal .auth-dialog { z-index: 2147483647 !important; position: relative; }
+	#audioAuthModal { 
+	  position: fixed !important; 
+	  inset: 0 !important; 
+	  z-index: 2147483646 !important;
+	  display: flex !important;
+	  align-items: center !important;
+	  justify-content: center !important;
+	  width: 100vw !important;
+	  height: 100vh !important;
+	}
+	#audioAuthModal .auth-dialog { 
+	  z-index: 2147483647 !important; 
+	  position: relative;
+	  margin: auto;
+	}
 
 
     /* Music overlay */
@@ -1836,7 +1907,14 @@
 		  .auth-dialog h3 { font-size: 1.05rem; text-align: center; }
 		}
 		/* safety overrides */
-		.auth-modal { position: fixed !important; inset: 0 !important; z-index: 2147483646 !important; }
+		.auth-modal { 
+		  position: fixed !important; 
+		  inset: 0 !important; 
+		  z-index: 2147483646 !important;
+		  display: flex !important;
+		  align-items: center !important;
+		  justify-content: center !important;
+		}
 		.auth-modal .auth-dialog { z-index: 2147483647 !important; max-height: 90vh !important; overflow: auto !important; }
 	/* ===== Audio auth modal - robust top-level overlay styling ===== */
 	.auth-modal {
@@ -1915,6 +1993,122 @@
 	  color: #0c1320;
 	}
 
+	/* ===== AUDIO AUTH MODAL - FINAL OVERRIDE (must be last) ===== */
+	.auth-modal {
+	  position: fixed !important;
+	  inset: 0 !important;
+	  display: flex !important;
+	  align-items: center !important;
+	  justify-content: center !important;
+	  z-index: 2147483646 !important;
+	  -webkit-overflow-scrolling: touch;
+	}
+	.auth-modal .auth-backdrop {
+	  position: absolute;
+	  inset: 0;
+	  background: rgba(3,6,12,0.72);
+	  backdrop-filter: blur(4px);
+	  z-index: 2147483646;
+	}
+	.auth-modal .auth-dialog {
+	  position: relative;
+	  z-index: 2147483647 !important;
+	  width: min(480px, calc(100% - 32px));
+	  max-height: 90vh;
+	  overflow: auto;
+	  border-radius: 12px;
+	  background: linear-gradient(135deg, rgba(93, 64, 55, 0.95) 0%, rgba(62, 39, 35, 0.95) 100%),
+	              url('images/rdburman.gif') center center / cover no-repeat;
+	  padding: 24px;
+	  box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+	  color: #fff;
+	  -webkit-tap-highlight-color: transparent;
+	}
+	@media (max-width: 520px) {
+	  .auth-modal .auth-dialog {
+	    width: calc(100% - 20px);
+	    margin: 8px;
+	    padding: 14px;
+	    border-radius: 10px;
+	  }
+	}
+	.auth-modal.hidden { display: none !important; }
+	.auth-modal .auth-close { 
+	  position: absolute; 
+	  right: 12px; 
+	  top: 12px; 
+	  z-index: 2147483648; 
+	  background: rgba(255,255,255,0.2); 
+	  border: none; 
+	  border-radius: 50%;
+	  width: 32px;
+	  height: 32px;
+	  cursor: pointer; 
+	  font-size: 16px;
+	  color: #fff;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+	.auth-modal .auth-close:hover {
+	  background: rgba(255,255,255,0.3);
+	}
+	.auth-modal .auth-dialog h3 {
+	  margin: 0 0 20px 0;
+	  text-align: center;
+	  color: #fff;
+	}
+	.auth-modal .auth-dialog label {
+	  display: block;
+	  margin-bottom: 4px;
+	  color: #fff;
+	  font-weight: 500;
+	}
+	.auth-modal .auth-dialog input {
+	  width: 100%;
+	  box-sizing: border-box;
+	  padding: 12px 14px;
+	  border-radius: 8px;
+	  border: 2px solid rgba(255,255,255,0.3);
+	  background: rgba(255,255,255,0.1);
+	  color: #fff;
+	  margin-top: 6px;
+	  margin-bottom: 14px;
+	  font-size: 1rem;
+	}
+	.auth-modal .auth-dialog input::placeholder {
+	  color: rgba(255,255,255,0.6);
+	}
+	.auth-modal .auth-dialog input:focus {
+	  outline: none;
+	  border-color: #FFAB91;
+	  background: rgba(255,255,255,0.15);
+	}
+	.auth-modal .auth-dialog button {
+	  padding: 12px 24px;
+	  border: none;
+	  border-radius: 8px;
+	  font-size: 1rem;
+	  font-weight: 600;
+	  cursor: pointer;
+	}
+	.auth-modal .auth-dialog button[type="submit"] {
+	  background: linear-gradient(135deg, #FF7043 0%, #FF5722 100%);
+	  color: #fff;
+	  flex: 1;
+	}
+	.auth-modal .auth-dialog button[type="submit"]:hover {
+	  transform: translateY(-2px);
+	  box-shadow: 0 6px 20px rgba(255,87,34,0.4);
+	}
+	.auth-modal .auth-dialog button[type="button"] {
+	  background: rgba(255,255,255,0.2);
+	  color: #fff;
+	  flex: 1;
+	}
+	.auth-modal .auth-dialog button[type="button"]:hover {
+	  background: rgba(255,255,255,0.3);
+	}
 			
   </style>
 </head>
@@ -1984,6 +2178,7 @@
 		  <label>
 			Email
 			<input id="authEmail" name="email" type="email" required placeholder="you@example.com">
+			<div id="emailVerificationStatus" class="email-verification-status" style="display:none;"></div>
 		  </label>
 		  <label>
 			Mobile
@@ -3476,7 +3671,25 @@
 			<p><strong>"Aapki Aankhon Mein Kuch" (Reprise, Ghar):</strong> Raaga: Yaman; slower solo version keeps the teevra Ma and Yaman movement, but more minimal—intimate classical conversation with oneself.</p>
 			</div>
 			</details>
-			<!-- 6. Wordsmiths -->
+			<!-- 6. Actors or Singers -->
+			<details class="boss-saga-section">
+			<summary>6. ✍️ The Boss &amp; Actors or Singers</summary>
+			<div class="boss-saga-body">
+				<p>Panchamda made merry with his Actors</p>
+				<h4>Amitabh Bachchan</h4>
+				<p>Tu Maike Mat Jaiyo from <em>Pukar</em> Jidhar Dekhoon Teri Tasveer from <em>Mahaan</em></p>
+				<h4>Rekha</h4>
+				<p>Kayda Todke Socho Ek Din from<em>Khubsoorat</em></p>
+				<h4>Shatrughan Sinha</h4>
+				<p>Ek Baat Suni Hai Chachaji from <em>Naram Garam</em></p>
+				<h4>Mehmood</h4>
+				<p>Muthukodi Kawadi Hada from <em>Do Phool</em></p>
+				<h4>Danny Denzongpa</h4>
+				<p>Sun Sun Kasam Se from <em>Kaala Sona</em></p>
+				<!-- <p class="boss-saga-outro"></p> -->
+			</div>
+			</details>
+			<!-- 7. Wordsmiths -->
 			<details class="boss-saga-section">
 			<summary>6. ✍️ The Boss &amp; His Wordsmiths: Ultimate Fan Playlist</summary>
 			<div class="boss-saga-body">
@@ -3679,11 +3892,25 @@
 				<a href="#" onclick="return openFavModal(event, 'https://www.youtube.com/watch?v=EA4qpsJS9uY&list=RDEA4qpsJS9uY&start_radio=1', 'Ek Hi Khwab| (Kinara 1977)');"> 
 										 🎵 Ek Hi Khwab | (Kinara 1977)</a> 
 				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/EEe4tVkaDWY?si=oxHls-A0lyQ4F5jy', 'Kotha Hoyechhilo | (Troyee 1982)');"> 
-										 🎵 Kotha Hoyechhilo | (Troyee 1982) Bengali</a>
+										 🎵 Kotha Hoyechhilo | (Troyee 1982) Bangla</a>
 				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/cesHYOjDcvg?si=LXAw8IC9GHrw_bkF', 'Mon Theke Mone Ki Kore Je Jabo | (Shwet Pathorer Thala 1992)');">
-										 🎵 Mon Theke Mone Ki Kore Je Jabo | Bengali (Shwet Pathorer Thala 1992)</a>
+										 🎵 Mon Theke Mone Ki Kore Je Jabo | Bangla (Shwet Pathorer Thala 1992)</a>
 				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/G0oOtkYjdFo?si=SF4z5UxjIwhh_U7d', 'Ki Kore Janle Tumi | (Debota 1990)');">
-										 🎵 Ki Kore Janle Tumi | (Debota 1990) Bengali</a>
+										 🎵 Ki Kore Janle Tumi | (Debota 1990) Bangla</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/KNVCJt4FkhU?si=ySAu-mm7_pBsLqms', 'Mone Pore Ruby Roy | (Pujo Album 1969)');">
+										 🎵 Mone Pore Ruby Roy | (Pujo Album 1969) Bangla</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/Su13f9lHSfY?si=5NxcnV_ZVSj1zozF', 'Jete Jete Pathe Holo | (Pujo Album 1974)');">
+										 🎵 Jete Jete Pathe Holo | (Pujo Album 1974) Bangla</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/_3h0GTIx9aw?si=Q35AEyu9bvgiuQ1X', 'Nadir Paare Uthchhe Dhooan | (Pujo Album 1974)');">
+										 🎵 Nadir Paare Uthchhe Dhooan | (Pujo Album 1974) Bangla</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/6APL9CuKNFc?si=h_04JGnhTfZEOpFX', 'Phire Eso Anuradha | (Pujo Album 1969)');">
+										 🎵 Phire Eso Anuradha | (Pujo Album 1969) Bangla</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/D0diLyPspDY?si=qbUmxSJBP6FAOej-', 'Phire Elam Dure Giye | (Pujo Album 1985)');">
+										 🎵 Phire Elam Dure Giye | (Pujo Album 1985) Bangla</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/Zd1XuAvWukQ?si=6pwpMcpfDWzunG-1', 'Tumi Kato Je Dure | (Pujo Album 1977)');">
+										 🎵 Phire Elam Dure Giye | (Pujo Album 1977) Bangla</a>
+				<a href="#" onclick="return openFavModal(event, 'https://youtu.be/L2Ts1wRFg6s?si=bgUhfc2ewOYwITK3', 'Akash Keno Daake | (Pujo Album 1970)');">
+										 🎵 'Akash Keno Daake | (Pujo Album 1970) Bangla</a>										 
 			  </div>
 			</div>
 		<!-- 4. His Cabaret Tracks 🎷🎵 -->
@@ -4019,6 +4246,506 @@
     } catch (e) { return false; }
   }
 
+  // =========================================================
+  // EMAIL VERIFICATION ENGINE (Client-Side)
+  // =========================================================
+  const EmailVerifier = {
+    // Configuration
+    CONFIG: {
+      DISPOSABLE_DOMAINS: new Set([
+        'tempmail.com', 'guerrillamail.com', 'mailinator.com', '10minutemail.com',
+        'throwaway.email', 'fakeinbox.com', 'trashmail.com', 'getnada.com',
+        'temp-mail.org', 'yopmail.com', 'maildrop.cc', 'sharklasers.com',
+        'dispostable.com', 'mintemail.com', 'emailondeck.com', 'tempr.email',
+        'dropmail.me', 'mohmal.com', 'tempail.com', 'emailfake.com',
+        'crazymailing.com', 'tempsky.com', 'fakemail.net', 'mailnesia.com',
+        'guerrillamailblock.com', 'pokemail.net', 'throwawaymail.com',
+        'tempinbox.com', 'fakemailgenerator.com', 'emailtemp.org', 'tmpmail.org',
+        'tmpmail.net', 'getairmail.com', 'mailcatch.com', 'meltmail.com'
+      ]),
+      // Invalid domains that look like email but aren't email services
+      INVALID_DOMAINS: new Set([
+        'gl.com', 'goo.gl', 'bit.ly', 'tinyurl.com', 't.co', 'ow.ly',
+        'test.com', 'example.com', 'example.org', 'example.net',
+        'localhost', 'localhost.localdomain', 'invalid.com',
+        'fake.com', 'fake.org', 'fake.net', 'none.com', 'null.com',
+        'abc.com', 'xyz.com', 'aaa.com', 'bbb.com', 'ccc.com',
+        'asdf.com', 'qwerty.com', 'temp.com', 'no.com', 'na.com',
+        'domain.com', 'email.com', 'mail.co', 'website.com'
+      ]),
+      // Valid well-known email providers (whitelist)
+      VALID_EMAIL_PROVIDERS: new Set([
+        'gmail.com', 'yahoo.com', 'yahoo.co.in', 'yahoo.co.uk',
+        'hotmail.com', 'outlook.com', 'live.com', 'msn.com',
+        'aol.com', 'icloud.com', 'me.com', 'mac.com',
+        'mail.com', 'protonmail.com', 'proton.me', 'zoho.com',
+        'yandex.com', 'yandex.ru', 'gmx.com', 'gmx.net',
+        'fastmail.com', 'tutanota.com', 'tutanota.de',
+        'rediffmail.com', 'rediff.com', 'qq.com', '163.com', '126.com',
+        'mail.ru', 'inbox.com', 'aim.com', 'att.net', 'verizon.net',
+        'comcast.net', 'sbcglobal.net', 'bellsouth.net', 'cox.net',
+        'earthlink.net', 'juno.com', 'netzero.net', 'web.de', 'wp.pl',
+        'o2.pl', 'interia.pl', 'op.pl', 'orange.fr', 'free.fr',
+        'laposte.net', 'wanadoo.fr', 'libero.it', 'virgilio.it',
+        'alice.it', 'tin.it', 'seznam.cz', 'centrum.cz', 'ukr.net',
+        'bigpond.com', 'optusnet.com.au', 'ozemail.com.au'
+      ]),
+      FREE_EMAIL_PROVIDERS: new Set([
+        'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'live.com',
+        'aol.com', 'icloud.com', 'mail.com', 'protonmail.com', 'zoho.com',
+        'yandex.com', 'gmx.com', 'inbox.com', 'fastmail.com', 'tutanota.com',
+        'rediffmail.com', 'qq.com', '163.com', '126.com'
+      ]),
+      // Valid TLDs for stricter checking
+      COMMON_VALID_TLDS: new Set([
+        'com', 'org', 'net', 'edu', 'gov', 'mil', 'int',
+        'co', 'io', 'ai', 'app', 'dev', 'tech', 'online',
+        'in', 'uk', 'us', 'ca', 'au', 'de', 'fr', 'it', 'es', 'nl', 'be',
+        'ru', 'cn', 'jp', 'kr', 'br', 'mx', 'ar', 'za', 'nz', 'sg', 'hk',
+        'ie', 'at', 'ch', 'pl', 'se', 'no', 'dk', 'fi', 'cz', 'pt', 'gr',
+        'co.in', 'co.uk', 'com.au', 'com.br', 'co.nz', 'co.za'
+      ]),
+      ROLE_PREFIXES: [
+        'admin', 'administrator', 'info', 'contact', 'support', 'sales',
+        'help', 'webmaster', 'postmaster', 'hostmaster', 'abuse', 'noreply',
+        'no-reply', 'marketing', 'billing', 'accounts', 'hr', 'jobs',
+        'careers', 'press', 'media', 'team', 'hello', 'office'
+      ],
+      RISK_THRESHOLDS: { LOW: 30, MEDIUM: 60, HIGH: 100 }
+    },
+
+    // RFC 5322 email regex
+    EMAIL_REGEX: /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i,
+
+    // Debounce timer
+    debounceTimer: null,
+    lastVerifiedEmail: null,
+    lastVerificationResult: null,
+
+    // Check if domain looks valid (has proper structure)
+    isValidDomainStructure(domain) {
+      // Must have at least one dot
+      if (!domain.includes('.')) return false;
+      
+      // Split into parts
+      const parts = domain.split('.');
+      
+      // Must have at least 2 parts
+      if (parts.length < 2) return false;
+      
+      // Each part must be non-empty and valid
+      for (const part of parts) {
+        if (!part || part.length === 0) return false;
+        if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i.test(part)) return false;
+      }
+      
+      // TLD must be at least 2 characters
+      const tld = parts[parts.length - 1];
+      if (tld.length < 2) return false;
+      
+      // Domain name (before TLD) should be at least 2 characters for most valid domains
+      const domainName = parts[parts.length - 2];
+      if (domainName.length < 2) return false;
+      
+      return true;
+    },
+
+    // Check if domain is likely a real email provider
+    isLikelyValidEmailDomain(domain) {
+      // If it's a known valid provider, it's good
+      if (this.CONFIG.VALID_EMAIL_PROVIDERS.has(domain)) return true;
+      
+      // If it's a known invalid domain, reject
+      if (this.CONFIG.INVALID_DOMAINS.has(domain)) return false;
+      
+      // Check domain structure
+      if (!this.isValidDomainStructure(domain)) return false;
+      
+      // For unknown domains, check if TLD is common
+      const parts = domain.split('.');
+      const tld = parts[parts.length - 1];
+      const tldCombo = parts.length > 2 ? parts.slice(-2).join('.') : null;
+      
+      // Accept if TLD or TLD combo is in common list
+      if (this.CONFIG.COMMON_VALID_TLDS.has(tld) || 
+          (tldCombo && this.CONFIG.COMMON_VALID_TLDS.has(tldCombo))) {
+        // Additional check: domain name shouldn't be too short (like a.com, b.net)
+        const domainName = parts[parts.length - 2];
+        if (domainName.length < 3) return false;
+        
+        return true; // Unknown but plausible domain
+      }
+      
+      return false; // Unknown TLD
+    },
+
+    // Validate email syntax (client-side)
+    validateSyntax(email) {
+      const result = {
+        isValid: false,
+        localPart: null,
+        domain: null,
+        errors: [],
+        warnings: [],
+        isRoleBased: false,
+        isDisposable: false,
+        isFreeEmail: false,
+        isKnownProvider: false,
+        hasSuspiciousPattern: false,
+        isInvalidDomain: false
+      };
+
+      email = (email || '').trim().toLowerCase();
+
+      if (!email) {
+        result.errors.push('Email address is required');
+        return result;
+      }
+
+      if (email.length > 254) {
+        result.errors.push('Email too long (max 254 characters)');
+        return result;
+      }
+
+      const atIndex = email.indexOf('@');
+      if (atIndex === -1) {
+        result.errors.push('Missing @ symbol');
+        return result;
+      }
+
+      result.localPart = email.substring(0, atIndex);
+      result.domain = email.substring(atIndex + 1);
+
+      if (result.localPart.length > 64) {
+        result.errors.push('Local part too long (max 64 characters)');
+        return result;
+      }
+
+      if (!result.domain || result.domain.length < 3 || !result.domain.includes('.')) {
+        result.errors.push('Invalid domain');
+        return result;
+      }
+
+      if (!this.EMAIL_REGEX.test(email)) {
+        result.errors.push('Invalid email format');
+        return result;
+      }
+
+      // Check disposable domain
+      if (this.CONFIG.DISPOSABLE_DOMAINS.has(result.domain)) {
+        result.isDisposable = true;
+        result.errors.push('Disposable email addresses are not allowed');
+        return result;
+      }
+
+      // Check invalid/fake domains
+      if (this.CONFIG.INVALID_DOMAINS.has(result.domain)) {
+        result.isInvalidDomain = true;
+        result.errors.push('This domain does not accept emails');
+        return result;
+      }
+
+      // Check if domain is a known valid email provider
+      result.isKnownProvider = this.CONFIG.VALID_EMAIL_PROVIDERS.has(result.domain);
+      
+      // Check if domain structure is valid and likely to be a real email domain
+      if (!result.isKnownProvider && !this.isLikelyValidEmailDomain(result.domain)) {
+        result.isInvalidDomain = true;
+        result.errors.push('Invalid or unrecognized email domain');
+        return result;
+      }
+
+      // Check free email
+      result.isFreeEmail = this.CONFIG.FREE_EMAIL_PROVIDERS.has(result.domain);
+      if (result.isFreeEmail) {
+        result.warnings.push('Free email provider detected');
+      }
+
+      // Check role-based
+      result.isRoleBased = this.CONFIG.ROLE_PREFIXES.some(prefix => 
+        result.localPart === prefix || result.localPart.startsWith(prefix + '.')
+      );
+      if (result.isRoleBased) {
+        result.warnings.push('Role-based email (less reliable)');
+      }
+
+      // Check suspicious patterns in local part
+      const suspiciousPatterns = [
+        /^[0-9]+$/,     // Only numbers
+        /^test/i,       // Starts with test
+        /^temp/i,       // Starts with temp
+        /^fake/i,       // Starts with fake
+        /^xxx/i,        // Starts with xxx
+        /^aaa/i,        // Starts with aaa
+        /^abc/i,        // Starts with abc
+        /^asdf/i,       // Starts with asdf
+        /^qwerty/i,     // Starts with qwerty
+        /(.)\1{4,}/     // 5+ repeated characters
+      ];
+      result.hasSuspiciousPattern = suspiciousPatterns.some(p => p.test(result.localPart));
+      if (result.hasSuspiciousPattern) {
+        result.warnings.push('Suspicious email pattern detected');
+      }
+
+      // If not a known provider, add a warning
+      if (!result.isKnownProvider && !result.isFreeEmail) {
+        result.warnings.push('Unknown email domain - will require server verification');
+      }
+
+      result.isValid = result.errors.length === 0;
+      return result;
+    },
+
+    // Calculate risk score
+    calculateRisk(syntaxResult, serverResult = null) {
+      let score = 0;
+      const factors = [];
+
+      // Invalid domain is high risk
+      if (syntaxResult.isInvalidDomain) {
+        score += 100;
+        factors.push('Invalid domain');
+      }
+
+      // Syntax-based scoring
+      if (syntaxResult.isDisposable) {
+        score += 80;
+        factors.push('Disposable domain');
+      }
+      if (syntaxResult.isFreeEmail) {
+        score += 10;
+        factors.push('Free email provider');
+      }
+      if (syntaxResult.isRoleBased) {
+        score += 15;
+        factors.push('Role-based email');
+      }
+      if (syntaxResult.hasSuspiciousPattern) {
+        score += 20;
+        factors.push('Suspicious pattern');
+      }
+      
+      // Unknown domain (not in whitelist) adds risk
+      if (!syntaxResult.isKnownProvider && !syntaxResult.isFreeEmail && !syntaxResult.isInvalidDomain) {
+        score += 25;
+        factors.push('Unknown email domain');
+      }
+
+      // Server-based scoring (if available)
+      if (serverResult) {
+        if (!serverResult.hasMx) {
+          score += 50;
+          factors.push('No MX records');
+        }
+        if (!serverResult.hasSpf) {
+          score += 15;
+          factors.push('No SPF record');
+        }
+        if (!serverResult.hasDkim) {
+          score += 10;
+          factors.push('No DKIM record');
+        }
+        if (!serverResult.hasDmarc) {
+          score += 10;
+          factors.push('No DMARC record');
+        }
+        if (serverResult.smtpFailed) {
+          score += 30;
+          factors.push('SMTP validation failed');
+        }
+        if (serverResult.breachDetected) {
+          score += 40;
+          factors.push('Found in data breach');
+        }
+      } else if (!syntaxResult.isKnownProvider && !syntaxResult.isFreeEmail) {
+        // If no server verification and unknown domain, add more risk
+        score += 20;
+        factors.push('Server verification unavailable');
+      }
+
+      // Determine level and outcome
+      let level, outcome;
+      if (score <= this.CONFIG.RISK_THRESHOLDS.LOW) {
+        level = 'LOW';
+        outcome = 'ACCEPT';
+      } else if (score <= this.CONFIG.RISK_THRESHOLDS.MEDIUM) {
+        level = 'MEDIUM';
+        outcome = 'CHALLENGE';
+      } else {
+        level = 'HIGH';
+        outcome = 'REJECT';
+      }
+
+      return { score: Math.min(score, 100), level, outcome, factors };
+    },
+
+    // Full verification (client + server)
+    async verify(email) {
+      const result = {
+        email: email.toLowerCase().trim(),
+        timestamp: new Date().toISOString(),
+        syntax: null,
+        server: null,
+        risk: null,
+        summary: null
+      };
+
+      // Step 1: Client-side syntax validation
+      result.syntax = this.validateSyntax(email);
+      
+      if (!result.syntax.isValid) {
+        result.risk = { score: 100, level: 'HIGH', outcome: 'REJECT', factors: result.syntax.errors };
+        result.summary = {
+          isValid: false,
+          outcome: 'REJECT',
+          message: result.syntax.errors[0],
+          riskLevel: 'HIGH'
+        };
+        return result;
+      }
+
+      // Step 2: Server-side validation (MX, SPF, DKIM, DMARC, SMTP)
+      try {
+        const serverResponse = await fetch(API_BASE_URL + '/verify-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, options: { performSmtpCheck: true } })
+        });
+
+        if (serverResponse.ok) {
+          const serverData = await serverResponse.json();
+          if (serverData.success && serverData.verification) {
+            result.server = serverData.verification;
+          }
+        }
+      } catch (err) {
+        console.warn('Server-side email verification unavailable:', err.message);
+        // Continue with client-side only
+      }
+
+      // Step 3: Calculate final risk
+      result.risk = this.calculateRisk(result.syntax, result.server?.summary || null);
+
+      // Step 4: Generate summary
+      let message;
+      if (result.risk.outcome === 'ACCEPT') {
+        message = 'Email verified successfully';
+      } else if (result.risk.outcome === 'CHALLENGE') {
+        message = 'Email requires additional verification';
+      } else {
+        message = 'Email verification failed: ' + result.risk.factors[0];
+      }
+
+      result.summary = {
+        isValid: result.risk.outcome !== 'REJECT',
+        outcome: result.risk.outcome,
+        message,
+        riskLevel: result.risk.level,
+        riskScore: result.risk.score,
+        factors: result.risk.factors
+      };
+
+      return result;
+    },
+
+    // Update UI status
+    updateStatusUI(statusEl, state, message, details = null, riskLevel = null) {
+      if (!statusEl) return;
+      
+      statusEl.style.display = 'block';
+      statusEl.className = 'email-verification-status ' + state;
+      
+      let html = '';
+      if (state === 'verifying') {
+        html = '<div class="spinner"></div><span>' + message + '</span>';
+      } else {
+        const icon = state === 'valid' ? '✓' : state === 'warning' ? '⚠' : '✗';
+        html = '<span>' + icon + ' ' + message + '</span>';
+        if (riskLevel) {
+          html += '<span class="risk-badge ' + riskLevel.toLowerCase() + '">' + riskLevel + ' Risk</span>';
+        }
+      }
+      
+      if (details) {
+        html += '<div class="email-verification-details">' + details + '</div>';
+      }
+      
+      statusEl.innerHTML = html;
+    },
+
+    // Debounced verification for input field
+    debounceVerify(email, statusEl, callback) {
+      if (this.debounceTimer) {
+        clearTimeout(this.debounceTimer);
+      }
+
+      // Quick syntax check
+      const quickCheck = this.validateSyntax(email);
+      
+      if (!email || email.length < 5) {
+        statusEl.style.display = 'none';
+        return;
+      }
+
+      if (!quickCheck.isValid) {
+        this.updateStatusUI(statusEl, 'invalid', quickCheck.errors[0]);
+        if (callback) callback({ isValid: false, canSubmit: false });
+        return;
+      }
+
+      // Show verifying state
+      this.updateStatusUI(statusEl, 'verifying', 'Verifying email...');
+
+      // Debounce full verification
+      this.debounceTimer = setTimeout(async () => {
+        try {
+          const result = await this.verify(email);
+          this.lastVerifiedEmail = email;
+          this.lastVerificationResult = result;
+
+          if (result.summary.outcome === 'ACCEPT') {
+            this.updateStatusUI(
+              statusEl, 
+              'valid', 
+              result.summary.message,
+              null,
+              result.summary.riskLevel
+            );
+            if (callback) callback({ isValid: true, canSubmit: true, result });
+          } else if (result.summary.outcome === 'CHALLENGE') {
+            this.updateStatusUI(
+              statusEl, 
+              'warning', 
+              result.summary.message,
+              result.risk.factors.slice(0, 2).join(', '),
+              result.summary.riskLevel
+            );
+            if (callback) callback({ isValid: true, canSubmit: true, result, needsChallenge: true });
+          } else {
+            this.updateStatusUI(
+              statusEl, 
+              'invalid', 
+              result.summary.message,
+              result.risk.factors.slice(0, 2).join(', '),
+              result.summary.riskLevel
+            );
+            if (callback) callback({ isValid: false, canSubmit: false, result });
+          }
+        } catch (err) {
+          console.error('Email verification error:', err);
+          // Fall back to syntax-only
+          if (quickCheck.isValid) {
+            this.updateStatusUI(statusEl, 'warning', 'Verification limited', 'Server check unavailable');
+            if (callback) callback({ isValid: true, canSubmit: true });
+          }
+        }
+      }, 800); // 800ms debounce
+    }
+  };
+
+  // Track email verification state
+  let emailVerificationState = { isValid: false, canSubmit: false, result: null };
+
   async function ensureAudioAuthorized() {
     if (getStoredAudioAuth()) return true;
 
@@ -4026,13 +4753,57 @@
     const form = $('#audioAuthForm');
     if (!modal || !form) return false;
 
-    // Show modal
+    // Ensure modal is in body (fixes stacking context issues)
+    if (modal.parentElement !== document.body) {
+      document.body.appendChild(modal);
+    }
+
+    // Get the dialog element and backdrop
+    const dialog = modal.querySelector('.auth-dialog');
+    const backdrop = modal.querySelector('.auth-backdrop');
+
+    // Hide backdrop - we'll use the modal itself as backdrop
+    if (backdrop) {
+      backdrop.style.cssText = 'display: none !important;';
+    }
+
+    // Show modal 
     modal.classList.remove('hidden');
     modal.classList.remove('fading-out');
     modal.setAttribute('aria-hidden', 'false');
+    
+    // Apply styles to modal container - full screen overlay
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100vw';
+    modal.style.height = '100vh';
+    modal.style.backgroundColor = 'rgba(0,0,0,0.75)';
+    modal.style.zIndex = '999999';
+    modal.style.display = 'block';
+    modal.style.overflow = 'auto';
+    modal.style.margin = '0';
+    modal.style.padding = '0';
     modal.style.pointerEvents = 'auto';
-    modal.style.display = 'flex';
-    modal.style.opacity = '1';
+    
+    // Apply styles to dialog - centered using transform
+    if (dialog) {
+      dialog.style.position = 'fixed';
+      dialog.style.top = '50%';
+      dialog.style.left = '50%';
+      dialog.style.transform = 'translate(-50%, -50%)';
+      dialog.style.maxWidth = '450px';
+      dialog.style.width = '90%';
+      dialog.style.maxHeight = '90vh';
+      dialog.style.overflow = 'auto';
+      dialog.style.background = 'linear-gradient(135deg, rgba(93, 64, 55, 0.98) 0%, rgba(62, 39, 35, 0.98) 100%)';
+      dialog.style.borderRadius = '16px';
+      dialog.style.padding = '28px';
+      dialog.style.color = '#fff';
+      dialog.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)';
+      dialog.style.zIndex = '1000000';
+      dialog.style.margin = '0';
+    }
 
     return new Promise((resolve) => {
       let pollInterval = null;
@@ -4058,12 +4829,19 @@
           const statusEl = $('#authStatus');
           const waitingEl = $('#authWaiting');
           const resultEl = $('#authResult');
+          const emailVerifyEl = $('#emailVerificationStatus');
           if (statusEl) statusEl.style.display = 'none';
           if (waitingEl) waitingEl.style.display = 'none';
           if (resultEl) {
             resultEl.style.display = 'none';
             resultEl.textContent = '';
           }
+          if (emailVerifyEl) {
+            emailVerifyEl.style.display = 'none';
+            emailVerifyEl.innerHTML = '';
+          }
+          // Reset email verification state
+          emailVerificationState = { isValid: false, canSubmit: false, result: null };
           
           // Show welcome message if approved
           if (showWelcome) {
@@ -4133,6 +4911,60 @@
       $('#authCloseX').onclick = () => closeModal(false);
       $('#authCancelBtn').onclick = () => closeModal(false);
 
+      // Set up email verification on input
+      const emailInput = $('#authEmail');
+      const emailStatusEl = $('#emailVerificationStatus');
+      const submitBtn = $('#authSubmitBtn');
+      
+      // Reset verification state
+      emailVerificationState = { isValid: false, canSubmit: false, result: null };
+      
+      // Email input handler with verification
+      emailInput.addEventListener('input', function() {
+        const email = this.value.trim();
+        EmailVerifier.debounceVerify(email, emailStatusEl, (state) => {
+          emailVerificationState = state;
+          // Update submit button state
+          if (state.canSubmit) {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+          } else {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+          }
+        });
+      });
+      
+      // Email blur handler - final verification
+      emailInput.addEventListener('blur', async function() {
+        const email = this.value.trim();
+        if (email && !emailVerificationState.isValid) {
+          // Trigger immediate verification on blur
+          EmailVerifier.updateStatusUI(emailStatusEl, 'verifying', 'Verifying email...');
+          try {
+            const result = await EmailVerifier.verify(email);
+            emailVerificationState = {
+              isValid: result.summary.outcome !== 'REJECT',
+              canSubmit: result.summary.outcome !== 'REJECT',
+              result
+            };
+            
+            if (result.summary.outcome === 'ACCEPT') {
+              EmailVerifier.updateStatusUI(emailStatusEl, 'valid', result.summary.message, null, result.summary.riskLevel);
+            } else if (result.summary.outcome === 'CHALLENGE') {
+              EmailVerifier.updateStatusUI(emailStatusEl, 'warning', result.summary.message, result.risk.factors.slice(0,2).join(', '), result.summary.riskLevel);
+            } else {
+              EmailVerifier.updateStatusUI(emailStatusEl, 'invalid', result.summary.message, result.risk.factors.slice(0,2).join(', '), result.summary.riskLevel);
+            }
+            
+            submitBtn.disabled = !emailVerificationState.canSubmit;
+            submitBtn.style.opacity = emailVerificationState.canSubmit ? '1' : '0.5';
+          } catch (err) {
+            console.error('Email verification error:', err);
+          }
+        }
+      });
+
       form.onsubmit = async (ev) => {
         ev.preventDefault();
         const name = $('#authName').value.trim();
@@ -4142,6 +4974,33 @@
         if (!name || !email || !mobile) {
           alert('Please fill all fields.');
           return;
+        }
+
+        // Check email verification state
+        if (!emailVerificationState.canSubmit) {
+          // Try one more verification
+          EmailVerifier.updateStatusUI(emailStatusEl, 'verifying', 'Verifying email...');
+          try {
+            const result = await EmailVerifier.verify(email);
+            if (result.summary.outcome === 'REJECT') {
+              EmailVerifier.updateStatusUI(emailStatusEl, 'invalid', result.summary.message, result.risk.factors.slice(0,2).join(', '), result.summary.riskLevel);
+              alert('Email verification failed: ' + result.summary.message);
+              return;
+            }
+            emailVerificationState = { isValid: true, canSubmit: true, result };
+          } catch (err) {
+            // Allow submission if verification service is unavailable
+            console.warn('Email verification unavailable, proceeding anyway');
+          }
+        }
+
+        // Log verification result for audit (GDPR: no PII stored, only risk score)
+        if (emailVerificationState.result) {
+          console.log('Email verification result:', {
+            riskLevel: emailVerificationState.result.summary?.riskLevel,
+            riskScore: emailVerificationState.result.summary?.riskScore,
+            outcome: emailVerificationState.result.summary?.outcome
+          });
         }
 
         $('#authStatus').style.display = 'block';
@@ -4589,6 +5448,15 @@
 
     // Init scrolling track
     initScrollingTrack();
+
+    // =========================================================
+    // MOVE AUDIO AUTH MODAL TO BODY (fixes stacking context issues)
+    // =========================================================
+    const audioAuthModal = $('#audioAuthModal');
+    if (audioAuthModal && audioAuthModal.parentElement !== document.body) {
+      document.body.appendChild(audioAuthModal);
+      console.log('✅ audioAuthModal moved to document.body for proper stacking');
+    }
 
     console.log('✅ Initialization complete');
   }

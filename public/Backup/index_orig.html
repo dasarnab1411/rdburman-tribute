@@ -1,456 +1,814 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>R.D. Burman - Pancham Da Tribute</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Georgia, serif;
-            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 25%, #48dbfb 50%, #ff9ff3 75%, #54a0ff 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            min-height: 100vh;
-            color: #2c3e50;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Georgia, serif;
+        background: linear-gradient(
+          135deg,
+          #ff6b6b 0%,
+          #feca57 25%,
+          #48dbfb 50%,
+          #ff9ff3 75%,
+          #54a0ff 100%
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        min-height: 100vh;
+        color: #2c3e50;
+      }
+      @keyframes gradientShift {
+        0%,
+        100% {
+          background-position: 0% 50%;
         }
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        50% {
+          background-position: 100% 50%;
         }
-        .scrolling-header {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px 0;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      }
+      .scrolling-header {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px 0;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      }
+      .scrolling-track {
+        display: flex;
+        animation: scroll 30s linear infinite;
+        width: fit-content;
+      }
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
         }
-        .scrolling-track {
-            display: flex;
-            animation: scroll 30s linear infinite;
-            width: fit-content;
+        100% {
+          transform: translateX(-50%);
         }
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+      }
+      .scrolling-image {
+        height: 80px;
+        width: auto;
+        margin: 0 15px;
+        border-radius: 10px;
+        border: 3px solid #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 2;
+      }
+      header {
+        text-align: center;
+        padding: 40px 20px;
+        background: linear-gradient(
+          135deg,
+          #2c3e50 0%,
+          #34495e 50%,
+          #2c3e50 100%
+        );
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+      }
+      header::before {
+        content: '🎸 🎹 🎺 🥁 🎻 🎷 🪕 🎼 🎵 🎶 ♪ ♫ ♩ ♬ 🎸 🎹 🎺 🥁 🎻 🎷';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        font-size: 4.5rem;
+        opacity: 0.35;
+        color: rgba(255, 215, 0, 0.8);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px;
+        padding: 30px;
+        animation: instrumentFloat 20s linear infinite;
+        pointer-events: none;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+      }
+      @keyframes instrumentFloat {
+        0% {
+          transform: translateX(0) translateY(0);
         }
-        .scrolling-image {
-            height: 80px;
-            width: auto;
-            margin: 0 15px;
-            border-radius: 10px;
-            border: 3px solid #fff;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        100% {
+          transform: translateX(-50%) translateY(-20px);
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 2; }
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
+      }
+      header::after {
+        content: '🎤 🪘 🎺 🎸 🎻 🥁 🎹 🎷 🪕 🎼 🎵 🎶 ♪ ♫ 🎤 🪘 🎺 🎸';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 200%;
+        height: 100%;
+        font-size: 4rem;
+        opacity: 0.3;
+        color: rgba(255, 182, 193, 0.8);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 45px;
+        padding: 25px;
+        animation: instrumentFloat 25s linear infinite reverse;
+        pointer-events: none;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+      }
+      .main-video-container {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        border: 8px solid #ff6b6b;
+        margin: 20px auto;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      }
+      .main-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      h1 {
+        font-size: 3.5rem;
+        color: #ff6b6b;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        margin: 20px 0;
+        font-weight: bold;
+        position: relative;
+        z-index: 10;
+      }
+      .dates {
+        font-size: 1.3rem;
+        color: #2c3e50;
+        font-weight: bold;
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+        display: inline-block;
+        border-radius: 20px;
+        margin: 15px 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 10;
+      }
+      .subtitle {
+        font-size: 1.5rem;
+        color: #ffeaa7;
+        font-style: italic;
+        margin-top: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 10;
+      }
+      nav {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+      .tab-btn {
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+      .tab-btn:nth-child(1) {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .tab-btn:nth-child(2) {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+      }
+      .tab-btn:nth-child(3) {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+      }
+      .tab-btn:nth-child(4) {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+      }
+      .tab-btn.active {
+        transform: scale(1.1);
+      }
+      .tab-content {
+        display: none !important;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px;
+        border-radius: 20px;
+        min-height: 500px;
+        max-height: none;
+        overflow-y: auto;
+      }
+      .tab-content.active {
+        display: block !important;
+        animation: fadeIn 0.5s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        header::before {
-            content: '🎸 🎹 🎺 🥁 🎻 🎷 🪕 🎼 🎵 🎶 ♪ ♫ ♩ ♬ 🎸 🎹 🎺 🥁 🎻 🎷';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 200%;
-            height: 100%;
-            font-size: 4.5rem;
-            opacity: 0.35;
-            color: rgba(255, 215, 0, 0.8);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 50px;
-            padding: 30px;
-            animation: instrumentFloat 20s linear infinite;
-            pointer-events: none;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        @keyframes instrumentFloat {
-            0% { transform: translateX(0) translateY(0); }
-            100% { transform: translateX(-50%) translateY(-20px); }
+      }
+      #about {
+        height: auto !important;
+        max-height: none !important;
+      }
+      #about > div {
+        display: block !important;
+        visibility: visible !important;
+        height: auto !important;
+      }
+      #about > div > div {
+        display: block !important;
+        visibility: visible !important;
+      }
+      .home-summary {
+        line-height: 1.8;
+        font-size: 1.15rem;
+      }
+      .home-summary h2 {
+        color: #8e44ad;
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .home-summary .highlight {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        padding: 20px;
+        border-radius: 15px;
+        margin: 25px 0;
+      }
+      .biography-content {
+        line-height: 1.8;
+        font-size: 1.05rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: block !important;
+        visibility: visible !important;
+      }
+      .biography-content > div {
+        display: block !important;
+        visibility: visible !important;
+        margin-bottom: 30px;
+      }
+      .folder-item {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        padding: 15px 20px;
+        margin: 10px 0;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.2s;
+      }
+      .folder-item:hover {
+        transform: translateX(5px);
+      }
+      .song-item {
+        background: white;
+        padding: 12px 15px;
+        margin: 8px 0;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        transition: background 0.2s;
+      }
+      .song-item:hover {
+        background: #f8f9fa;
+      }
+      .content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+      }
+      .content-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        border-left: 5px solid #e74c3c;
+      }
+      .video-embed {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 10px;
+      }
+      .loading {
+        text-align: center;
+        padding: 40px;
+      }
+      .spinner {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #e74c3c;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
-        header::after {
-            content: '🎤 🪘 🎺 🎸 🎻 🥁 🎹 🎷 🪕 🎼 🎵 🎶 ♪ ♫ 🎤 🪘 🎺 🎸';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 200%;
-            height: 100%;
-            font-size: 4rem;
-            opacity: 0.3;
-            color: rgba(255, 182, 193, 0.8);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 45px;
-            padding: 25px;
-            animation: instrumentFloat 25s linear infinite reverse;
-            pointer-events: none;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        100% {
+          transform: rotate(360deg);
         }
-        .main-video-container {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 8px solid #ff6b6b;
-            margin: 20px auto;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
-        .main-video { width: 100%; height: 100%; object-fit: cover; }
-        h1 {
-            font-size: 3.5rem;
-            color: #ff6b6b;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-            margin: 20px 0;
-            font-weight: bold;
-            position: relative;
-            z-index: 10;
-        }
-        .dates {
-            font-size: 1.3rem;
-            color: #2c3e50;
-            font-weight: bold;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-            display: inline-block;
-            border-radius: 20px;
-            margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 10;
-        }
-        .subtitle { 
-            font-size: 1.5rem; 
-            color: #ffeaa7; 
-            font-style: italic; 
-            margin-top: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            position: relative;
-            z-index: 10;
-        }
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+      }
+      .audio-player-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        padding: 15px 20px;
+        z-index: 1000;
+        display: none;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+      }
+      .video-tab-btn.active {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+      .video-tab-btn {
+        opacity: 0.8;
+      }
+      .life-tab-btn.active {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+      .life-tab-btn {
+        opacity: 0.9;
+        padding: 10px 18px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition:
+          transform 0.2s,
+          opacity 0.2s;
+        background: linear-gradient(135deg, #ffd89b 0%, #ff9ff3 100%);
+      }
+      .life-tabs {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 18px 0 30px 0;
+      }
+      .life-sub-content {
+        display: none;
+      }
+      .life-sub-content.active {
+        display: block;
+      }
+      .life-sub-header {
+        font-size: 1.6rem;
+        margin-bottom: 12px;
+        color: #2c3e50;
+        font-weight: bold;
+      }
+      footer {
+        text-align: center;
+        padding: 30px;
+        margin-top: 50px;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      footer p {
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      /* small responsive tweaks */
+      @media (max-width: 700px) {
         .tab-btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
+          padding: 10px 16px;
+          font-size: 1rem;
         }
-        .tab-btn:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .tab-btn:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
-        .tab-btn:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
-        .tab-btn:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
-        .tab-btn.active { transform: scale(1.1); }
-        .tab-content { 
-            display: none !important;
-            background: rgba(255, 255, 255, 0.95); 
-            padding: 40px; 
-            border-radius: 20px;
-            min-height: 500px;
-            max-height: none;
-            overflow-y: auto;
+        .life-tab-btn {
+          padding: 8px 12px;
+          font-size: 0.95rem;
         }
-        .tab-content.active { 
-            display: block !important;
-            animation: fadeIn 0.5s ease-in;
+        header::before,
+        header::after {
+          display: none;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        #about {
-            height: auto !important;
-            max-height: none !important;
-        }
-        #about > div {
-            display: block !important;
-            visibility: visible !important;
-            height: auto !important;
-        }
-        #about > div > div {
-            display: block !important;
-            visibility: visible !important;
-        }
-        .home-summary { line-height: 1.8; font-size: 1.15rem; }
-        .home-summary h2 { color: #8e44ad; font-size: 2.2rem; margin-bottom: 20px; text-align: center; }
-        .home-summary .highlight { background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 20px; border-radius: 15px; margin: 25px 0; }
-        .biography-content {
-            line-height: 1.8;
-            font-size: 1.05rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: block !important;
-            visibility: visible !important;
-        }
-        .biography-content > div {
-            display: block !important;
-            visibility: visible !important;
-            margin-bottom: 30px;
-        }
-        .folder-item {
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-            padding: 15px 20px;
-            margin: 10px 0;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.2s;
-        }
-        .folder-item:hover { transform: translateX(5px); }
-        .song-item {
-            background: white;
-            padding: 12px 15px;
-            margin: 8px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            transition: background 0.2s;
-        }
-        .song-item:hover { background: #f8f9fa; }
-        .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
-        .content-card { background: white; padding: 25px; border-radius: 15px; border-left: 5px solid #e74c3c; }
-        .video-embed { width: 100%; aspect-ratio: 16/9; border-radius: 10px; }
-        .loading { text-align: center; padding: 40px; }
-        .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #e74c3c; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .audio-player-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            padding: 15px 20px;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
-        }
-        .video-tab-btn.active { transform: scale(1.1); opacity: 1; }
-        .video-tab-btn { opacity: 0.8; }
-        .life-tab-btn.active { transform: scale(1.05); opacity: 1; }
-        .life-tab-btn { opacity: 0.9; padding: 10px 18px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; transition: transform 0.2s, opacity 0.2s; background: linear-gradient(135deg,#ffd89b 0%, #ff9ff3 100%); }
-        .life-tabs { display:flex; gap:12px; flex-wrap:wrap; margin: 18px 0 30px 0; }
-        .life-sub-content { display: none; }
-        .life-sub-content.active { display: block; }
-        .life-sub-header { font-size: 1.6rem; margin-bottom: 12px; color: #2c3e50; font-weight: bold; }
-        footer { 
-            text-align: center; 
-            padding: 30px; 
-            margin-top: 50px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            border-radius: 20px;
-            color: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        footer p {
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
+      }
 
-        /* small responsive tweaks */
-        @media (max-width: 700px) {
-            .tab-btn { padding: 10px 16px; font-size: 1rem; }
-            .life-tab-btn { padding: 8px 12px; font-size: 0.95rem; }
-            header::before, header::after { display: none; }
-        }
-
-        /* testimonial image style */
-        .testimonial-head-img { width:80px; height:80px; border-radius:50%; object-fit:cover; float:left; margin-right:15px; border:3px solid rgba(255,255,255,0.6); box-shadow:0 6px 18px rgba(0,0,0,0.2); }
-        .testimonial-block { overflow:auto; padding:18px; border-radius:12px; margin-bottom:18px; color:#222; }
+      /* testimonial image style */
+      .testimonial-head-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        float: left;
+        margin-right: 15px;
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      }
+      .testimonial-block {
+        overflow: auto;
+        padding: 18px;
+        border-radius: 12px;
+        margin-bottom: 18px;
+        color: #222;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="scrolling-header">
-        <div class="scrolling-track" id="scrollingTrack"></div>
+      <div class="scrolling-track" id="scrollingTrack"></div>
     </div>
 
     <div class="container">
-        <header>
-            <div class="main-video-container">
-                <video class="main-video" autoplay loop muted playsinline>
-                    <source src="images/RD.mp4" type="video/mp4">
-                </video>
-            </div>
-            <h1>R.D. BURMAN</h1>
-            <div class="subtitle">🎵 Pancham Da - The Musical Genius 🎶</div>
-            <div class="dates">27 June 1939 - 4 January 1994</div>
-            <p style="margin-top: 20px; font-size: 1.2rem; color: #ffeaa7; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); position: relative; z-index: 10;">"The Innovator who Revolutionized Bollywood Music"</p>
-        </header>
+      <header>
+        <div class="main-video-container">
+          <video class="main-video" autoplay loop muted playsinline>
+            <source src="images/RD.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <h1>R.D. BURMAN</h1>
+        <div class="subtitle">🎵 Pancham Da - The Musical Genius 🎶</div>
+        <div class="dates">27 June 1939 - 4 January 1994</div>
+        <p
+          style="
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #ffeaa7;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+          "
+        >
+          "The Innovator who Revolutionized Bollywood Music"
+        </p>
+      </header>
 
-        <nav>
-            <button class="tab-btn active" onclick="showTab(event, 'home')">🏠 Home</button>
-            <button class="tab-btn" onclick="showTab(event, 'video')">📹 Video</button>
-            <button class="tab-btn" onclick="showTab(event, 'audio')">🎧 Audio</button>
-            <button class="tab-btn" onclick="showTab(event, 'about')">📖 My Life</button>
-        </nav>
+      <nav>
+        <button class="tab-btn active" onclick="showTab(event, 'home')">
+          🏠 Home
+        </button>
+        <button class="tab-btn" onclick="showTab(event, 'video')">
+          📹 Video
+        </button>
+        <button class="tab-btn" onclick="showTab(event, 'audio')">
+          🎧 Audio
+        </button>
+        <button class="tab-btn" onclick="showTab(event, 'about')">
+          📖 My Life
+        </button>
+      </nav>
 
-        <div id="home" class="tab-content active">
-            <div class="home-summary">
-                <h2>🎼 Welcome to Pancham Da's Musical Legacy</h2>
-                <p>Rahul Dev Burman, known as <strong>Pancham Da</strong>, was born on 27th June 1939 in Calcutta. His nickname came from a legend – his baby cries resonated with the fifth note (Pa) of the Indian musical scale!</p>
-                <div class="highlight">
-                    <strong>Born into Musical Royalty:</strong> Son of Sachin Dev Burman, he composed his first song at age nine for <em>Funtoosh</em> (1956).
-                </div>
-                <p>Pancham Da orchestrated a revolution! He brought rock, jazz, and electronic sounds into Bollywood. His collaboration with Asha Bhosle, Kishore Kumar, and Lata Mangeshkar produced immortal melodies.</p>
-                <div class="highlight">
-                    <strong>The Numbers:</strong> <strong>331 films</strong> - 292 in Hindi, 31 in Bengali. From "Mehbooba Mehbooba" to "Tere Bina Zindagi Se."
-                </div>
-            </div>
+      <div id="home" class="tab-content active">
+        <div class="home-summary">
+          <h2>🎼 Welcome to Pancham Da's Musical Legacy</h2>
+          <p>
+            Rahul Dev Burman, known as <strong>Pancham Da</strong>, was born on
+            27th June 1939 in Calcutta. His nickname came from a legend – his
+            baby cries resonated with the fifth note (Pa) of the Indian musical
+            scale!
+          </p>
+          <div class="highlight">
+            <strong>Born into Musical Royalty:</strong> Son of Sachin Dev
+            Burman, he composed his first song at age nine for
+            <em>Funtoosh</em> (1956).
+          </div>
+          <p>
+            Pancham Da orchestrated a revolution! He brought rock, jazz, and
+            electronic sounds into Bollywood. His collaboration with Asha
+            Bhosle, Kishore Kumar, and Lata Mangeshkar produced immortal
+            melodies.
+          </p>
+          <div class="highlight">
+            <strong>The Numbers:</strong> <strong>331 films</strong> - 292 in
+            Hindi, 31 in Bengali. From "Mehbooba Mehbooba" to "Tere Bina Zindagi
+            Se."
+          </div>
+        </div>
+      </div>
+
+      <div id="video" class="tab-content">
+        <h2 style="color: #e74c3c; font-size: 2.5rem; margin-bottom: 30px">
+          📹 Video Collection
+        </h2>
+
+        <!-- Video Sub-tabs -->
+        <div
+          style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap"
+        >
+          <button
+            class="video-tab-btn active"
+            onclick="showVideoTab(event, 'about-videos')"
+            style="
+              padding: 12px 30px;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              border: none;
+              border-radius: 25px;
+              cursor: pointer;
+              font-weight: bold;
+              transition: all 0.3s;
+            "
+          >
+            About Pancham
+          </button>
+          <button
+            class="video-tab-btn"
+            onclick="showVideoTab(event, 'composing-videos')"
+            style="
+              padding: 12px 30px;
+              background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+              color: white;
+              border: none;
+              border-radius: 25px;
+              cursor: pointer;
+              font-weight: bold;
+              transition: all 0.3s;
+            "
+          >
+            Composing
+          </button>
+          <button
+            class="video-tab-btn"
+            onclick="showVideoTab(event, 'unreleased-videos')"
+            style="
+              padding: 12px 30px;
+              background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+              color: white;
+              border: none;
+              border-radius: 25px;
+              cursor: pointer;
+              font-weight: bold;
+              transition: all 0.3s;
+            "
+          >
+            Unreleased Songs
+          </button>
         </div>
 
-        <div id="video" class="tab-content">
-            <h2 style="color: #e74c3c; font-size: 2.5rem; margin-bottom: 30px;">📹 Video Collection</h2>
-            
-            <!-- Video Sub-tabs -->
-            <div style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;">
-                <button class="video-tab-btn active" onclick="showVideoTab(event, 'about-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">About Pancham</button>
-                <button class="video-tab-btn" onclick="showVideoTab(event, 'composing-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">Composing</button>
-                <button class="video-tab-btn" onclick="showVideoTab(event, 'unreleased-videos')" style="padding: 12px 30px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s;">Unreleased Songs</button>
-            </div>
-
-            <!-- About Pancham Videos -->
-            <div id="about-videos" class="video-sub-content active">
-                <div class="content-grid"></div>
-            </div>
-
-            <!-- Composing Videos -->
-            <div id="composing-videos" class="video-sub-content" style="display: none;">
-                <div class="content-grid"></div>
-            </div>
-
-            <!-- Unreleased Songs Videos -->
-            <div id="unreleased-videos" class="video-sub-content" style="display: none;">
-                <div class="content-grid"></div>
-            </div>
+        <!-- About Pancham Videos -->
+        <div id="about-videos" class="video-sub-content active">
+          <div class="content-grid"></div>
         </div>
 
-        <div id="audio" class="tab-content">
-            <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 30px;">🎧 Audio Collection</h2>
-            <div id="audioTreeContent">
-                <div class="loading"><div class="spinner"></div><p>Loading audio collection...</p></div>
-            </div>
+        <!-- Composing Videos -->
+        <div
+          id="composing-videos"
+          class="video-sub-content"
+          style="display: none"
+        >
+          <div class="content-grid"></div>
         </div>
 
-        <!-- ABOUT / MY LIFE -->
-        <div id="about" class="tab-content">
-            <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 10px;">📖 My Life</h2>
-            <div style="line-height: 2; font-size: 1.2rem; margin-bottom: 8px;">
-                <p>Explore Pancham Da's life through a biographical portrait, testimonials and poems.</p>
-            </div>
+        <!-- Unreleased Songs Videos -->
+        <div
+          id="unreleased-videos"
+          class="video-sub-content"
+          style="display: none"
+        >
+          <div class="content-grid"></div>
+        </div>
+      </div>
 
-            <!-- Life sub-tabs -->
-            <div class="life-tabs" role="tablist" aria-label="My Life Sections">
-                <button class="life-tab-btn active" onclick="showLifeTab(event, 'biography-chapters')">R. D. BURMAN (PANCHAM) — A BIOGRAPHICAL PORTRAIT</button>
-                <button class="life-tab-btn" onclick="showLifeTab(event, 'testimonials')">Testimonials</button>
-            </div>
+      <div id="audio" class="tab-content">
+        <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 30px">
+          🎧 Audio Collection
+        </h2>
+        <div id="audioTreeContent">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading audio collection...</p>
+          </div>
+        </div>
+      </div>
 
-            <!-- Biography chapters container (12 headers, no numbering) -->
-            <div id="biography-chapters" class="life-sub-content active biography-content" style="margin-top: 10px;">
-                <!-- will be injected by loadBiographyChapters() -->
-            </div>
-
-            <!-- Testimonials container (7 blocks + poems) -->
-            <div id="testimonials" class="life-sub-content biography-content" style="margin-top: 10px; display:none;">
-                <!-- will be injected by loadTestimonials() -->
-            </div>
+      <!-- ABOUT / MY LIFE -->
+      <div id="about" class="tab-content">
+        <h2 style="color: #8e44ad; font-size: 2.5rem; margin-bottom: 10px">
+          📖 My Life
+        </h2>
+        <div style="line-height: 2; font-size: 1.2rem; margin-bottom: 8px">
+          <p>
+            Explore Pancham Da's life through a biographical portrait,
+            testimonials and poems.
+          </p>
         </div>
 
-        <footer>
-            <p style="font-size: 1.2rem;">♪♫ "Pancham Da's music transcends time, touching hearts across generations." ♫♪</p>
-            <p style="margin-top: 20px; font-weight: bold; font-size: 1.3rem;">🎵 Forever in our hearts - R.D. Burman (1939-1994) 🎶</p>
-        </footer>
+        <!-- Life sub-tabs -->
+        <div class="life-tabs" role="tablist" aria-label="My Life Sections">
+          <button
+            class="life-tab-btn active"
+            onclick="showLifeTab(event, 'biography-chapters')"
+          >
+            R. D. BURMAN (PANCHAM) — A BIOGRAPHICAL PORTRAIT
+          </button>
+          <button
+            class="life-tab-btn"
+            onclick="showLifeTab(event, 'testimonials')"
+          >
+            Testimonials
+          </button>
+        </div>
+
+        <!-- Biography chapters container (12 headers, no numbering) -->
+        <div
+          id="biography-chapters"
+          class="life-sub-content active biography-content"
+          style="margin-top: 10px"
+        >
+          <!-- will be injected by loadBiographyChapters() -->
+        </div>
+
+        <!-- Testimonials container (7 blocks + poems) -->
+        <div
+          id="testimonials"
+          class="life-sub-content biography-content"
+          style="margin-top: 10px; display: none"
+        >
+          <!-- will be injected by loadTestimonials() -->
+        </div>
+      </div>
+
+      <footer>
+        <p style="font-size: 1.2rem">
+          ♪♫ "Pancham Da's music transcends time, touching hearts across
+          generations." ♫♪
+        </p>
+        <p style="margin-top: 20px; font-weight: bold; font-size: 1.3rem">
+          🎵 Forever in our hearts - R.D. Burman (1939-1994) 🎶
+        </p>
+      </footer>
     </div>
 
     <div class="audio-player-container" id="audioPlayerContainer">
-        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white;">
-            <div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">🎵 No song playing</div>
-            <audio id="audioPlayer" controls controlsList="nodownload" style="flex: 2; max-width: 600px;"></audio>
+      <div
+        style="
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          color: white;
+        "
+      >
+        <div
+          id="nowPlaying"
+          style="flex: 1; font-size: 1.1rem; font-weight: bold"
+        >
+          🎵 No song playing
         </div>
+        <audio
+          id="audioPlayer"
+          controls
+          controlsList="nodownload"
+          style="flex: 2; max-width: 600px"
+        ></audio>
+      </div>
     </div>
 
     <script>
-        const API_BASE_URL = window.location.origin + '/api';
-        // existing constants (unchanged)
-        const driveFolders = [
-            { id: '1', name: '2 Songs on Same Tune', folderId: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1' },
-            { id: '2', name: 'A to M', folderId: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3' },
-            { id: '3', name: 'Asha && R.D_Bangla', folderId: '15W7_4PUUYRSxntCn7EUg95wETL0Alzsa' },
-            { id: '4', name: 'Gulzar_Asha_RD', folderId: '1vbTX12RNbNJSHNXenJ-es805NslwEClv' },
-            { id: '5', name: 'N to Z', folderId: '1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy' },
-            { id: '6', name: 'Pancham - Gulzar Remembers', folderId: '1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g' }
-        ];
+      const API_BASE_URL = window.location.origin + '/api';
+      // existing constants (unchanged)
+      const driveFolders = [
+        {
+          id: '1',
+          name: '2 Songs on Same Tune',
+          folderId: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1',
+        },
+        {
+          id: '2',
+          name: 'A to M',
+          folderId: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3',
+        },
+        {
+          id: '3',
+          name: 'Asha && R.D_Bangla',
+          folderId: '15W7_4PUUYRSxntCn7EUg95wETL0Alzsa',
+        },
+        {
+          id: '4',
+          name: 'Gulzar_Asha_RD',
+          folderId: '1vbTX12RNbNJSHNXenJ-es805NslwEClv',
+        },
+        {
+          id: '5',
+          name: 'N to Z',
+          folderId: '1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy',
+        },
+        {
+          id: '6',
+          name: 'Pancham - Gulzar Remembers',
+          folderId: '1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g',
+        },
+      ];
 
-        function showTab(e, n) {
-            if(e) e.preventDefault();
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            const target = document.getElementById(n);
-            if (!target) return;
-            target.classList.add('active');
-            if(e && e.currentTarget) e.currentTarget.classList.add('active');
-            if(n === 'video' && !document.getElementById('about-videos').dataset.loaded) loadVideos();
-            if(n === 'audio' && !document.getElementById('audioTreeContent').dataset.loaded) loadAudio();
-            if(n === 'about' && !document.getElementById('biography-chapters').dataset.loaded) loadBiographyChapters();
+      function showTab(e, n) {
+        if (e) e.preventDefault();
+        document
+          .querySelectorAll('.tab-content')
+          .forEach((t) => t.classList.remove('active'));
+        document
+          .querySelectorAll('.tab-btn')
+          .forEach((b) => b.classList.remove('active'));
+        const target = document.getElementById(n);
+        if (!target) return;
+        target.classList.add('active');
+        if (e && e.currentTarget) e.currentTarget.classList.add('active');
+        if (
+          n === 'video' &&
+          !document.getElementById('about-videos').dataset.loaded
+        )
+          loadVideos();
+        if (
+          n === 'audio' &&
+          !document.getElementById('audioTreeContent').dataset.loaded
+        )
+          loadAudio();
+        if (
+          n === 'about' &&
+          !document.getElementById('biography-chapters').dataset.loaded
+        )
+          loadBiographyChapters();
+      }
+
+      function showVideoTab(e, tabId) {
+        if (e) e.preventDefault();
+        document
+          .querySelectorAll('.video-sub-content')
+          .forEach((t) => (t.style.display = 'none'));
+        document
+          .querySelectorAll('.video-tab-btn')
+          .forEach((b) => b.classList.remove('active'));
+        const el = document.getElementById(tabId);
+        if (el) el.style.display = 'block';
+        if (e && e.currentTarget) e.currentTarget.classList.add('active');
+      }
+
+      function showLifeTab(e, tabId) {
+        if (e) e.preventDefault();
+        // hide all life sub-contents
+        document.querySelectorAll('.life-sub-content').forEach((t) => {
+          t.classList.remove('active');
+          t.style.display = 'none';
+        });
+        // remove active class from buttons
+        document
+          .querySelectorAll('.life-tab-btn')
+          .forEach((b) => b.classList.remove('active'));
+        // show requested
+        const el = document.getElementById(tabId);
+        if (!el) return;
+        el.classList.add('active');
+        el.style.display = 'block';
+        // set button active
+        if (e && e.currentTarget) e.currentTarget.classList.add('active');
+
+        // lazy-load content where needed
+        if (tabId === 'biography-chapters' && !el.dataset.loaded) {
+          loadBiographyChapters();
+        } else if (tabId === 'testimonials' && !el.dataset.loaded) {
+          loadTestimonials();
         }
+      }
 
-        function showVideoTab(e, tabId) {
-            if(e) e.preventDefault();
-            document.querySelectorAll('.video-sub-content').forEach(t => t.style.display = 'none');
-            document.querySelectorAll('.video-tab-btn').forEach(b => b.classList.remove('active'));
-            const el = document.getElementById(tabId);
-            if (el) el.style.display = 'block';
-            if(e && e.currentTarget) e.currentTarget.classList.add('active');
-        }
+      function loadBiographyChapters() {
+        const container = document.getElementById('biography-chapters');
+        if (!container) return;
 
-        function showLifeTab(e, tabId) {
-            if (e) e.preventDefault();
-            // hide all life sub-contents
-            document.querySelectorAll('.life-sub-content').forEach(t => {
-                t.classList.remove('active');
-                t.style.display = 'none';
-            });
-            // remove active class from buttons
-            document.querySelectorAll('.life-tab-btn').forEach(b => b.classList.remove('active'));
-            // show requested
-            const el = document.getElementById(tabId);
-            if (!el) return;
-            el.classList.add('active');
-            el.style.display = 'block';
-            // set button active
-            if(e && e.currentTarget) e.currentTarget.classList.add('active');
-
-            // lazy-load content where needed
-            if (tabId === 'biography-chapters' && !el.dataset.loaded) {
-                loadBiographyChapters();
-            } else if (tabId === 'testimonials' && !el.dataset.loaded) {
-                loadTestimonials();
-            }
-        }
-
-        function loadBiographyChapters() {
-            const container = document.getElementById('biography-chapters');
-            if (!container) return;
-
-            container.innerHTML = `
+        container.innerHTML = `
 <!-- BEGIN: Inserted CHAPTERS from Pancham_Master_Manuscript_Full.docx -->
 <div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 18px; border-left: 6px solid #8e44ad;">
   <div class="life-sub-header">CHAPTER 1 — ORIGINS OF A RESTLESS GENIUS</div>
@@ -606,15 +964,15 @@
 <!-- END: Inserted CHAPTERS -->
             `;
 
-            container.dataset.loaded = 'true';
-        }
+        container.dataset.loaded = 'true';
+      }
 
-        function loadTestimonials() {
-            const container = document.getElementById('testimonials');
-            if (!container) return;
+      function loadTestimonials() {
+        const container = document.getElementById('testimonials');
+        if (!container) return;
 
-            // Each block uses a distinct color and includes the person's image at the top-left
-            container.innerHTML = `
+        // Each block uses a distinct color and includes the person's image at the top-left
+        container.innerHTML = `
 <!-- BEGIN: TESTIMONIALS (Blocks 1-7) + Poems -->
 <div class="testimonial-block" style="background: linear-gradient(135deg,#fff9c4 0%, #ffe0b2 100%);">
   <img class="testimonial-head-img" src="images/Gulzar.jpeg" alt="Gulzar">
@@ -713,53 +1071,63 @@
 <!-- END: TESTIMONIALS -->
             `;
 
-            // mark as loaded
-            container.dataset.loaded = 'true';
-        }
+        // mark as loaded
+        container.dataset.loaded = 'true';
+      }
 
-        function loadIndexAppendix() {
-            // removed by user request — this function intentionally left minimal
-            const container = document.querySelector('#index-appendix .biography-content');
-            if (container) {
-                container.innerHTML = `<p>Index & Appendix removed as per request.</p>`;
-                document.getElementById('index-appendix').dataset.loaded = 'true';
-            }
+      function loadIndexAppendix() {
+        // removed by user request — this function intentionally left minimal
+        const container = document.querySelector(
+          '#index-appendix .biography-content'
+        );
+        if (container) {
+          container.innerHTML = `<p>Index & Appendix removed as per request.</p>`;
+          document.getElementById('index-appendix').dataset.loaded = 'true';
         }
+      }
 
-        // placeholder functions for videos/audio to maintain original behavior
-        function loadVideos() {
-            // minimal lazy-load placeholder for video grids; mark as loaded
-            document.getElementById('about-videos').dataset.loaded = 'true';
-        }
-        function loadAudio() {
-            document.getElementById('audioTreeContent').dataset.loaded = 'true';
-        }
+      // placeholder functions for videos/audio to maintain original behavior
+      function loadVideos() {
+        // minimal lazy-load placeholder for video grids; mark as loaded
+        document.getElementById('about-videos').dataset.loaded = 'true';
+      }
+      function loadAudio() {
+        document.getElementById('audioTreeContent').dataset.loaded = 'true';
+      }
 
-        // initialize scrolling images track if desired
-        (function initScrollingTrack() {
-            const track = document.getElementById('scrollingTrack');
-            const imgs = ['Gulzar.jpeg','Javed Akhtar.jpeg','Ramesh Sippy.jpeg','Amitabh Bachchan.jpeg','Asha Bhosle.jpeg','Lata Mangeshkar.jpeg','Gulshan Bawra.jpeg'];
-            imgs.forEach(name => {
-                const img = document.createElement('img');
-                img.src = 'images/' + name;
-                img.className = 'scrolling-image';
-                img.alt = name.replace(/\.[^.]+$/, '');
-                track.appendChild(img);
-            });
-            // duplicate for continuous scroll effect
-            imgs.forEach(name => {
-                const img = document.createElement('img');
-                img.src = 'images/' + name;
-                img.className = 'scrolling-image';
-                img.alt = name.replace(/\.[^.]+$/, '');
-                track.appendChild(img.cloneNode());
-            });
-        })();
-
-        // when page loaded, lazy-load biography
-        document.addEventListener('DOMContentLoaded', () => {
-            loadBiographyChapters();
+      // initialize scrolling images track if desired
+      (function initScrollingTrack() {
+        const track = document.getElementById('scrollingTrack');
+        const imgs = [
+          'Gulzar.jpeg',
+          'Javed Akhtar.jpeg',
+          'Ramesh Sippy.jpeg',
+          'Amitabh Bachchan.jpeg',
+          'Asha Bhosle.jpeg',
+          'Lata Mangeshkar.jpeg',
+          'Gulshan Bawra.jpeg',
+        ];
+        imgs.forEach((name) => {
+          const img = document.createElement('img');
+          img.src = 'images/' + name;
+          img.className = 'scrolling-image';
+          img.alt = name.replace(/\.[^.]+$/, '');
+          track.appendChild(img);
         });
+        // duplicate for continuous scroll effect
+        imgs.forEach((name) => {
+          const img = document.createElement('img');
+          img.src = 'images/' + name;
+          img.className = 'scrolling-image';
+          img.alt = name.replace(/\.[^.]+$/, '');
+          track.appendChild(img.cloneNode());
+        });
+      })();
+
+      // when page loaded, lazy-load biography
+      document.addEventListener('DOMContentLoaded', () => {
+        loadBiographyChapters();
+      });
     </script>
-</body>
+  </body>
 </html>

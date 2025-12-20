@@ -16,16 +16,16 @@ Show Image
 🔒 Secure - API keys protected on server-side
 📁 Project Structure
 rdburman-tribute/
-├── server.js              # Backend Express server
-├── package.json           # Node.js dependencies
-├── .env                   # Environment variables (create this)
-├── .env.example          # Example environment variables
-├── .gitignore            # Git ignore rules
-├── Dockerfile            # Docker container configuration
-├── docker-compose.yml    # Docker Compose setup
-├── README.md             # This file
+├── server.js # Backend Express server
+├── package.json # Node.js dependencies
+├── .env # Environment variables (create this)
+├── .env.example # Example environment variables
+├── .gitignore # Git ignore rules
+├── Dockerfile # Docker container configuration
+├── docker-compose.yml # Docker Compose setup
+├── README.md # This file
 └── public/
-    └── index.html        # Frontend application
+└── index.html # Frontend application
 🚀 Quick Start
 Prerequisites
 Node.js 16+ (Download)
@@ -49,10 +49,13 @@ GOOGLE_DRIVE_CLIENT_ID=your_drive_client_id_here
 GOOGLE_DRIVE_CLIENT_SECRET=your_drive_secret_here
 Run the application
 bash
+
 # Development mode (with auto-reload)
+
 npm run dev
 
 # Production mode
+
 npm start
 Open your browser
 http://localhost:3000
@@ -78,35 +81,42 @@ Copy Client ID and Secret to .env
 🐳 Docker Deployment
 Using Docker Compose (Recommended)
 bash
+
 # Build and start all services
+
 docker-compose up -d
 
 # View logs
+
 docker-compose logs -f
 
 # Stop services
+
 docker-compose down
 Using Docker only
 bash
+
 # Build image
+
 docker build -t rdburman-tribute .
 
 # Run container
+
 docker run -d -p 3000:3000 --env-file .env rdburman-tribute
 📡 API Endpoints
 Health Check
 GET /api/health
 YouTube
-GET /api/youtube/search          - Search for RD Burman videos
-GET /api/youtube/video/:id       - Get specific video details
+GET /api/youtube/search - Search for RD Burman videos
+GET /api/youtube/video/:id - Get specific video details
 Google Drive
-GET  /api/drive/auth             - Start OAuth flow
-POST /api/drive/list             - List folder contents
-POST /api/drive/folder/:id       - Get subfolder files
+GET /api/drive/auth - Start OAuth flow
+POST /api/drive/list - List folder contents
+POST /api/drive/folder/:id - Get subfolder files
 Spotify
-GET /api/spotify/artist          - Get RD Burman artist info
+GET /api/spotify/artist - Get RD Burman artist info
 Aggregation
-GET /api/aggregate/all           - Get all content from all APIs
+GET /api/aggregate/all - Get all content from all APIs
 🌐 Deployment Options
 Option 1: Railway.app (Easiest)
 Sign up at Railway.app
@@ -117,17 +127,22 @@ Cost: $0-5/month
 
 Option 2: Heroku
 bash
+
 # Install Heroku CLI
+
 npm install -g heroku
 
 # Login and create app
+
 heroku login
 heroku create rdburman-tribute
 
 # Set environment variables
+
 heroku config:set YOUTUBE_API_KEY=your_key
 
 # Deploy
+
 git push heroku main
 Cost: FREE tier available
 
@@ -147,20 +162,20 @@ Deploy backend to Railway ($3-5/month)
 Update API URLs in frontend
 🔧 Configuration
 Environment Variables
-Variable	Required	Description
-PORT	No	Server port (default: 3000)
-NODE_ENV	No	Environment (development/production)
-YOUTUBE_API_KEY	Yes	YouTube Data API key
-GOOGLE_DRIVE_CLIENT_ID	No	Drive OAuth client ID
-GOOGLE_DRIVE_CLIENT_SECRET	No	Drive OAuth secret
-SPOTIFY_CLIENT_ID	No	Spotify app client ID
-SPOTIFY_CLIENT_SECRET	No	Spotify app secret
+Variable Required Description
+PORT No Server port (default: 3000)
+NODE_ENV No Environment (development/production)
+YOUTUBE_API_KEY Yes YouTube Data API key
+GOOGLE_DRIVE_CLIENT_ID No Drive OAuth client ID
+GOOGLE_DRIVE_CLIENT_SECRET No Drive OAuth secret
+SPOTIFY_CLIENT_ID No Spotify app client ID
+SPOTIFY_CLIENT_SECRET No Spotify app secret
 🛠️ Development
 Available Scripts
 bash
-npm start          # Start production server
-npm run dev        # Start development server with auto-reload
-npm test           # Run tests (not yet implemented)
+npm start # Start production server
+npm run dev # Start development server with auto-reload
+npm test # Run tests (not yet implemented)
 Project Dependencies
 express - Web framework
 cors - CORS middleware
@@ -228,14 +243,14 @@ Check OAuth credentials
 Verify redirect URI
 Ensure Drive API is enabled
 🗺️ Roadmap
- Add search functionality
- Implement user authentication
- Create playlist feature
- Add comments system
- Build mobile app
- Add more content sources
- Implement caching with Redis
- Add analytics
+Add search functionality
+Implement user authentication
+Create playlist feature
+Add comments system
+Build mobile app
+Add more content sources
+Implement caching with Redis
+Add analytics
 📈 Stats
 Videos: 20+ automatically loaded
 Songs: Full collection on Google Drive
@@ -245,4 +260,3 @@ Supported Browsers: All modern browsers
 Made with ❤️ for Pancham Da
 
 🎵 Forever in our hearts - R.D. Burman (1939-1994) 🎶
-

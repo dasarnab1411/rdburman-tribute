@@ -3,12 +3,15 @@
 ## Changes Made
 
 ### Problem
+
 The original implementation loaded all YouTube videos as full iframes immediately when the page loaded, causing:
+
 - Slow initial page load (50+ video iframes loading simultaneously)
 - High bandwidth usage
 - Poor user experience with long wait times
 
 ### Solution
+
 Implemented lazy loading with click-to-play thumbnails:
 
 1. **Thumbnail Preview**: Instead of loading full iframes, we now show lightweight YouTube thumbnails
@@ -29,11 +32,13 @@ Implemented lazy loading with click-to-play thumbnails:
 ## Performance Improvements
 
 ### Before Optimization
+
 - Initial load: ~50+ iframes × ~500KB = ~25MB+ data
 - Load time: 10-30 seconds (depending on connection)
 - Browser memory: High (all videos loaded)
 
 ### After Optimization
+
 - Initial load: ~50 thumbnails × ~15KB = ~750KB data
 - Load time: 1-3 seconds
 - Browser memory: Low (only clicked videos load)
@@ -61,13 +66,13 @@ wrapper.innerHTML = `<div class="video-thumbnail" ...>
 </div>`;
 
 // 2. Load iframe only on click
-wrapper.addEventListener('click', function() {
-    wrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" ...>`;
+wrapper.addEventListener("click", function () {
+  wrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" ...>`;
 });
 
 // 3. Batch DOM operations
 const fragment = document.createDocumentFragment();
-videos.forEach(id => fragment.appendChild(createCard(id)));
+videos.forEach((id) => fragment.appendChild(createCard(id)));
 grid.appendChild(fragment);
 ```
 
@@ -87,6 +92,7 @@ grid.appendChild(fragment);
 ## Testing
 
 To test the optimization:
+
 1. Open browser DevTools → Network tab
 2. Reload the page
 3. Notice only thumbnail images load initially
@@ -96,6 +102,7 @@ To test the optimization:
 ## Rollback
 
 If needed, remove this line from index.html:
+
 ```html
 <script src="video-optimization.js"></script>
 ```

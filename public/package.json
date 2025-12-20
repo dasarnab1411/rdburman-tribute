@@ -17,5 +17,14 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
+  },
+   "scripts": {
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css,scss,html}\"",
+    "lint:js": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix",
+    "lint:css": "stylelint \"**/*.{css,scss}\" --fix",
+	"lint:index.html": "prettier --write index.html",
+    "lint:all": "npm run prettier && npm run lint:js && npm run lint:css"
   }
 }
+
+

@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>R.D. Burman - Pancham Da Tribute</title>
+    <!-- Favicon for the site -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+
+  <style>
+    /* === RESET & BASE === */
+    * { box-sizing: border-box; }
+    
+    html, body { 
+      position: relative; 
+      z-index: 0; 
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #2c3e50 0, #000 55%, #111 100%);
+      color: #f5f5f5;
+    }
+
+    /* === CONTAINER === */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 16px 40px;
+      position: relative;
+      z-index: 0;
+    }
+
+    /* === HEADER === */
+    header {
+      text-align: center;
+      padding: 24px 8px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 2.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 10;
+    }
+    header p {
+      margin: 4px 0;
+      opacity: 0.85;
+    }
+
+    /* Floating instrument emojis over the header */
+    header::before {
+      content: '🎸 🎹 🎺 🥁 🎻 🎷 🪕 🎼 🎵 🎶 ♪ ♫ ♩ ♬ 🎸 🎹 🎺 🥁 🎻 🎷';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      font-size: 4.5rem;
+      opacity: 0.35;
+      color: rgba(255, 215, 0, 0.8);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 50px;
+      padding: 30px;
+      animation: instrumentFloat 20s linear infinite;
+      pointer-events: none;
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+      z-index: 0;
+    }
+
+    header::after {
+      content: '🎤 🪘 🎺 🎸 🎻 🥁 🎹 🎷 🪕 🎼 🎵 🎶 ♪ ♫ 🎤 🪘 🎺 🎸';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 200%;
+      height: 100%;
+      font-size: 4rem;
+      opacity: 0.3;
+      color: rgba(255, 182, 193, 0.8);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 45px;
+      padding: 25px;
+      animation: instrumentFloat 25s linear infinite reverse;
+      pointer-events: none;
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+      z-index: 0;
+    }
+
+    @keyframes instrumentFloat {
+      0%   { transform: translateX(0) translateY(0); }
+      100% { transform: translateX(-50%) translateY(-20px); }
+    }
+
+    /* === MAIN VIDEO CONTAINER === */
+    .main-video-container {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 8px solid #ff6b6b;
+      margin: 20px auto;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      position: relative;
+      z-index: 1;
+    }
+    .main-video { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+    }
+
+    .dates {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      font-weight: bold;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+      display: inline-block;
+      border-radius: 20px;
+      margin: 15px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* === SCROLLING TRACK === */
+    .scroll-strip-wrapper {
+      margin-top: 18px;
+      overflow: hidden;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.35);
+    }
+    .scrolling-track {
+      display: flex;
+      gap: 12px;
+      padding: 6px 10px;
+      animation: scroll-x 45s linear infinite;
+      will-change: transform;
+    }
+    .scrolling-image {
+      height: 56px;
+      width: auto;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    @keyframes scroll-x {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* === MUSIC OVERLAY - CRITICAL FIX === */
+    #musicOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(0,0,0,0.9), rgba(0,0,0,0.98));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 9999; /* High but not max */
+      color: #fefefe;
+      text-align: center;
+      padding: 20px;
+      pointer-events: auto;
+    }
+
+    #musicOverlay.hidden {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      z-index: -1 !important;
+    }
+
+    #musicOverlayBtn {
+      padding: 16px 40px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f39c12, #e74c3c);
+      border: none;
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #musicOverlayBtn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.6);
+    }
+
+    #musicOverlayBtn:active {
+      transform: scale(0.98);
+    }
+
+    /* === BACKGROUND CONTROLS === */
+    .bg-controls {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+    .bg-controls button {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.35);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 0.85rem;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .bg-controls button:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    /* === TAB BAR === */
+    .tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 24px 0 18px;
+      justify-content: center;
+    }
+    .tab-btn {
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      background: rgba(0,0,0,0.4);
+      color: #f5f5f5;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-1px);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+      transform: translateY(-1px);
+    }
+
+    /* === TAB CONTENT === */
+    .tab-content {
+      display: none;
+      margin-top: 8px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* === CARDS & GRIDS === */
+    .content-card {
+      background: rgba(20,20,20,0.9);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .video-embed {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+    }
+
+    /* === AUDIO PLAYER === */
+    #audioPlayerContainer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #2c3e50, #000);
+      padding: 12px 16px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.7);
+      display: none;
+      z-index: 1000;
+    }
+    #audioPlayerContainer.active { 
+      display: block; 
+    }
+
+    /* === FOLDER ITEMS === */
+    .folder-item {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+      padding: 15px 20px;
+      margin: 10px 0;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s;
+      color: #333;
+    }
+    .folder-item:hover { 
+      transform: translateX(5px); 
+    }
+    .folder-item .folder-root-name {
+      color: #3498db;
+      font-weight: 600;
+    }
+
+    /* === BIOGRAPHY & TESTIMONIALS === */
+    .biography-content {
+      background: rgba(0,0,0,0.5);
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,255,255,0.08);
+      line-height: 1.8;
+    }
+    .highlight {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 25px 0;
+      color: #333;
+    }
+
+    /* === ACCORDION === */
+    .accordion {
+      margin-top: 16px;
+    }
+    .accordion-item {
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.6);
+    }
+    .accordion-header {
+      padding: 14px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #fff7e6, #ffeccf);
+      color: #333;
+      transition: background 0.2s;
+    }
+    .accordion-header:hover {
+      background: linear-gradient(135deg, #ffeccf, #ffe0b8);
+    }
+    .accordion-header .chev {
+      font-size: 1rem;
+      opacity: 0.7;
+      transition: transform 0.25s;
+    }
+    .accordion-header.expanded .chev {
+      transform: rotate(90deg);
+    }
+    .accordion-body {
+      display: none;
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.95);
+      color: #333;
+      line-height: 1.8;
+    }
+    .accordion-body.visible {
+      display: block;
+    }
+
+    /* === TESTIMONIALS === */
+    .testimonial {
+      display: flex;
+      gap: 18px;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      background: linear-gradient(135deg, #fff7e6, #ffeccf);
+    }
+    .testimonial img {
+      width: 86px;
+      height: 86px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.8);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      flex: 0 0 86px;
+    }
+    .testimonial .content {
+      flex: 1;
+      color: #333;
+    }
+    .testimonial h3 {
+      margin: 0 0 8px;
+      color: #2c3e50;
+    }
+
+    /* === POEM BLOCK === */
+    .poem-block {
+      background: linear-gradient(135deg, #e8f8f5, #e0f0ff);
+      padding: 18px;
+      border-radius: 12px;
+      margin-top: 18px;
+    }
+    .poem-text {
+      white-space: pre-wrap;
+      font-family: Georgia, serif;
+      line-height: 1.8;
+      color: #2b2b2b;
+    }
+
+    /* === BOSS SECTION === */
+    .life-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 30px;
+    }
+    .life-tab-btn {
+      padding: 10px 18px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s, opacity 0.2s;
+      background: linear-gradient(135deg, #ffd89b 0%, #ff9ff3 100%);
+      color: #333;
+      opacity: 0.9;
+    }
+    .life-tab-btn.active {
+      opacity: 1;
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      color: #fff;
+    }
+
+    .boss-sub-content {
+      display: none;
+    }
+    .boss-sub-content.active {
+      display: block;
+    }
+    .boss-saga {
+      background: #fff7e6;
+      color: #4a2c00;
+      border-radius: 16px;
+      padding: 25px 20px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .boss-saga-heading {
+      font-size: 1.4rem;
+      color: #e74c3c;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .boss-saga-intro {
+      text-align: justify;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      color: #333;
+    }
+    .boss-saga-section {
+      border-radius: 14px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffeaa7, #fad0c4);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      margin-bottom: 10px;
+    }
+    .boss-saga-section summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 12px 16px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #ff9a9e, #fecfef);
+      color: #4a148c;
+    }
+    .boss-saga-section[open] summary {
+      background: linear-gradient(135deg, #f6d365, #fda085);
+    }
+    .boss-saga-section summary::-webkit-details-marker {
+      display: none;
+    }
+    .boss-saga-body {
+      padding: 12px 18px 18px;
+      background: rgba(255,255,255,0.96);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #333;
+    }
+
+    .boss-category {
+      margin-bottom: 26px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #fffdf3, #ffe8c2);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+    .boss-category-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #e67e22;
+    }
+    .myboss-song-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .myboss-song-list a {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      background: #ffeaa7;
+      color: #5c3300;
+    }
+    .myboss-song-list a:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.14);
+    }
+
+    /* Song list color variations */
+    .myboss-song-list a:nth-child(8n+1) { background:#ffeaa7; color:#5c3300; }
+    .myboss-song-list a:nth-child(8n+2) { background:#ff9ff3; color:#3b003b; }
+    .myboss-song-list a:nth-child(8n+3) { background:#74b9ff; color:#001933; }
+    .myboss-song-list a:nth-child(8n+4) { background:#55efc4; color:#004432; }
+    .myboss-song-list a:nth-child(8n+5) { background:#fab1a0; color:#4a2100; }
+    .myboss-song-list a:nth-child(8n+6) { background:#d1d8e0; color:#1e272e; }
+    .myboss-song-list a:nth-child(8n+7) { background:#ffe6f7; color:#4b214b; }
+    .myboss-song-list a:nth-child(8n+8) { background:#c8ffb0; color:#1e3a09; }
+
+    /* Category-specific colors */
+    .boss-title-music-list a { background: #d81b60; color: #fff; }
+    .boss-bg-score-list a { background: #b71c1c; color: #fff; }
+    .boss-fav-songs-list a { background: #F5F5F5; color: #b71c1c; }
+    .boss-cabaret-list a { background: linear-gradient(135deg, #ff6f00, #ff4081, #7c4dff); color: #fff; }
+    .boss-actor-list a { background: #3f51b5; color: #fff; }
+
+    .boss-small-note {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 6px;
+    }
+
+    /* === VIDEO MODAL === */
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .video-modal.hidden {
+      display: none;
+    }
+    .video-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      pointer-events: auto;
+    }
+    .video-modal-dialog {
+      position: relative;
+      z-index: 1;
+      background: #111;
+      border-radius: 12px;
+      padding: 16px 16px 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      pointer-events: auto;
+      max-width: 640px;
+      width: min(640px, 95vw);
+      color: #fff;
+    }
+    .video-modal-frame-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    .video-modal-frame-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .video-modal-header {
+      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .video-modal-close-btn {
+      display: block;
+      margin: 14px auto 0;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: none;
+      background: #e74c3c;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .video-modal-close-btn:hover {
+      background: #c0392b;
+    }
+
+    /* === AUDIO AUTH MODAL === */
+    #audioAuthModal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2147483646;
+      transition: opacity 180ms ease;
+    }
+    #audioAuthModal.hidden {
+      opacity: 0;
+      pointer-events: none !important;
+      visibility: hidden !important;
+      display: none !important;
+    }
+    #audioAuthModal .auth-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+    }
+    #audioAuthModal .auth-dialog {
+      position: relative;
+      z-index: 2147483647;
+      max-width: 520px;
+      width: calc(100% - 32px);
+      margin: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7f7fb 100%);
+      border-radius: 12px;
+      box-shadow: 0 18px 40px rgba(10,10,30,0.5);
+      padding: 24px;
+      color: #333;
+    }
+    .auth-dialog h3 {
+      margin: 0 0 16px;
+      font-size: 1.2rem;
+      color: #2c3e50;
+    }
+    .auth-dialog form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .auth-dialog label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.95rem;
+      gap: 6px;
+      color: #333;
+    }
+    .auth-dialog input[type="text"],
+    .auth-dialog input[type="email"],
+    .auth-dialog input[type="tel"] {
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .auth-dialog button {
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .auth-dialog button[type="submit"] {
+      background: #2d89ff;
+      color: white;
+    }
+    .auth-dialog button[type="button"] {
+      background: #777;
+      color: #fff;
+    }
+    .auth-close {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #666;
+    }
+    .auth-status {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 12px;
+    }
+
+    /* === FOOTER === */
+    footer {
+      text-align: center;
+      padding: 30px;
+      margin-top: 50px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      border-radius: 20px;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    footer p {
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 700px) {
+      header h1 { font-size: 1.7rem; }
+      .tab-btn { padding: 10px 16px; font-size: 0.95rem; }
+      .life-tab-btn { padding: 8px 12px; font-size: 0.9rem; }
+      header::before, header::after { display: none; }
+      .testimonial { flex-direction: column; align-items: center; text-align: center; }
+      .testimonial img { margin-bottom: 10px; }
+      .scrolling-image { height: 46px; }
+    }
+
+    @media (max-width: 480px) {
+      .video-modal-dialog {
+        max-width: 95vw;
+        padding: 12px 12px 16px;
+      }
+      .auth-dialog { 
+        width: calc(100% - 24px); 
+        padding: 18px; 
+      }
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+   
+  <!-- Background theme audio -->
+  <audio
+    id="bgTheme"
+    src="Tune/Sagar - a theme music.mp3"
+    preload="auto"
+    loop
+    style="display:none;">
+  </audio>
+
+  <!-- Fullscreen first-play overlay -->
+  <div id="musicOverlay">
+    <h2>🎵 Pancham Da's Theme</h2>
+    <p>Tap below once to let the tribute page play background music while you browse.</p>
+    <button id="musicOverlayBtn" type="button">▶ Play Panchamda's Theme</button>
+  </div>
+
+  <!-- Tiny pause / stop buttons -->
+  <div class="bg-controls">
+    <button id="pauseBgMusic" type="button">⏸ Pause Theme</button>
+    <button id="stopBgMusic" type="button">⏹ Stop Theme</button>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="main-video-container">
+        <video autoplay class="main-video" loop muted playsinline>
+          <source src="images/RD.mp4" type="video/mp4"/>
+        </video>
+      </div>
+
+      <h1>Rahul Dev "Pancham" Burman</h1>
+      <p>Boss of Rhythm • Architect of Modern Hindi Film Music • Forever in our hearts</p>
+      <div class="dates">27 June 1939 - 4 January 1994</div>
+      <p style="margin-top: 20px; font-size: 1.2rem; color: #ffeaa7; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); position: relative; z-index: 10;">"The Innovator who Revolutionized Bollywood Music"</p>
+      <div class="scroll-strip-wrapper">
+        <div id="scrollingTrack" class="scrolling-track"></div>
+      </div>
+    </header>
+
+    <!-- Tab bar -->
+    <nav class="tab-bar">
+      <button class="tab-btn active" data-tab="home">🏠 Home</button>
+      <button class="tab-btn" data-tab="video">🎬 Videos</button>
+      <button class="tab-btn" data-tab="audio">🎧 Audio Archive</button>
+      <button class="tab-btn" data-tab="life">📖 His Life</button>
+      <button class="tab-btn" data-tab="boss">👔 My Boss</button>
+    </nav>
+
+    <!-- === AUDIO AUTH MODAL === -->
+    <div id="audioAuthModal" class="hidden" aria-hidden="true">
+      <div class="auth-backdrop"></div>
+      <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="audioAuthTitle">
+        <h3 id="audioAuthTitle">Audio Access — Authorization Required</h3>
+
+        <form id="audioAuthForm" autocomplete="off">
+          <label>
+            Name
+            <input id="authName" name="name" type="text" required placeholder="Your name">
+          </label>
+          <label>
+            Email
+            <input id="authEmail" name="email" type="email" required placeholder="you@example.com">
+          </label>
+          <label>
+            Mobile
+            <input id="authMobile" name="mobile" type="tel" required placeholder="+91 9XXXXXXXXX">
+          </label>
+
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button id="authSubmitBtn" type="submit">Request Access</button>
+            <button id="authCancelBtn" type="button">Cancel</button>
+          </div>
+
+          <div id="authStatus" class="auth-status" style="margin-top:12px;display:none;">
+            <div id="authWaiting" style="display:none;">
+              Waiting for approval... (you will be granted access automatically when approved)
+            </div>
+            <div id="authResult" style="display:none;"></div>
+          </div>
+        </form>
+
+        <button id="authCloseX" class="auth-close" type="button">✖</button>
+      </div>
+    </div>
+    <!-- === end audio auth modal === -->
+
+    <!-- Global video modal for My Favourite Boss's Compositions -->
+    <div id="videoModal" class="video-modal hidden" aria-hidden="true">
+      <div class="video-modal-backdrop"></div>
+      <div class="video-modal-dialog" role="dialog" aria-modal="true">
+        <div class="video-modal-header">
+          <span id="videoModalTitle">🎵 Now Playing</span>
+        </div>
+        <div class="video-modal-body">
+          <div class="video-modal-frame-wrapper">
+            <iframe
+              id="videoModalIframe"
+              class="video-embed"
+              loading="lazy"
+              src="about:blank"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+        <button id="videoModalClose" class="video-modal-close-btn" type="button">
+          ✖ Close
+        </button>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <section id="home" class="tab-content active">
+      <div class="biography-content">
+        <h2>Welcome to the Boss's universe</h2>
+        <p>
+          This is a personal, lovingly hand–curated tribute to Rahul Dev Burman – Panchamda – the
+          composer who could turn a train rhythm into a love song, a bottle tap into background
+          score, and a whistle into pure cinematic magic.
+        </p>
+        <p><strong>Pancham Da</strong>, was born on 27th June 1939 in Calcutta. His nickname came from a legend, the great Ashok Kumar – his baby cries resonated with the fifth note (Pa) of the Indian musical scale!</p>
+        <div class="highlight">
+          <strong>Born into Musical Royalty:</strong> Son of Sachin Dev Burman, he composed his first song "Aye Mere Topi palat ke aa", at age nine for <em>Funtoosh</em> (1956).
+        </div>
+        <p>Pancham Da orchestrated a revolution! He brought rock, jazz, and electronic sounds into Bollywood. His collaboration with Asha Bhosle, Kishore Kumar, and Lata Mangeshkar produced immortal melodies.</p>
+        <div class="highlight">
+          <strong>The Numbers:</strong> <strong>331 films</strong> - 292 in Hindi, 31 in Bengali, 3 in Telugu, 2 in Oriya, 2 in Tamil, 1 in Marathi. From "Mehbooba Mehbooba" to "Tere Bina Zindagi Se."
+        </div>
+        <p>
+          Explore his <strong>videos</strong>, a growing <strong>audio</strong> archive of rare tracks,
+          memory–soaked <strong>biography chapters</strong>, and finally, my own corner:
+          <strong>"My Boss"</strong> – why he is and will always remain my Boss.
+        </p>
+      </div>
+    </section>
+
+    <!-- VIDEO -->
+    <section id="video" class="tab-content">
+      <h2 style="color: red; text-align:center;">🎥🎥 "Video Stories &amp; Sessions" 🎥🎥</h2>
+      <div style="margin:10px 0 14px;">
+        <button class="video-tab-btn life-tab-btn active" data-video-tab="about-videos">
+          About Pancham
+        </button>
+        <button class="video-tab-btn life-tab-btn" data-video-tab="composing-videos">
+          In the Studio / Composing
+        </button>
+        <button class="video-tab-btn life-tab-btn" data-video-tab="unreleased-videos">
+          Unreleased / Rare
+        </button>
+      </div>
+
+      <div id="about-videos" class="video-sub-content" data-loaded="false" style="display:block;">
+        <div id="aboutVideosGrid" class="video-grid"></div>
+      </div>
+      <div id="composing-videos" class="video-sub-content" data-loaded="false" style="display:none;">
+        <div id="composingVideosGrid" class="video-grid"></div>
+      </div>
+      <div id="unreleased-videos" class="video-sub-content" data-loaded="false" style="display:none;">
+        <div id="unreleasedVideosGrid" class="video-grid"></div>
+      </div>
+    </section>
+
+    <!-- AUDIO -->
+    <section id="audio" class="tab-content">
+      <h2 style="color: Green; text-align:center;">🎧🎧 "Audio Archives" 🎧🎧</h2>
+      <p>
+        Browse themed folders – Rare songs, Compilations, Asha–Pancham Bengali gems,
+        and more. Click a folder to drill down, then hit ▶ Play on any track to stream it here.
+      </p>
+      <div id="audioTreeContent" data-loaded="false">
+        <div class="loading"><div class="spinner"></div><p>Loading audio collection...</p></div>
+      </div>
+    </section>
+
+    <!-- HIS LIFE -->
+    <section id="life" class="tab-content">
+      <h2 style="color: blue; text-align:center;">📖📖 His Life – Chapters, Memories &amp; Tributes 📖📖</h2>
+      <div class="biography-content">
+        <div id="chaptersAccordion" class="accordion">
+          <div class="accordion-item">
+            <div class="accordion-header collapsed" data-target="c1">
+              ORIGINS OF A RESTLESS GENIUS
+              <span class="chev">▶</span>
+            </div>
+            <div id="c1" class="accordion-body">
+              <p>Rahul Dev Burman—universally known as Pancham—was born into a musical dynasty that shaped the very evolution of Indian cinema. His father, the iconic S. D. Burman, carried within him the weight of classical tradition, the wisdom of folk roots, and an instinctive melodic purity that had already reshaped Hindi film music.</p>
+              <p>Yet, even as a child, Pancham showed signs of a different temperament—one driven not by inherited legacy but by an almost electric sense of curiosity. Where S. D. Burman glided like a river of timeless melody, Pancham moved like a spark that refused to stay still.</p>
+              <p>He was restless.<br>He was rhythmic.<br>He was experimental.<br>He was hungry.</p>
+            </div>
+          </div>
+          <!-- Add more accordion items as needed -->
+        </div>
+      </div>
+    </section>
+
+    <!-- MY BOSS -->  
+    <section id="boss" class="tab-content">
+      <h2 style="color: #e67e22; font-size: 2.2rem; margin-bottom: 20px; text-align:center;">👔👔 My Boss 👔👔</h2>
+      
+      <!-- Shared player for My Boss links -->
+      <div id="bossFavPlayer" class="content-card" style="display:none; margin-bottom: 24px;">
+        <div id="bossFavNowPlaying" style="font-weight:bold; margin-bottom:10px;">
+          🎵 Select any composition below to start playing
+        </div>
+        <iframe
+          id="bossFavIframe"
+          class="video-embed"
+          loading="lazy"
+          src="about:blank"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <!-- Sub-tabs row -->
+      <div class="life-tabs" id="life-sub-tabs-boss" aria-label="My Boss Sections">
+        <button class="life-tab-btn boss-tab-btn active" data-boss-tab="boss-main">
+          Why he is my BOSS
+        </button>
+        <button class="life-tab-btn boss-tab-btn" data-boss-tab="boss-favourites">
+          🎵 My Favourite Boss's Compositions
+        </button>
+      </div>
+
+      <!-- Boss main -->
+      <div id="boss-main" class="boss-sub-content active">
+        <div class="boss-saga">
+          <h3 class="boss-saga-heading">
+            🎵 THE R.D. BURMAN SAGA: From a Fan to The Boss 🎵
+          </h3>
+          <p class="boss-saga-intro">
+            Welcome to the mad, magical universe of the one and only Boss, our Panchamda—the man who
+            could hear rhythm in raindrops, romance in silence, and rebellion in a single bassline.
+          </p>
+          <div class="boss-saga-accordion">
+            <details class="boss-saga-section" open>
+              <summary>1. 🎬 The Atmospheric Wizard: Boss of Background Scores</summary>
+              <div class="boss-saga-body">
+                <p>Boss never treated background score as filler; for him, it was another powerful character in the story, shaping every emotion from fear to longing.</p>
+                <h4>🔥 Sholay (1975)</h4>
+                <p><strong>The Terror of Gabbar:</strong> Instead of bombarding us with loud drums, Boss chose a low, groaning cello with brass, creating that slow, creeping sense of doom.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boss favourites -->
+      <div id="boss-favourites" class="boss-sub-content">
+        <h3>🎵 My Favourite Boss's Compositions</h3>
+        
+        <!-- Title Music -->
+        <div class="boss-category">
+          <div class="boss-category-title">🎬 Title Music – Boss's Opening Themes 🎵</div>
+          <div class="myboss-song-list boss-title-music-list">
+            <a href="#" data-video-url="https://youtube.com/playlist?list=PLt1_3oWrtFTOFpilXV5DEwZoxKjdXR6Ra" data-title="Title Music Playlist">
+              🎵 Title Music Playlist
+            </a>
+          </div>
+        </div>
+
+        <!-- My Favourite Songs -->
+        <div class="boss-category">
+          <div class="boss-category-title">💖 My Favourite Songs – Pancham Forever 🎵</div>
+          <div class="myboss-song-list boss-fav-songs-list" style="max-height:380px; overflow:auto;">
+            <a href="#" data-video-url="https://youtu.be/CpYuH4Cc8Mk" data-title="Rah Pe Rehte Hai | Namkeen (1982)">
+              🎵 Rah Pe Rehte Hai | Namkeen (1982)
+            </a>
+            <a href="#" data-video-url="https://youtu.be/flFE-ps5yYo" data-title="Tumne Mujhe Dekha | Teesri Manzil (1966)">
+              🎵 Tumne Mujhe Dekha | Teesri Manzil (1966)
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top:18px; font-style:italic;">
+        WHY HE IS and WILL REMAIN MY BOSS.
+      </p>
+    </section>
+  </div>
+
+  <!-- Global audio player (for Drive audio) -->
+  <div id="audioPlayerContainer">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 15px; color: white; flex-wrap: wrap;">
+      <div id="nowPlaying" style="flex: 1; font-size: 1.1rem; font-weight: bold;">
+        🎵 No song playing
+      </div>
+      <audio id="audioPlayer"
+        controls
+        controlslist="nodownload"
+        style="flex: 2; max-width: 600px;"></audio>
+      <button type="button"
+        id="stopAudioBtn"
+        style="padding: 8px 16px; border-radius: 20px; border: none; background:#e74c3c; color:#fff; cursor:pointer; white-space: nowrap;">
+        ⏹ Stop
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    <p style="font-size: 1.2rem;">
+      ♪♫ "Pancham Da's music transcends time, touching hearts across generations." ♫♪
+    </p>
+    <p style="margin-top: 20px; font-weight: bold; font-size: 1.3rem;">
+      🎵 Forever in our hearts - R.D. Burman (1939-1994) 🎶
+    </p>
+  </footer>
+
+  <!-- YouTube Iframe API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <script>
+  /* =========================================================
+     R.D. BURMAN TRIBUTE - UNIFIED JAVASCRIPT
+     All functionality in a single, clean script block
+     ========================================================= */
+
+  (function() {
+    'use strict';
+
+    // =========================================================
+    // GLOBAL STATE
+    // =========================================================
+    let bgThemeAudio = null;
+    let ytPlayers = [];
+    let isOverlayDismissed = false;
+
+    const API_BASE_URL = window.location.hostname.includes('localhost')
+      ? 'http://localhost:3001/api'
+      : window.location.origin + '/api';
+
+    const GAS_WEBAPP_BASE_URL = 'https://script.google.com/macros/s/AKfycbz2fJhES3dsNRoBGlDxqyoGVcEwHgREdD5og5jQlyX0M5O4FKIOwRN7vjbM7fBeG8jQ/exec';
+
+    const driveFolders = [
+      { id: '1', name: '2 Songs on Same Tune', folderId: '1jkelYsCvDvFfR9jrGv1-WjHK6DRJZgo1' },
+      { id: '2', name: 'A to M', folderId: '16ejKARRUctUYiSmGpXUjztIpbUeaLVQ3' },
+      { id: '3', name: 'Asha && R.D_Bangla', folderId: '15W7_4PUUYRSxntCn7EUg95wETL0Alzsa' },
+      { id: '4', name: 'Gulzar_Asha_RD', folderId: '1vbTX12RNbNJSHNXenJ-es805NslwEClv' },
+      { id: '5', name: 'N to Z', folderId: '1X0oZNmsd_MFCEkDXeZCHdfFsqsVJ1Auy' },
+      { id: '6', name: 'Pancham - Gulzar Remembers', folderId: '1UPxZ-4s5nSEjrjquqH5GkkG4u95LRf9g' }
+    ];
+
+    const youtubeVideos = {
+      about: ['ROYNffYphro','Acx881M41wQ','TxRxKXPfzw4','h_bYlWFho9I','1qGaUw9E_uA',
+              '1KS6m6-Wkhc','zpL0eXRdKBg','X1RMCW0MVuk','It_AdKqB-_I','8HW02AUZOug'],
+      composing: ['-S-vrvv1NnE','_oJmKeBPj84','K0mUTccDgNE','3F4NT2Y-SPM','ftbqxSdyiDs',
+                  'Ggh36-xzktU','43Zg7_4TQnE','BkuDrXDJMUo','HbUjtluZsws','pwUyw_hYEVA'],
+      unreleased: ['DyS1s3vVSMU','sdxb7Ntmgtw','cXgoIGjnMok','KDwwO9sRM1U','Iz1fky4vJOo',
+                   'sqBsvPYUles','ElfWOyqeRyA','6qRG7Ifdnjo','GKn-UjnrINY','MRzyX1sHdIo']
+    };
+
+    // =========================================================
+    // UTILITY FUNCTIONS
+    // =========================================================
+    
+    function $(selector) {
+      return document.querySelector(selector);
+    }
+    
+    function $$(selector) {
+      return document.querySelectorAll(selector);
+    }
+
+    function log(...args) {
+      console.log('[RD Tribute]', ...args);
+    }
+
+    function error(...args) {
+      console.error('[RD Tribute]', ...args);
+    }
+
+    // =========================================================
+    // THEME MUSIC SYSTEM - CRITICAL FIX
+    // =========================================================
+    
+    function startBgTheme() {
+      log('startBgTheme() called');
+      
+      const overlay = $('#musicOverlay');
+      const audio = $('#bgTheme');
+      
+      if (!overlay || !audio) {
+        error('Missing elements:', { overlay: !!overlay, audio: !!audio });
+        return false;
+      }
+
+      // Mark overlay as dismissed
+      isOverlayDismissed = true;
+
+      // Set up and play audio
+      audio.volume = 0.4;
+      audio.loop = true;
+      
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            log('✅ Audio started playing successfully');
+            bgThemeAudio = audio;
+          })
+          .catch(err => {
+            log('⚠️ Autoplay blocked (user gesture may be required):', err.message);
+            // Still dismiss overlay even if audio blocked
+          });
+      }
+
+      // CRITICAL: Hide overlay with maximum force
+      overlay.style.cssText = 'display: none !important; visibility: hidden !important; pointer-events: none !important; opacity: 0 !important; z-index: -9999 !important;';
+      overlay.classList.add('hidden');
+      overlay.setAttribute('aria-hidden', 'true');
+      
+      // Ensure body/container are interactive
+      document.body.style.overflow = '';
+      document.body.style.pointerEvents = '';
+      
+      const container = $('.container');
+      if (container) {
+        container.style.pointerEvents = 'auto';
+        container.style.visibility = 'visible';
+      }
+
+      // Make sure Home tab is active
+      showTab('home');
+      
+      log('✅ Theme started, overlay hidden, tabs unlocked');
+      return false;
+    }
+
+    function pauseBackgroundTheme() {
+      if (bgThemeAudio) {
+        try { 
+          bgThemeAudio.pause(); 
+          log('Theme paused');
+        } catch (e) { 
+          error('Pause error:', e); 
+        }
+      }
+    }
+
+    function stopBackgroundTheme() {
+      if (bgThemeAudio) {
+        try {
+          bgThemeAudio.pause();
+          bgThemeAudio.currentTime = 0;
+          log('Theme stopped');
+        } catch (e) { 
+          error('Stop error:', e); 
+        }
+      }
+    }
+
+    // =========================================================
+    // TAB MANAGEMENT
+    // =========================================================
+    
+    async function showTab(tabId) {
+      log('showTab called:', tabId);
+      
+      // Guard Audio tab with authorization
+      if (tabId === 'audio') {
+        const allowed = await ensureAudioAuthorized();
+        if (!allowed) {
+          log('Audio access denied');
+          return;
+        }
+      }
+
+      // Hide all tab contents
+      $$('.tab-content').forEach(t => t.classList.remove('active'));
+      
+      // Remove active from all tab buttons
+      $$('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      // Show target tab
+      const target = $('#' + tabId);
+      if (target) {
+        target.classList.add('active');
+      }
+      
+      // Activate the correct tab button
+      const tabBtn = $(`.tab-btn[data-tab="${tabId}"]`);
+      if (tabBtn) {
+        tabBtn.classList.add('active');
+      }
+
+      // Lazy-load content
+      if (tabId === 'video') {
+        const aboutPanel = $('#about-videos');
+        if (aboutPanel && aboutPanel.dataset.loaded === 'false') {
+          loadVideos();
+        }
+      }
+      if (tabId === 'audio') {
+        const audioTree = $('#audioTreeContent');
+        if (audioTree && audioTree.dataset.loaded === 'false') {
+          loadAudio();
+        }
+      }
+    }
+
+    function showVideoTab(tabId) {
+      $$('.video-sub-content').forEach(t => t.style.display = 'none');
+      $$('.video-tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const el = $('#' + tabId);
+      if (el) el.style.display = 'block';
+    }
+
+    function showBossTab(tabId) {
+      $$('#boss .boss-sub-content').forEach(x => {
+        x.classList.remove('active');
+        x.style.display = 'none';
+      });
+      $$('#life-sub-tabs-boss .boss-tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const el = $('#' + tabId);
+      if (el) {
+        el.classList.add('active');
+        el.style.display = 'block';
+      }
+    }
+
+    // =========================================================
+    // AUDIO AUTHORIZATION SYSTEM
+    // =========================================================
+    
+    function getStoredAudioAuth() {
+      try {
+        return localStorage.getItem('audioAuthorized') === 'true';
+      } catch (e) { 
+        return false; 
+      }
+    }
+
+    function setStoredAudioAuth(value) {
+      try {
+        localStorage.setItem('audioAuthorized', value ? 'true' : 'false');
+      } catch (e) { 
+        error('Storage error:', e); 
+      }
+    }
+
+    async function ensureAudioAuthorized() {
+      if (getStoredAudioAuth()) {
+        log('Audio already authorized');
+        return true;
+      }
+
+      const modal = $('#audioAuthModal');
+      const form = $('#audioAuthForm');
+      
+      if (!modal || !form) {
+        error('Auth modal elements not found');
+        return false;
+      }
+
+      return new Promise((resolve) => {
+        // Show modal
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+        modal.style.display = 'flex';
+        modal.style.pointerEvents = 'auto';
+        document.body.classList.add('modal-open');
+
+        const closeModal = (result) => {
+          modal.classList.add('hidden');
+          modal.setAttribute('aria-hidden', 'true');
+          modal.style.display = 'none';
+          modal.style.pointerEvents = 'none';
+          document.body.classList.remove('modal-open');
+          form.reset();
+          
+          // Clean up event listeners
+          $('#authCloseX').onclick = null;
+          $('#authCancelBtn').onclick = null;
+          form.onsubmit = null;
+          
+          resolve(result);
+        };
+
+        $('#authCloseX').onclick = () => closeModal(false);
+        $('#authCancelBtn').onclick = () => closeModal(false);
+
+        form.onsubmit = async (ev) => {
+          ev.preventDefault();
+          
+          const name = $('#authName').value.trim();
+          const email = $('#authEmail').value.trim();
+          const mobile = $('#authMobile').value.trim();
+
+          if (!name || !email || !mobile) {
+            alert('Please fill all fields.');
+            return;
+          }
+
+          $('#authStatus').style.display = 'block';
+          $('#authWaiting').style.display = 'block';
+          $('#authResult').style.display = 'none';
+
+          try {
+            const payload = {
+              name, email, mobile,
+              requestedAt: new Date().toISOString(),
+              clientToken: crypto.randomUUID ? crypto.randomUUID() : ('t' + Date.now())
+            };
+
+            const res = await fetch(GAS_WEBAPP_BASE_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: 'request', payload })
+            }).then(r => r.json());
+
+            if (res && res.success) {
+              // Poll for approval
+              const pollInterval = setInterval(async () => {
+                try {
+                  const status = await fetch(`${GAS_WEBAPP_BASE_URL}?action=status&token=${res.token}`)
+                    .then(r => r.json());
+                  
+                  if (status.approved === true) {
+                    clearInterval(pollInterval);
+                    setStoredAudioAuth(true);
+                    $('#authResult').textContent = 'Access Approved!';
+                    $('#authResult').style.display = 'block';
+                    $('#authWaiting').style.display = 'none';
+                    setTimeout(() => closeModal(true), 800);
+                  } else if (status.approved === false && status.final) {
+                    clearInterval(pollInterval);
+                    $('#authResult').textContent = 'Access Denied.';
+                    $('#authResult').style.display = 'block';
+                    $('#authWaiting').style.display = 'none';
+                    setTimeout(() => closeModal(false), 1500);
+                  }
+                } catch (err) {
+                  log('Poll error:', err);
+                }
+              }, 3000);
+
+              // Timeout after 5 minutes
+              setTimeout(() => {
+                clearInterval(pollInterval);
+                if (!getStoredAudioAuth()) {
+                  $('#authResult').textContent = 'Request timed out. Please try again.';
+                  $('#authResult').style.display = 'block';
+                  $('#authWaiting').style.display = 'none';
+                }
+              }, 5 * 60 * 1000);
+            } else {
+              throw new Error(res?.error || 'Request failed');
+            }
+          } catch (err) {
+            error('Submit error:', err);
+            $('#authResult').textContent = 'Submission failed: ' + err.message;
+            $('#authResult').style.display = 'block';
+            $('#authWaiting').style.display = 'none';
+          }
+        };
+      });
+    }
+
+    // =========================================================
+    // YOUTUBE HANDLING
+    // =========================================================
+    
+    function extractYouTubeEmbedUrl(rawUrl) {
+      try {
+        const u = new URL(rawUrl);
+        const host = u.hostname;
+        const params = u.searchParams;
+        const listId = params.get('list');
+        
+        if (listId) {
+          return `https://www.youtube.com/embed/videoseries?list=${listId}&enablejsapi=1&autoplay=1`;
+        }
+        
+        let videoId = null;
+        if (host.includes('youtu.be')) {
+          videoId = u.pathname.replace('/', '');
+        } else if (params.get('v')) {
+          videoId = params.get('v');
+        } else if (u.pathname.startsWith('/embed/')) {
+          videoId = u.pathname.split('/').pop();
+        }
+        
+        if (videoId) {
+          return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1`;
+        }
+        return rawUrl;
+      } catch (e) {
+        log('Could not parse YouTube URL:', rawUrl, e);
+        return rawUrl;
+      }
+    }
+
+    function attachYouTubePlayers() {
+      if (!window.YT || !YT.Player) return;
+
+      $$('iframe.video-embed').forEach(iframe => {
+        if (iframe.dataset.playerAttached === 'true') return;
+
+        const player = new YT.Player(iframe, {
+          events: {
+            onStateChange: event => {
+              if (event.data === YT.PlayerState.PLAYING) {
+                ytPlayers.forEach(p => {
+                  if (p !== player) {
+                    try { p.pauseVideo(); } catch (e) {}
+                  }
+                });
+                pauseBackgroundTheme();
+              }
+            }
+          }
+        });
+
+        iframe.dataset.playerAttached = 'true';
+        ytPlayers.push(player);
+      });
+    }
+
+    // Make this available globally for YouTube API callback
+    window.onYouTubeIframeAPIReady = function() {
+      log('YouTube API Ready');
+      attachYouTubePlayers();
+    };
+
+    // =========================================================
+    // VIDEO MODAL
+    // =========================================================
+    
+    function openFavModal(url, title) {
+      const modal = $('#videoModal');
+      const iframe = $('#videoModalIframe');
+      const titleEl = $('#videoModalTitle');
+
+      if (!modal || !iframe || !titleEl) return false;
+
+      const embedUrl = extractYouTubeEmbedUrl(url);
+      pauseBackgroundTheme();
+
+      iframe.src = embedUrl;
+      titleEl.textContent = `🎵 Now Playing: ${title}`;
+
+      modal.classList.remove('hidden');
+      document.body.classList.add('modal-open');
+
+      return false;
+    }
+
+    function closeFavModal() {
+      const modal = $('#videoModal');
+      const iframe = $('#videoModalIframe');
+
+      if (iframe) iframe.src = '';
+      if (modal) modal.classList.add('hidden');
+      
+      document.body.classList.remove('modal-open');
+    }
+
+    function openBossVideo(url, title) {
+      const container = $('#bossFavPlayer');
+      const iframe = $('#bossFavIframe');
+      const titleEl = $('#bossFavNowPlaying');
+      
+      if (!container || !iframe || !titleEl) return false;
+
+      const embedUrl = extractYouTubeEmbedUrl(url);
+      pauseBackgroundTheme();
+
+      iframe.src = embedUrl;
+      container.style.display = 'block';
+      titleEl.textContent = `🎵 Now Playing: ${title}`;
+
+      attachYouTubePlayers();
+      return false;
+    }
+
+    // =========================================================
+    // VIDEO LOADING
+    // =========================================================
+    
+    function loadVideos() {
+      const aboutGrid = $('#aboutVideosGrid');
+      const compGrid = $('#composingVideosGrid');
+      const unrelGrid = $('#unreleasedVideosGrid');
+      
+      if (!aboutGrid || !compGrid || !unrelGrid) return;
+
+      function createCard(id) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'content-card';
+        wrapper.innerHTML = `
+          <iframe class="video-embed"
+            loading="lazy"
+            src="https://www.youtube.com/embed/${id}?enablejsapi=1"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>`;
+        return wrapper;
+      }
+
+      youtubeVideos.about.forEach(id => aboutGrid.appendChild(createCard(id)));
+      youtubeVideos.composing.forEach(id => compGrid.appendChild(createCard(id)));
+      youtubeVideos.unreleased.forEach(id => unrelGrid.appendChild(createCard(id)));
+
+      $('#about-videos').dataset.loaded = 'true';
+      $('#composing-videos').dataset.loaded = 'true';
+      $('#unreleased-videos').dataset.loaded = 'true';
+
+      attachYouTubePlayers();
+      log('Videos loaded');
+    }
+
+    // =========================================================
+    // AUDIO TREE LOADING
+    // =========================================================
+    
+    function loadAudio() {
+      const container = $('#audioTreeContent');
+      if (!container) return;
+      
+      container.dataset.loaded = 'true';
+      container.innerHTML = '<div id="audioContainer" style="padding:20px"></div>';
+      showMainFolders();
+    }
+
+    function showMainFolders() {
+      const container = $('#audioContainer');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      driveFolders.forEach(folder => {
+        const div = document.createElement('div');
+        div.className = 'folder-item';
+        div.innerHTML = `
+          <div>
+            <span>📁</span>
+            <span class="folder-root-name">${folder.name}</span>
+          </div>
+          <span>▶</span>
+        `;
+        div.onclick = () => loadFolderContents(folder.folderId, folder.name);
+        container.appendChild(div);
+      });
+    }
+
+    async function loadFolderContents(folderId, folderName) {
+      const container = $('#audioContainer');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="folder-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+          <div><span>◀</span> Back to Folders</div>
+        </div>
+        <div style="padding: 20px; text-align: center; font-size: 1.3rem; color: #f1c40f; font-weight: bold;">
+          📂 ${folderName}
+        </div>
+        <div class="loading" style="text-align:center; padding: 14px;">
+          <p>Loading contents…</p>
+        </div>
+      `;
+
+      // Wire up back button
+      container.querySelector('.folder-item').onclick = showMainFolders;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/drive/folder-contents/${folderId}`);
+        const data = await response.json();
+        
+        const loadingDiv = container.querySelector('.loading');
+        if (loadingDiv) loadingDiv.remove();
+
+        if (!data.success) {
+          container.innerHTML += `<div style="padding:20px; text-align:center; color:#e74c3c;">❌ Error: ${data.error || 'unknown error'}</div>`;
+          return;
+        }
+
+        // Add subfolders
+        if (data.folders && data.folders.length > 0) {
+          data.folders.forEach(sub => {
+            const subDiv = document.createElement('div');
+            subDiv.className = 'folder-item';
+            subDiv.style.background = 'linear-gradient(135deg,#74ebd5,#ACB6E5)';
+            subDiv.innerHTML = `
+              <div style="display:flex;align-items:center;gap:12px">
+                <div>
+                  <div style="font-weight:bold">📂 ${sub.name}</div>
+                  <div style="font-size:0.9rem;opacity:0.8">Click to view songs</div>
+                </div>
+              </div>
+              <span style="font-size:1.3rem">▶</span>
+            `;
+            subDiv.onclick = (e) => { 
+              e.stopPropagation(); 
+              loadFolderContents(sub.id, sub.name); 
+            };
+            container.appendChild(subDiv);
+          });
+        }
+
+        // Add audio files
+        if (data.audioFiles && data.audioFiles.length > 0) {
+          data.audioFiles.forEach(audio => {
+            const audioDiv = document.createElement('div');
+            audioDiv.className = 'folder-item';
+            audioDiv.style.background = '#111';
+            audioDiv.style.color = '#fff';
+            
+            const sizeText = audio.size ? ` • ${(audio.size / (1024*1024)).toFixed(1)} MB` : '';
+            audioDiv.innerHTML = `
+              <div style="display:flex;align-items:center;gap:12px">
+                <div>
+                  <div style="font-weight:bold">🎶 ${audio.name}</div>
+                  <div style="font-size:0.9rem;opacity:.75">${audio.folder || ''}${sizeText}</div>
+                </div>
+              </div>
+              <button style="padding:10px 16px;background:#e74c3c;color:#fff;border-radius:20px;border:none;cursor:pointer">▶ Play</button>
+            `;
+            audioDiv.querySelector('button').onclick = (ev) => {
+              ev.stopPropagation();
+              playAudio(audio.id, audio.name);
+            };
+            container.appendChild(audioDiv);
+          });
+        } else if ((!data.folders || !data.folders.length)) {
+          const emptyDiv = document.createElement('div');
+          emptyDiv.style.cssText = 'padding:40px;text-align:center;color:#999;font-size:1.1rem';
+          emptyDiv.innerHTML = '📭 No audio files found in this folder';
+          container.appendChild(emptyDiv);
+        }
+      } catch (err) {
+        error('Folder load error:', err);
+        const loadingDiv = container.querySelector('.loading');
+        if (loadingDiv) loadingDiv.remove();
+        container.innerHTML += `<div style="padding:20px;color:#e74c3c;text-align:center">❌ Error: ${err.message}</div>`;
+      }
+    }
+
+    function playAudio(fileId, fileName) {
+      const player = $('#audioPlayer');
+      const container = $('#audioPlayerContainer');
+      const nowPlaying = $('#nowPlaying');
+
+      pauseBackgroundTheme();
+
+      nowPlaying.textContent = '⏳ Loading: ' + fileName;
+      container.classList.add('active');
+      container.style.display = 'block';
+
+      const streamUrl = `${API_BASE_URL}/drive/stream/${fileId}`;
+      player.src = streamUrl;
+      player.load();
+
+      player.onloadeddata = () => {
+        nowPlaying.textContent = '🎵 Now Playing: ' + fileName;
+        player.play().catch(err => {
+          error('Play error:', err);
+          nowPlaying.textContent = '❌ Error: ' + fileName;
+        });
+      };
+      
+      player.onerror = (e) => {
+        error('Audio error:', e);
+        nowPlaying.textContent = '❌ Failed to load: ' + fileName;
+      };
+      
+      player.onended = () => {
+        nowPlaying.textContent = '✅ Finished: ' + fileName;
+      };
+    }
+
+    function stopAudio() {
+      const audioPlayer = $('#audioPlayer');
+      const container = $('#audioPlayerContainer');
+      const nowPlaying = $('#nowPlaying');
+
+      if (audioPlayer) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+      }
+      if (nowPlaying) {
+        nowPlaying.textContent = '⏹ Stopped';
+      }
+      if (container) {
+        container.classList.remove('active');
+        container.style.display = 'none';
+      }
+    }
+
+    // =========================================================
+    // ACCORDION
+    // =========================================================
+    
+    function toggleAccordion(targetId, headerEl) {
+      const body = $('#' + targetId);
+      if (!body || !headerEl) return;
+
+      const isOpen = body.classList.contains('visible');
+
+      // Close all accordions
+      $$('.accordion-body').forEach(b => b.classList.remove('visible'));
+      $$('.accordion-header').forEach(h => h.classList.remove('expanded'));
+
+      // Open clicked one if it was closed
+      if (!isOpen) {
+        body.classList.add('visible');
+        headerEl.classList.add('expanded');
+        setTimeout(() => {
+          headerEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 180);
+      }
+    }
+
+    // =========================================================
+    // SCROLLING TRACK
+    // =========================================================
+    
+    function initScrollingTrack() {
+      const track = $('#scrollingTrack');
+      if (!track) return;
+      
+      const imgs = [
+        'Pancham10.png','Pancham12.png','Pancham16.png','Pancham17.png',
+        'Pancham18.png','Pancham19.png','Pancham20.png','Pancham21.png','Pancham22.png',
+        'Pancham23.png','Pancham25.png','Pancham26.png','Pancham27.png','Pancham28.png',
+        'Pancham29.png','Pancham3.png','Pancham30.png','Pancham4.png','Pancham5.png',
+        'Pancham6.png','Pancham7.png','Pancham8.png','Pancham9.png','rd-burman-2.png',
+        'rd-burman-3.png','rd-burman-4.png','rd-burman-single-color1.png','RD.png',
+        'rd1.png','RD1_imresizer.jpg'
+      ];
+      
+      track.innerHTML = '';
+      
+      // Duplicate for seamless scrolling
+      imgs.concat(imgs).forEach(name => {
+        const img = document.createElement('img');
+        img.src = 'images/' + name;
+        img.className = 'scrolling-image';
+        img.alt = name.replace(/\.[^.]+$/, '');
+        img.onerror = () => img.style.display = 'none';
+        track.appendChild(img);
+      });
+    }
+
+    // =========================================================
+    // EVENT BINDING
+    // =========================================================
+    
+    function bindEvents() {
+      log('Binding events...');
+
+      // CRITICAL: Theme play button
+      const overlayBtn = $('#musicOverlayBtn');
+      if (overlayBtn) {
+        overlayBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          log('🎵 Theme button clicked!');
+          startBgTheme();
+        });
+        log('✅ Theme button event bound');
+      } else {
+        error('❌ musicOverlayBtn not found!');
+      }
+
+      // Background music controls
+      const pauseBtn = $('#pauseBgMusic');
+      const stopBtn = $('#stopBgMusic');
+      if (pauseBtn) pauseBtn.onclick = pauseBackgroundTheme;
+      if (stopBtn) stopBtn.onclick = stopBackgroundTheme;
+
+      // Tab buttons
+      $$('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const tabId = this.dataset.tab;
+          if (tabId) showTab(tabId);
+        });
+      });
+
+      // Video sub-tabs
+      $$('.video-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const tabId = this.dataset.videoTab;
+          if (tabId) {
+            showVideoTab(tabId);
+            $$('.video-tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+          }
+        });
+      });
+
+      // Boss sub-tabs
+      $$('.boss-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const tabId = this.dataset.bossTab;
+          if (tabId) {
+            showBossTab(tabId);
+            $$('.boss-tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+          }
+        });
+      });
+
+      // Accordion headers
+      $$('.accordion-header').forEach(header => {
+        header.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.dataset.target;
+          if (targetId) toggleAccordion(targetId, this);
+        });
+      });
+
+      // Video modal close
+      const videoModal = $('#videoModal');
+      if (videoModal) {
+        const backdrop = videoModal.querySelector('.video-modal-backdrop');
+        const closeBtn = $('#videoModalClose');
+        if (backdrop) backdrop.addEventListener('click', closeFavModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeFavModal);
+      }
+
+      // Boss song links (delegated)
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('.myboss-song-list a[data-video-url]');
+        if (link) {
+          e.preventDefault();
+          const url = link.dataset.videoUrl;
+          const title = link.dataset.title || link.textContent.trim();
+          openFavModal(url, title);
+        }
+      });
+
+      // Audio stop button
+      const stopAudioBtn = $('#stopAudioBtn');
+      if (stopAudioBtn) stopAudioBtn.onclick = stopAudio;
+
+      // ESC key handling
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          // Close video modal
+          const videoModal = $('#videoModal');
+          if (videoModal && !videoModal.classList.contains('hidden')) {
+            e.preventDefault();
+            closeFavModal();
+            return;
+          }
+          // Close auth modal
+          const authModal = $('#audioAuthModal');
+          if (authModal && !authModal.classList.contains('hidden')) {
+            e.preventDefault();
+            authModal.classList.add('hidden');
+            document.body.classList.remove('modal-open');
+          }
+        }
+      });
+
+      // Visibility change - pause music when tab hidden
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) pauseBackgroundTheme();
+      });
+
+      log('✅ All events bound');
+    }
+
+    // =========================================================
+    // INITIALIZATION
+    // =========================================================
+    
+    function init() {
+      log('🚀 Initializing R.D. Burman Tribute...');
+
+      // Get audio element reference
+      bgThemeAudio = $('#bgTheme');
+
+      // Initialize UI components
+      initScrollingTrack();
+      
+      // Bind all event handlers
+      bindEvents();
+
+      // Handle scroll restoration
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+
+      log('✅ Initialization complete');
+    }
+
+    // Run initialization when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    // Expose necessary functions globally for any inline handlers
+    window.startBgTheme = startBgTheme;
+    window.pauseBackgroundTheme = pauseBackgroundTheme;
+    window.stopBackgroundTheme = stopBackgroundTheme;
+    window.showTab = showTab;
+    window.openFavModal = openFavModal;
+    window.closeFavModal = closeFavModal;
+    window.openBossVideo = openBossVideo;
+    window.toggleAccordion = toggleAccordion;
+    window.stopAudio = stopAudio;
+    window.ensureAudioAuthorized = ensureAudioAuthorized;
+
+  })();
+  </script>
+
+</body>
+</html>
